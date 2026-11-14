@@ -11,6 +11,7 @@ namespace Overworked.EditorTools
     /// в main, чтобы после New Game игра проходилась по нарративу, а не по тестовым сценам.
     /// Сейчас — Floor_03 из механик P3: стартовые реплики, онбординг HUD, подсказка управления,
     /// реплики в опенспейсе, стол Чарльза, сообщения Макса (с заданием) и Босса.
+    /// Floor_02 и Floor_01 — фонарик P4 в руках у Дэнни с начала этажа (Floor_02 затемнён).
     /// Всё кладётся в группу Story/Chain (и Interactables/Chain) — повторный запуск пересобирает только её,
     /// владелец этажа может потом переложить сценарии к себе и удалить группу.
     /// Запуск: меню Overworked → Build Game Chain → Floor 03 (P3 mechanics).
@@ -90,6 +91,48 @@ namespace Overworked.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             Debug.Log($"[Chain] Floor_03: собрано ({opening.name} + зоны)");
+        }
+
+        [MenuItem("Overworked/Build Game Chain/Floor 02 (flashlight, dark)")]
+        public static void BuildFloor02() => BuildFlashlightFloor("Floor_02", globalLight: 0.08f);
+
+        [MenuItem("Overworked/Build Game Chain/Floor 01 (flashlight)")]
+        public static void BuildFloor01() => BuildFlashlightFloor("Floor_01", globalLight: -1f);
+
+        [MenuItem("Overworked/Build Game Chain/All Floors")]
+        public static void BuildAll()
+        {
+            BuildFloor03();
+            BuildFloor02();
+            BuildFloor01();
+        }
+
+        /// <summary>
+        /// Фонарик P4 (FlashlightController) на этаже: с начала этажа уже в руках у Дэнни, выключен, включается на F.
+        /// globalLight ≥ 0 — приглушить общий свет сцены (Floor_02 почти без ламп — без этого луч не видно).
+        /// </summary>
+        static void BuildFlashlightFloor(string sceneName, float globalLight)
+        {
+            var scene = EditorSceneManager.OpenScene(Scenes + sceneName + ".unity", OpenSceneMode.Single);
+            var group = Group(Root("Interactables"));
+            var go = new GameObject("Flashlight");
+            go.transform.SetParent(group.transform, false);
+            var flashlight = go.AddComponent<FlashlightController>();
+            var so = new SerializedObject(flashlight);
+            so.FindProperty("availableOnStart").boolValue = true;
+            so.FindProperty("onAtStart").boolValue = false;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            if (globalLight >= 0f)
+            {
+                var global = GameObject.Find("Global Light 2D");
+                var light = global != null ? global.GetComponent<UnityEngine.Rendering.Universal.Light2D>() : null;
+                if (light != null) light.intensity = globalLight;
+            }
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            Debug.Log($"[Chain] {sceneName}: фонарик в руках" + (globalLight >= 0f ? $", общий свет {globalLight}" : ""));
         }
 
         // ------------------------------------------------------------ сцена
