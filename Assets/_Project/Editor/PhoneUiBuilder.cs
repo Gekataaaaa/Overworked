@@ -333,7 +333,7 @@ namespace Overworked.EditorTools
 
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             foreach (var go in scene.GetRootGameObjects())
-                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester") Object.DestroyImmediate(go);
+                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester" or "HudTester") Object.DestroyImmediate(go);
 
             const float halfWidth = 15f, floorY = -4.2f, top = 5.65f, bottom = -5.65f;
             var env = new GameObject("Environment");
@@ -384,9 +384,11 @@ namespace Overworked.EditorTools
                 darr.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<DialogueData>(TestDialogues[i]);
             dso.ApplyModifiedPropertiesWithoutUndo();
 
+            new GameObject("HudTester").AddComponent<HudTester>();
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0) и DialogueTester (Z/X/C, V) готовы");
+            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0), DialogueTester (Z/X/C, V), HudTester (N/H/J/K) готовы");
         }
     }
 }

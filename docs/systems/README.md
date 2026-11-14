@@ -14,3 +14,4 @@
 | Тексты игры → ScriptableObject | P3 | [Texts.md](Texts.md) |
 | Phone: PhoneManager, MessageManager, PhoneUI, тосты | P3 | [Phone.md](Phone.md) |
 | DialogueManager: субтитры, описания, системный текст | P3 | [DialogueManager.md](DialogueManager.md) |
+| UIManager: HUD, тосты, записка, подсказка управления | P3 | [UIManager.md](UIManager.md) |

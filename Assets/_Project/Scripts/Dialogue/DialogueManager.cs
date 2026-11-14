@@ -94,6 +94,7 @@ namespace Overworked
             // На паузе и при открытом телефоне нажатия относятся к ним, а не к субтитрам.
             if (PauseMenuUI.Instance != null && PauseMenuUI.Instance.IsPaused) return;
             if (PhoneManager.Instance != null && PhoneManager.Instance.IsOpen) return;
+            if (UIManager.Instance != null && UIManager.Instance.IsFullscreenOpen) return;
 
             var kb = Keyboard.current;
             var mouse = Mouse.current;
