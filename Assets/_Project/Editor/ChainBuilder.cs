@@ -84,9 +84,30 @@ namespace Overworked.EditorTools
                 new MessageStep { Message = max02, WaitUntilRead = true },
                 new DialogueStep { Dialogue = max02After });
 
-            // 1.3 Турникет — сообщение Босса. TODO(P2/P4): отказ турникета до него, Галлюцинация 1 после.
-            Zone(story, "1.3 BossAtTurnstile", 17f, 2f, null,
+            // 1.3 Турникет P2: своя карта → ACCESS DENIED → onDenied → сообщение Босса (нарратив 1.3).
+            // TODO(P4): после него — Галлюцинация 1 (шаг Hallucination).
+            var boss = Sequence(story, "1.3 BossAfterDenied", playOnStart: false, lockPlayer: true,
                 new MessageStep { Message = boss01, WaitUntilRead = true });
+            var turnstile = Object.FindFirstObjectByType<TurnstileInteractable>();
+            if (turnstile != null)
+            {
+                // Убираем старые подписки цепочки (после пересборки их цели удалены) и подписываем заново.
+                for (int i = turnstile.onDenied.GetPersistentEventCount() - 1; i >= 0; i--)
+                {
+                    var target = turnstile.onDenied.GetPersistentTarget(i);
+                    if (target == null || target is ScriptedSequence)
+                        UnityEditor.Events.UnityEventTools.RemovePersistentListener(turnstile.onDenied, i);
+                }
+                UnityEditor.Events.UnityEventTools.AddVoidPersistentListener(turnstile.onDenied,
+                    new UnityEngine.Events.UnityAction(boss.Play));
+                EditorUtility.SetDirty(turnstile);
+            }
+            else
+            {
+                // Турникета ещё нет — запасной вариант: зона перед лестницей.
+                Zone(story, "1.3 BossAtTurnstile", 17f, 2f, null,
+                    new MessageStep { Message = boss01, WaitUntilRead = true });
+            }
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
