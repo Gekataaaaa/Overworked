@@ -1072,11 +1072,13 @@ MonoBehaviour:
   output: {fileID: 1534108072}
   prompt: {fileID: 1663862206}
   nameInput: {fileID: 995421015}
-  intro: {fileID: 0}
-  welcome: {fileID: 0}
+  boot: {fileID: 11400000, guid: b9ea813bec574836803e195df783e5b8, type: 2}
+  intro: {fileID: 11400000, guid: aabdfc2e43bf18442be158dfd87f925c, type: 2}
+  welcome: {fileID: 11400000, guid: 7a86ea424429c294093882871130ed1d, type: 2}
   charDelay: 0.02
   welcomeHold: 2.5
   maxNameLength: 16
+  crtMaterial: {fileID: 2100000, guid: 4c90629717064e9cb4795c7d629b8a82, type: 2}
 --- !u!224 &1020440796
 RectTransform:
   m_ObjectHideFlags: 0

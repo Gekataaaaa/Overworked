@@ -16,20 +16,12 @@ MonoBehaviour:
   - Speaker: 2
     Text: '<color=#E0E0E0>WTTS v.4.02 — Work Time Tracking System (tty1)</color>'
   - Speaker: 2
-    Text: 
+    Text: ''
   - Speaker: 2
-    Text: '[  <color=#7CFF8A>OK</color>  ] Started Night Shift Service.'
+    Text: 'Night shift requires mandatory operator registration.'
   - Speaker: 2
-    Text: '[  <color=#7CFF8A>OK</color>  ] Reached target Floor 03.'
+    Text: 'Enter your name to confirm access.'
   - Speaker: 2
-    Text: '[ <color=#FFC857>WARN</color> ] Operator not registered.'
-  - Speaker: 2
-    Text: 
-  - Speaker: 2
-    Text: Night shift requires mandatory operator registration.
-  - Speaker: 2
-    Text: Enter your name to confirm access.
-  - Speaker: 2
-    Text: 
+    Text: ''
   - Speaker: 2
     Text: 'Enter your name:'
