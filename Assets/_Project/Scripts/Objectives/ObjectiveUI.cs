@@ -24,6 +24,9 @@ namespace Overworked
         [Tooltip("Сколько секунд видна выполненная карточка")]
         [SerializeField] float hideAfter = 2.5f;
 
+        [Tooltip("Если сразу пришло новое задание — сколько секунд ещё видна галочка прошлого")]
+        [SerializeField] float checkVisibleTime = 1.2f;
+
         bool visible = true;
         bool hasCard;
         ObjectiveData shown;
@@ -74,6 +77,23 @@ namespace Overworked
         void Show(ObjectiveData o)
         {
             StopAllCoroutines();
+            // На карточке ещё галочка прошлого задания — даём её увидеть, новое покажем чуть позже.
+            if (hasCard && checkMark.enabled)
+            {
+                StartCoroutine(ShowAfterCheck(o));
+                return;
+            }
+            ShowNow(o);
+        }
+
+        IEnumerator ShowAfterCheck(ObjectiveData o)
+        {
+            yield return new WaitForSeconds(checkVisibleTime);
+            ShowNow(o);
+        }
+
+        void ShowNow(ObjectiveData o)
+        {
             shown = o;
             titleText.text = TextFormatter.Format(o.Title);
             checkMark.enabled = false;

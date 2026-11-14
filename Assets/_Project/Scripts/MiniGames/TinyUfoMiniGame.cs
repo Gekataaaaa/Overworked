@@ -133,11 +133,17 @@ namespace Overworked
                     foreach (var canvas in root.GetComponentsInChildren<Canvas>())
                         if (canvas.isRootCanvas) Hide(canvas);
 
-            // У Tiny UFO свой EventSystem — при живом нашем их было бы два.
-            if (EventSystem.current != null && EventSystem.current.gameObject.scene != tiny)
-                foreach (var root in tiny.GetRootGameObjects())
-                    foreach (var es in root.GetComponentsInChildren<EventSystem>())
-                        es.gameObject.SetActive(false);
+            // Клики по кнопкам автомата (PLAY/QUIT) обрабатывает родной EventSystem Tiny UFO:
+            // с ним его кнопки и настроены. Наши EventSystem'ы (_Systems, меню) на время игры выключаем —
+            // при двух живых Unity берёт текущим первый, наш, и клик до PLAY не доходил.
+            foreach (var es in FindObjectsByType<EventSystem>())
+                if (es.gameObject.scene != tiny) Hide(es);
+            foreach (var root in tiny.GetRootGameObjects())
+                foreach (var es in root.GetComponentsInChildren<EventSystem>(true))
+                {
+                    es.gameObject.SetActive(true);
+                    EventSystem.current = es;
+                }
         }
 
         // Сцена DontDestroyOnLoad недоступна по имени — достаём её через объект-зонд.
