@@ -1,10 +1,14 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Overworked
 {
     /// <summary>
-    /// Главное меню (сцена MainMenu): Start → затемнение → пролог-терминал, Quit → выход.
+    /// Главное меню (сцена MainMenu): Continue / New Game / Quit.
+    /// Continue — только после выхода в меню через паузу (GameManager.CanContinue): возвращает в то же место,
+    /// без пролога и ввода имени. При первом запуске игры его нет.
+    /// New Game — затемнение → пролог-терминал с вводом имени; точка Continue сбрасывается.
     /// Лежит на MainMenu Canvas, собирается меню Overworked → P1 → Build Main Menu.
     /// </summary>
     public class MainMenuUI : MonoBehaviour
@@ -12,13 +16,17 @@ namespace Overworked
         [Tooltip("Панель с заголовком и кнопками")]
         [SerializeField] GameObject menuPanel;
 
-        [Tooltip("Кнопка Start")]
-        [SerializeField] Button startButton;
+        [Tooltip("Кнопка Continue — видна, только когда есть сохранение")]
+        [SerializeField] Button continueButton;
+
+        [Tooltip("Кнопка New Game — пролог с вводом имени")]
+        [FormerlySerializedAs("startButton")]
+        [SerializeField] Button newGameButton;
 
         [Tooltip("Кнопка Quit")]
         [SerializeField] Button quitButton;
 
-        [Tooltip("Пролог-терминал, запускается после Start")]
+        [Tooltip("Пролог-терминал, запускается после New Game")]
         [SerializeField] PrologueTerminal prologue;
 
         [Tooltip("Секунд на затемнение между меню и терминалом")]
@@ -28,15 +36,29 @@ namespace Overworked
 
         void Start()
         {
-            startButton.onClick.AddListener(OnStart);
+            bool canContinue = GameManager.Instance.CanContinue && continueButton != null;
+            if (continueButton != null)
+            {
+                continueButton.gameObject.SetActive(canContinue);
+                continueButton.onClick.AddListener(OnContinue);
+            }
+            newGameButton.onClick.AddListener(OnNewGame);
             quitButton.onClick.AddListener(OnQuit);
             menuPanel.SetActive(true);
             prologue.gameObject.SetActive(false);
-            // Выделяем Start, чтобы меню работало и с клавиатуры (стрелки + Enter).
-            startButton.Select();
+            // Выделяем первую кнопку, чтобы меню работало и с клавиатуры (стрелки + Enter).
+            (canContinue ? continueButton : newGameButton).Select();
         }
 
-        void OnStart()
+        void OnContinue()
+        {
+            if (starting) return;
+            starting = true;
+            Debug.Log("[UI] Continue");
+            GameManager.Instance.ContinueGame();
+        }
+
+        void OnNewGame()
         {
             if (starting) return;
             starting = true;

@@ -93,14 +93,20 @@ namespace Overworked
         /// <summary>Мгновенно ставит игрока в точку (вход/выход из комнаты, под затемнением).</summary>
         public void Teleport(Transform point)
         {
+            Teleport(point.position);
+            Debug.Log($"[Player] Teleport → {point.name}");
+        }
+
+        /// <summary>Мгновенно ставит игрока в позицию (Continue возвращает туда, где вышли в меню).</summary>
+        public void Teleport(Vector3 position)
+        {
             // Двигаем и Transform, и Rigidbody: иначе интерполяция на кадр вернёт старую позицию.
-            transform.position = point.position;
+            transform.position = position;
             if (body != null)
             {
-                body.position = point.position;
+                body.position = position;
                 body.linearVelocity = Vector2.zero;
             }
-            Debug.Log($"[Player] Teleport → {point.name}");
         }
 
         /// <summary>Анимация по имени: "LookAtScreen", "Fall", "LieDown", "StandUp".</summary>

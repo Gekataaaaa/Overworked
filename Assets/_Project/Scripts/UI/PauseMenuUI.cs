@@ -85,7 +85,8 @@ namespace Overworked
         void ToMainMenu()
         {
             Resume();
-            GameManager.Instance.LoadMainMenu();
+            // Запоминаем место: в меню появится Continue.
+            GameManager.Instance.LeaveToMainMenu();
         }
 
         void Quit()

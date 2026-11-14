@@ -151,8 +151,8 @@ namespace Overworked.EditorTools
                 stairs.transform.position = new Vector3(w - 2.5f, FloorY + 1.5f, 0);
                 var so = new SerializedObject(stairs.GetComponent<StairInteractable>());
                 so.FindProperty("targetFloor").intValue = f.StairsTo;
-                // TODO(P1): выключить standaloneE, когда P2 сделает InteractionSystem.
-                so.FindProperty("standaloneE").boolValue = true;
+                // E ловит InteractionSystem (P2); автономный режим лестницы только для сцен без него.
+                so.FindProperty("standaloneE").boolValue = false;
                 so.ApplyModifiedPropertiesWithoutUndo();
             }
 
