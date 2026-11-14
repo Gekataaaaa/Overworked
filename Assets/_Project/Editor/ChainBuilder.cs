@@ -73,21 +73,35 @@ namespace Overworked.EditorTools
             var inspect = deskZone.AddComponent<Inspectable>();
             Set(inspect, "dialogue", charlesDesk);
 
-            // 1.1 Выход в коридор — сообщение Макса (выдаёт задание «Get Max's pass»), ответ Дэнни.
-            Zone(story, "1.1 MaxCallsPass", -2f, 2f, null,
-                new MessageStep { Message = max01, WaitUntilRead = true },
-                new DialogueStep { Dialogue = max01After });
+            // Порядок этажа (решение команды, отличается от нарратива): кухня заперта →
+            // турникет со своей картой: ACCESS DENIED → Босс → Макс про пропуск (задание) → кухня открывается →
+            // пропуск → выход из кухни: Макс благодарит → турникет с картой Макса → лестница.
+            var kitchenDoor = FindKitchenDoor();
+            if (kitchenDoor != null)
+            {
+                kitchenDoor.SetDoorLocked(true);
+                EditorUtility.SetDirty(kitchenDoor);
+            }
+            else Debug.LogWarning("[Chain] Floor_03: не найдена дверь в кухню (DoorInteractable → Kitchen)");
 
             // 1.3 Выход из кухни после пропуска — второе сообщение Макса.
-            // Сработает, когда P2 положит пропуск (Pickup с completesObjective = F3_TakeMaxPass).
+            // Сработает, когда пропуск подобран (Pickup с completesObjective = F3_TakeMaxPass).
             Zone(story, "1.3 MaxThanks", 9f, 3f, takePass,
                 new MessageStep { Message = max02, WaitUntilRead = true },
                 new DialogueStep { Dialogue = max02After });
 
-            // 1.3 Турникет P2: своя карта → ACCESS DENIED → onDenied → сообщение Босса (нарратив 1.3).
-            // TODO(P4): после него — Галлюцинация 1 (шаг Hallucination).
-            var boss = Sequence(story, "1.3 BossAfterDenied", playOnStart: false, lockPlayer: true,
-                new MessageStep { Message = boss01, WaitUntilRead = true });
+            // Турникет P2: своя карта → ACCESS DENIED → onDenied → Босс, следом Макс про пропуск
+            // (сообщение выдаёт задание F3_TakeMaxPass), ответ Дэнни, кухня открывается.
+            // TODO(P4): Галлюцинация 1 — шаг Hallucination после сообщения Босса.
+            var unlockKitchen = new EventStep { Note = "Unlock kitchen" };
+            if (kitchenDoor != null)
+                UnityEditor.Events.UnityEventTools.AddBoolPersistentListener(unlockKitchen.OnRun,
+                    new UnityEngine.Events.UnityAction<bool>(kitchenDoor.SetDoorLocked), false);
+            var boss = Sequence(story, "1.3 DeniedBossThenMax", playOnStart: false, lockPlayer: true,
+                new MessageStep { Message = boss01, WaitUntilRead = true },
+                new MessageStep { Message = max01, WaitUntilRead = true },
+                new DialogueStep { Dialogue = max01After },
+                unlockKitchen);
             var turnstile = Object.FindAnyObjectByType<TurnstileInteractable>();
             if (turnstile != null)
             {
@@ -112,6 +126,19 @@ namespace Overworked.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             Debug.Log($"[Chain] Floor_03: собрано ({opening.name} + зоны)");
+        }
+
+        /// <summary>Дверь из коридора в кухню: DoorInteractable с направлением IntoRoom и комнатой Kitchen.</summary>
+        static DoorInteractable FindKitchenDoor()
+        {
+            foreach (var door in Object.FindObjectsByType<DoorInteractable>(FindObjectsInactive.Include))
+            {
+                var so = new SerializedObject(door);
+                var room = so.FindProperty("room").objectReferenceValue as Component;
+                bool intoRoom = so.FindProperty("direction").enumValueIndex == (int)DoorInteractable.Direction.IntoRoom;
+                if (intoRoom && room != null && room.name.Contains("Kitchen")) return door;
+            }
+            return null;
         }
 
         [MenuItem("Overworked/Build Game Chain/Floor 02 (flashlight, dark)")]
