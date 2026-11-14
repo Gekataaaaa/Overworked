@@ -20,6 +20,13 @@ namespace Overworked
             SceneTransitionManager.Instance.Load(scene);
         }
 
+        /// <summary>Возврат в главное меню (после титров, из паузы).</summary>
+        public void LoadMainMenu()
+        {
+            Debug.Log("[Core] LoadMainMenu");
+            SceneTransitionManager.Instance.Load("MainMenu");
+        }
+
         /// <summary>Новое прохождение (из главного меню).</summary>
         public void ResetState() => State = new GameState();
     }

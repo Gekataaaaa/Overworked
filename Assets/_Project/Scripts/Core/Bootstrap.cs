@@ -24,6 +24,9 @@ namespace Overworked
             var systems = Object.Instantiate(prefab);
             systems.name = SystemsPath;
             Object.DontDestroyOnLoad(systems);
+
+            // В редакторе и development-билде — отладочные F1–F6 (переходы по сценам).
+            if (Debug.isDebugBuild) systems.AddComponent<DebugHotkeys>();
         }
     }
 }

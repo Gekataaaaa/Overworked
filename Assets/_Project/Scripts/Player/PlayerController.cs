@@ -11,7 +11,7 @@ namespace Overworked
     public class PlayerController : SingletonBehaviour<PlayerController>
     {
         [Tooltip("Скорость ходьбы, юнитов в секунду")]
-        [SerializeField] float speed = 3f;
+        [SerializeField] float speed = 1.5f;
 
         [Tooltip("Спрайт Дэнни: отражается по X при смене направления. Пусто — ищется в детях")]
         [SerializeField] SpriteRenderer sprite;
