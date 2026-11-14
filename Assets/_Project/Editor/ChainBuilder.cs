@@ -35,6 +35,7 @@ namespace Overworked.EditorTools
             var start = Load<DialogueData>("Dialogues/F3_Start");
             var openSpace = Load<DialogueData>("Dialogues/F3_OpenSpace");
             var max01After = Load<DialogueData>("Dialogues/F3_Max01_After");
+            var h1After = Load<DialogueData>("Dialogues/F3_H1_After");
             var max02After = Load<DialogueData>("Dialogues/F3_Max02_After");
             var charlesDesk = Load<DialogueData>("Inspectables/F3_CharlesDesk");
             var max01 = Load<MessageData>("Messages/F3_Max_01");
@@ -111,6 +112,9 @@ namespace Overworked.EditorTools
                     new UnityEngine.Events.UnityAction<bool>(kitchenDoor.SetLocked), false);
             var boss = Sequence(story, "1.3 DeniedBossThenMax", playOnStart: false, lockPlayer: true,
                 new MessageStep { Message = boss01, WaitUntilRead = true },
+                // Нарратив 1.3 (P3): после сообщения Босса — Галлюцинация 1 (P4, H1_Turnstile) и «My ears are ringing…».
+                new HallucinationStep { Hallucination = FindHallucination("H1_Turnstile") },
+                new DialogueStep { Dialogue = h1After },
                 new MessageStep { Message = max01, WaitUntilRead = true },
                 new DialogueStep { Dialogue = max01After },
                 unlockKitchen);
@@ -178,10 +182,14 @@ namespace Overworked.EditorTools
             var go = new GameObject("Flashlight");
             go.transform.SetParent(group.transform, false);
             var flashlight = go.AddComponent<FlashlightController>();
+            // Если на этаже лежит фонарик для подбора (Floor_02, P2: FlashlightPickup), до подбора он недоступен,
+            // а подбор включает его — ссылку переподключаем на новый объект (иначе после пересборки она пустая).
+            var pickup = FindPickup("FlashlightPickup");
             var so = new SerializedObject(flashlight);
-            so.FindProperty("availableOnStart").boolValue = true;
+            so.FindProperty("availableOnStart").boolValue = pickup == null;
             so.FindProperty("onAtStart").boolValue = false;
             so.ApplyModifiedPropertiesWithoutUndo();
+            if (pickup != null) RelinkSetAvailable(pickup, flashlight);
 
             if (globalLight >= 0f)
             {
@@ -193,6 +201,32 @@ namespace Overworked.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             Debug.Log($"[Chain] {sceneName}: фонарик в руках" + (globalLight >= 0f ? $", общий свет {globalLight}" : ""));
+        }
+
+        static PickupInteractable FindPickup(string name)
+        {
+            foreach (var p in Object.FindObjectsByType<PickupInteractable>(FindObjectsInactive.Include))
+                if (p.name == name) return p;
+            return null;
+        }
+
+        /// <summary>Вызовы FlashlightController.SetAvailable в onDone подбора: пустую/старую цель меняем на новый фонарик.</summary>
+        static void RelinkSetAvailable(PickupInteractable pickup, FlashlightController flashlight)
+        {
+            var so = new SerializedObject(pickup);
+            var calls = so.FindProperty("onDone.m_PersistentCalls.m_Calls");
+            bool found = false;
+            for (int i = 0; calls != null && i < calls.arraySize; i++)
+            {
+                var call = calls.GetArrayElementAtIndex(i);
+                if (call.FindPropertyRelative("m_MethodName").stringValue != "SetAvailable") continue;
+                call.FindPropertyRelative("m_Target").objectReferenceValue = flashlight;
+                found = true;
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
+            if (!found)
+                UnityEditor.Events.UnityEventTools.AddBoolPersistentListener(pickup.onDone,
+                    new UnityEngine.Events.UnityAction<bool>(flashlight.SetAvailable), true);
         }
 
         // ------------------------------------------------------------ сцена
@@ -252,6 +286,14 @@ namespace Overworked.EditorTools
             var so = new SerializedObject(target);
             so.FindProperty(field).objectReferenceValue = value;
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        static HallucinationEvent FindHallucination(string name)
+        {
+            foreach (var h in Object.FindObjectsByType<HallucinationEvent>(FindObjectsInactive.Include))
+                if (h.name == name) return h;
+            Debug.LogWarning($"[Setup] в сцене нет галлюцинации {name}");
+            return null;
         }
 
         static T Load<T>(string path) where T : Object

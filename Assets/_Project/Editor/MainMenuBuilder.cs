@@ -48,7 +48,9 @@ namespace Overworked.EditorTools
 
             var mainFont = EnsureFontAsset($"{FontsDir}/PTSans-Regular.ttf", MainFontPath);
             var monoFont = EnsureFontAsset($"{FontsDir}/IBMPlexMono-Regular.ttf", MonoFontPath);
-            SetDefaultFont(mainFont);
+            // Шрифт по умолчанию TMP — пиксельный Hardpixel (P3): им берут подсказки [E] и тексты, созданные из кода
+            // без явного шрифта. Нет Hardpixel — PT Sans, как раньше.
+            SetDefaultFont(P3Fonts.Dialogue() ?? mainFont);
 
             // Стартовые тексты, только если ассетов ещё нет; дальше их правят в инспекторе.
             const string ok = "[  <color=#7CFF8A>OK</color>  ]";

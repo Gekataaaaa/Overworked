@@ -49,6 +49,9 @@
 **Шрифт окон:** субтитры (реплики Дэнни, описания), тост, записка и подсказка управления — пиксельный
 **Hardpixel** (`Fonts/Hardpixel.otf`, TMP-ассет `Hardpixel SDF` создаёт `P3Fonts` при Build Dialogue UI / Build HUD /
 Build Phone UI; запасной — PT Sans). Системные строки субтитров — IBM Plex Mono, телефон — Press Start 2P.
+Hardpixel же — **шрифт TMP по умолчанию** (`TMP Settings`): им идут подсказки `[E] …` P2 и все тексты,
+созданные из кода без явного шрифта (подсказка фонарика, карточка задания, мини-игры, лист A4). MainMenuBuilder (P1)
+при пересборке меню тоже ставит по умолчанию Hardpixel.
 ⚠ Лицензия Hardpixel не приложена: в файле «© 2010 Anton Kudin & Jovanny Lemonad, All rights reserved» —
 перед релизом проверить, разрешено ли встраивать шрифт в игру (сайт автора jovanny.ru).
 
