@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Overworked
 {
@@ -11,66 +13,75 @@ namespace Overworked
         /// <summary>Состояние текущего прохождения.</summary>
         public GameState State { get; private set; } = new GameState();
 
-        /// <summary>Куда вернёт Continue; null — продолжать нечего (первый запуск, новая игра, игра пройдена).</summary>
-        public ResumePoint Resume { get; private set; }
+        // Этаж, спрятанный под главным меню (пауза → Main Menu): сцена загружена, её корневые объекты выключены.
+        Scene hiddenFloor;
+        List<GameObject> hiddenRoots;
 
-        /// <summary>Показывать ли Continue в главном меню.</summary>
-        public bool CanContinue => Resume != null;
+        /// <summary>
+        /// Показывать ли Continue в главном меню: этаж спрятан под меню и всё ещё в памяти.
+        /// При первом запуске, после New Game и после WhiteRoom — нет.
+        /// </summary>
+        public bool CanContinue => hiddenFloor.IsValid() && hiddenFloor.isLoaded && hiddenRoots != null;
 
-        /// <summary>Загружает сцену этажа: 3, 2, 1; 0 = WhiteRoom.</summary>
+        /// <summary>Загружает сцену этажа: 3, 2, 1; 0 = WhiteRoom. Спрятанный под меню этаж при этом выгружается.</summary>
         public void LoadFloor(int floor)
         {
             // Во время перехода вызов проигнорируется — не меняем этаж в состоянии зря.
             if (SceneTransitionManager.Instance.IsLoading) return;
             State.CurrentFloor = floor;
-            if (floor == 0) Resume = null;   // WhiteRoom — игра пройдена, продолжать нечего
+            ForgetHiddenFloor();
             string scene = floor == 0 ? "WhiteRoom" : $"Floor_0{floor}";
             Debug.Log($"[Core] LoadFloor({floor}) → {scene}");
             SceneTransitionManager.Instance.Load(scene);
         }
 
-        /// <summary>Возврат в главное меню (после титров, из паузы).</summary>
+        /// <summary>Возврат в главное меню с выгрузкой этажа (после титров, F1). Continue после этого нет.</summary>
         public void LoadMainMenu()
         {
             Debug.Log("[Core] LoadMainMenu");
+            ForgetHiddenFloor();
             SceneTransitionManager.Instance.Load("MainMenu");
         }
 
-        /// <summary>Выход в меню из паузы: запоминает, где был игрок, чтобы Continue вернул туда же.</summary>
+        /// <summary>
+        /// Пауза → Main Menu: этаж не выгружается, а прячется под меню как есть — двери, предметы, сценарии,
+        /// фонарик, задания остаются в том же состоянии. Continue вернёт его.
+        /// </summary>
         public void LeaveToMainMenu()
         {
             if (SceneTransitionManager.Instance.IsLoading) return;
-            Resume = ResumePoint.Capture();
-            LoadMainMenu();
+            Debug.Log("[Core] LeaveToMainMenu: этаж спрятан под меню");
+            SceneTransitionManager.Instance.LoadOver("MainMenu", (scene, roots) =>
+            {
+                hiddenFloor = scene;
+                hiddenRoots = roots;
+            });
         }
 
-        /// <summary>
-        /// Continue: загружает сцену из Resume, затем ставит игрока на место, возвращает рассудок
-        /// и камеру. Имя, флаги и телефон и так живут в памяти — State не сбрасывается.
-        /// </summary>
+        /// <summary>Continue: убирает меню и включает спрятанный этаж ровно в том состоянии, в каком его оставили.</summary>
         public void ContinueGame()
         {
-            if (Resume == null || SceneTransitionManager.Instance.IsLoading) return;
-            var point = Resume;
-            void OnLoaded(string scene)
-            {
-                SceneTransitionManager.Instance.OnSceneLoaded -= OnLoaded;
-                if (scene != point.Scene) return;
-                point.Apply();
-                Resume = null;
-            }
-            SceneTransitionManager.Instance.OnSceneLoaded += OnLoaded;
-            Debug.Log($"[Core] Continue → {point.Scene} {point.Position}");
-            SceneTransitionManager.Instance.Load(point.Scene);
+            if (!CanContinue || SceneTransitionManager.Instance.IsLoading) return;
+            Debug.Log($"[Core] Continue → {hiddenFloor.name}");
+            var menu = SceneManager.GetActiveScene();
+            SceneTransitionManager.Instance.RestoreHidden(menu, hiddenFloor, hiddenRoots, ForgetHiddenFloor);
         }
 
-        /// <summary>Новое прохождение (из главного меню): имя спросят заново, Continue пропадает, задания сбрасываются.</summary>
+        /// <summary>Новое прохождение (из главного меню): имя спросят заново, Continue пропадает, задания и телефон сбрасываются.</summary>
         public void ResetState()
         {
             State = new GameState();
-            Resume = null;
-            // Задания живут в _Systems и пережили бы новую игру (просьба P2).
+            // Сам этаж выгрузится, когда пролог загрузит Floor_03 (обычная загрузка выгружает все сцены).
+            ForgetHiddenFloor();
+            // Задания и история телефона живут в _Systems и пережили бы новую игру.
             if (ObjectiveManager.Instance != null) ObjectiveManager.Instance.ResetAll();
+            if (MessageManager.Instance != null) MessageManager.Instance.Clear();
+        }
+
+        void ForgetHiddenFloor()
+        {
+            hiddenFloor = default;
+            hiddenRoots = null;
         }
     }
 }

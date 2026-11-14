@@ -100,7 +100,7 @@ SpinvGameManager.EndGame → Time.timeScale = 0 → событие GameEnded(boo
 |---|---|---|
 | **Две камеры с тегом MainCamera, два AudioListener** | у Overworked своя камера с Cinemachine | на время игры `TinyUfoMiniGame` выключает камеру Overworked (`Camera.main` до загрузки → `SetActive(false)`, после выгрузки → `true`). Tiny UFO везде берёт `Camera.main`: границы корабля, строй, хилки, фон |
 | **Камера Tiny UFO снимает спрайты Floor_01** | обе сцены в одном мире, всё Tiny UFO — слой Default, камера около (0, 0), ortho size 9 | **Floor_01 строить в стороне от начала координат** (например, коридор с x ≥ 100). Это моя сцена, правило дешёвое |
-| **Два EventSystem** | у Tiny UFO свой | после загрузки выключить `EventSystem` Tiny UFO, если `EventSystem.current` уже есть (или наоборот — проверить, что кнопки нажимаются) |
+| **Два EventSystem** | у Tiny UFO свой | на время игры выключаются EventSystem'ы Overworked, клики обрабатывает родной EventSystem Tiny UFO (с нашим клик по PLAY не доходил); после выхода наши включаются обратно |
 | **HUD Overworked рисуется поверх автомата** | HUD Canvas (P3) — overlay | `MiniGameHost` при открытии скрывает HUD (`UIManager.SetHudVisible`) — договориться с P3 |
 | **Esc открывает две паузы** | у Tiny UFO своя пауза на Esc/P | P1: `PauseMenuUI` игнорирует Esc, пока `MiniGameHost.IsOpen` |
 | **`Time.timeScale = 0`, `AudioListener.pause`** | Tiny UFO ставит их на паузе и в конце партии | после выгрузки сцены вернуть `timeScale = 1` (как в `MicrogameRunner`). Звук Overworked на паузе автомата тоже встаёт — это нормально |

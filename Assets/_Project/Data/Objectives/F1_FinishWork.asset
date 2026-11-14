@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: F1_FinishWork
   m_EditorClassIdentifier: Overworked::Overworked.ObjectiveData
   Id: F1_FinishWork
-  Title: 'Finish work in room 102.'
+  Title: Finish work in room 102.

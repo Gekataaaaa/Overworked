@@ -16,6 +16,6 @@ MonoBehaviour:
   - Speaker: 1
     Text: 'The badge reads {name}, position: "Senior Operator".'
   - Speaker: 0
-    Text: 'Senior operator?..'
+    Text: Senior operator?..
   - Speaker: 0
-    Text: 'No. This isn''t funny anymore.'
+    Text: No. This isn't funny anymore.

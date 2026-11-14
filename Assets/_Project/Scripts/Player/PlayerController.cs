@@ -31,6 +31,10 @@ namespace Overworked
         float driftUntil;
         int lastDir = 1;
 
+        // Этаж спрятан под главным меню (пауза → Main Menu) — игрока «нет», пока не вернёмся по Continue.
+        void OnEnable() => ReleaseInstanceWhileDisabled(true);
+        void OnDisable() => ReleaseInstanceWhileDisabled(false);
+
         protected override void Awake()
         {
             base.Awake();

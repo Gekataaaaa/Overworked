@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
   - Speaker: 0
-    Text: 'Everyone left ages ago.'
+    Text: Everyone left ages ago.
   - Speaker: 0
-    Text: 'As always. Just me, stuck here till midnight.'
+    Text: As always. Just me, stuck here till midnight.

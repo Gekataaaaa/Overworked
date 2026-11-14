@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
   - Speaker: 1
-    Text: 'The door is locked with an electronic lock. Behind the glass — absolute black emptiness. No street, no streetlights.'
+    Text: "The door is locked with an electronic lock. Behind the glass \u2014 absolute
+      black emptiness. No street, no streetlights."
   - Speaker: 0
-    Text: 'There''s nothing out there…'
+    Text: "There's nothing out there\u2026"

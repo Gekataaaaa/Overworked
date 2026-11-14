@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: F1_FindKey101
   m_EditorClassIdentifier: Overworked::Overworked.ObjectiveData
   Id: F1_FindKey101
-  Title: 'Find the key in room 101.'
+  Title: Find the key in room 101.

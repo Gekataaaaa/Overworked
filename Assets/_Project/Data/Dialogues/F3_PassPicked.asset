@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
   - Speaker: 0
-    Text: 'Got it.'
+    Text: Got it.

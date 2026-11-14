@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Overworked
 {
     /// <summary>
-    /// Предмет без инвентаря: по E исчезает со сцены, ставит флаг (setsFlag, например "MaxPass"),
+    /// Предмет без инвентаря: по E взлетает над головой Дэнни и втягивается в него (PickupFlyEffect), ставит флаг (setsFlag, например "MaxPass"),
     /// показывает тост «Received: …» и закрывает задание (completesObjective).
     /// </summary>
     public class PickupInteractable : InteractableBase
@@ -26,7 +26,8 @@ namespace Overworked
             // Finish до выключения объекта: onDone должен дойти до сценария, пока объект ещё жив.
             Finish();
             PlayDialogue(afterDialogue);
-            (hideOnPickup != null ? hideOnPickup : gameObject).SetActive(false);
+            // Не исчезает сразу: взлетает над головой Дэнни и втягивается в него (PickupFlyEffect).
+            PickupFlyEffect.Play(hideOnPickup != null ? hideOnPickup : gameObject);
         }
     }
 }

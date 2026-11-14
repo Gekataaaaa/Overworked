@@ -26,5 +26,15 @@ namespace Overworked
         {
             if (Instance == this) Instance = null;
         }
+
+        /// <summary>
+        /// Для синглтонов сцены этажа (игрок): пока объект выключен, его как будто нет — Instance = null.
+        /// Нужно, когда этаж спрятан под главным меню (Continue): HUD, телефон, пауза видят «игрока нет».
+        /// </summary>
+        protected void ReleaseInstanceWhileDisabled(bool enabledNow)
+        {
+            if (enabledNow) { if (Instance == null) Instance = (T)this; }
+            else if (Instance == this) Instance = null;
+        }
     }
 }

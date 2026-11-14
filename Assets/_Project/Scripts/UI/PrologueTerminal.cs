@@ -80,16 +80,16 @@ namespace Overworked
         }
 
         /// <summary>
-        /// Включает CRT на всё время терминала (загрузка + ввод имени). Меню до этого остаётся чистым,
-        /// а после пролога грузится Floor_03 — эффект уходит вместе со сценой.
+        /// Включает CRT на всей сцене MainMenu (меню и терминал); после пролога грузится Floor_03 —
+        /// эффект уходит вместе со сценой. MainMenuUI вызывает его на старте меню, Begin — ещё раз (безопасно).
         /// </summary>
-        void EnableCrt()
+        public void EnableCrt()
         {
             var cam = Camera.main;
             if (crtMaterial == null || cam == null) return;
             // CRT — проход камеры, а overlay-холст рисуется поверх кадра мимо неё. Переводим холст
-            // терминала на эту камеру, чтобы эффект лёг на текст.
-            var canvas = GetComponentInParent<Canvas>().rootCanvas;
+            // меню на эту камеру, чтобы эффект лёг на текст. true — терминал на старте выключен.
+            var canvas = GetComponentInParent<Canvas>(true).rootCanvas;
             canvas.renderMode = RenderMode.ScreenSpaceCamera;
             canvas.worldCamera = cam;
             canvas.planeDistance = 1f;
