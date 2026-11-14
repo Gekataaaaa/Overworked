@@ -42,6 +42,8 @@ UI собирается меню **Overworked → P3 → Build Phone UI** (пе�
 
 **Известные ограничения / TODO:**
 - Во время мини-игр (`MiniGameHost.IsOpen`) телефон не открывается.
+- Кнопка телефона видна только когда в сцене есть игрок (`PlayerController.Instance`): в меню и прологе её нет.
+  В WhiteRoom HUD скрыт — сцена должна вызвать `UIManager.SetHudVisible(HudPart.Phone, false)`.
 - Звук вибрации — поле `vibrateClip` на `MessageManager`, пока пустое (звуки собирает P4).
 - В PT Sans нет символов из глитч-сообщений Max на Floor_01 (`▓▒░`, зачёркивание) — понадобится
   fallback-шрифт, проверить при заполнении `F1_Max_*`.

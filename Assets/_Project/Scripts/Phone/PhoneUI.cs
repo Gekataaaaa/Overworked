@@ -82,6 +82,8 @@ namespace Overworked
         Coroutine shake;
         Coroutine scrollRoutine;
         bool subscribed;
+        // Кнопку разрешил HUD (онбординг Floor_03 может её спрятать). Видна она ещё и только при игроке.
+        bool shownByHud = true;
 
         void Start()
         {
@@ -94,6 +96,7 @@ namespace Overworked
             EnsureScrollCatchesMouse();
             TrySubscribe();
             RefreshDots();
+            UpdateButtonVisibility();
         }
 
         void OnDestroy()
@@ -124,6 +127,7 @@ namespace Overworked
 
         void Update()
         {
+            UpdateButtonVisibility();
             if (!panel.activeSelf || GameInput.Move == null) return;
             // Клавиатура: A/D (стрелки) переключают чат Max ↔ Boss. Игрок в это время стоит.
             if (!GameInput.Move.WasPressedThisFrame()) return;
@@ -152,8 +156,17 @@ namespace Overworked
         /// <summary>Показать или спрятать кнопку телефона (онбординг HUD).</summary>
         public void SetButtonVisible(bool visible)
         {
-            phoneButton.gameObject.SetActive(visible);
+            shownByHud = visible;
+            UpdateButtonVisibility();
             if (!visible) Hide();
+        }
+
+        void UpdateButtonVisibility()
+        {
+            // HUD живёт в _Systems всю игру, но телефон нужен только на этаже, где есть Дэнни:
+            // в главном меню, прологе и до появления игрока кнопку не показываем.
+            bool visible = shownByHud && PlayerController.Instance != null;
+            if (phoneButton.gameObject.activeSelf != visible) phoneButton.gameObject.SetActive(visible);
         }
 
         void ShowContacts()
