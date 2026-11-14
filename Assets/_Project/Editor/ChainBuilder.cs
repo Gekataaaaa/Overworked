@@ -88,7 +88,7 @@ namespace Overworked.EditorTools
             // TODO(P4): после него — Галлюцинация 1 (шаг Hallucination).
             var boss = Sequence(story, "1.3 BossAfterDenied", playOnStart: false, lockPlayer: true,
                 new MessageStep { Message = boss01, WaitUntilRead = true });
-            var turnstile = Object.FindFirstObjectByType<TurnstileInteractable>();
+            var turnstile = Object.FindAnyObjectByType<TurnstileInteractable>();
             if (turnstile != null)
             {
                 // Убираем старые подписки цепочки (после пересборки их цели удалены) и подписываем заново.
