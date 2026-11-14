@@ -72,7 +72,7 @@ namespace Overworked.EditorTools
 
                 var phoneUi = hud.GetComponent<PhoneUI>();
                 if (phoneUi == null) phoneUi = hud.gameObject.AddComponent<PhoneUI>();
-                var toast = BuildToast(hud, font, out var toastText);
+                var toast = BuildToast(hud, P3Fonts.Dialogue(), out var toastText); // всплывающее окно — Hardpixel
                 // Весь телефон — пиксельный Press Start 2P (тост остаётся на PT Sans: он не часть телефона).
                 var pixel = EnsurePixelFont(font);
                 var button = BuildPhoneButton(hud, pixel, out var buttonDot);

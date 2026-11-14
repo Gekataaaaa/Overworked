@@ -46,6 +46,12 @@
 (текст); скрипт `HeartbeatUI` положить на объект `Heartbeat`. Карточка задания — своя у P2 (`ObjectiveUI`),
 в правом верхнем углу.
 
+**Шрифт окон:** субтитры (реплики Дэнни, описания), тост, записка и подсказка управления — пиксельный
+**Hardpixel** (`Fonts/Hardpixel.otf`, TMP-ассет `Hardpixel SDF` создаёт `P3Fonts` при Build Dialogue UI / Build HUD /
+Build Phone UI; запасной — PT Sans). Системные строки субтитров — IBM Plex Mono, телефон — Press Start 2P.
+⚠ Лицензия Hardpixel не приложена: в файле «© 2010 Anton Kudin & Jovanny Lemonad, All rights reserved» —
+перед релизом проверить, разрешено ли встраивать шрифт в игру (сайт автора jovanny.ru).
+
 **Печать текста:** записка и подсказка управления печатаются по буквам со звуком (`windowCharsPerSecond`, 40),
 тексты окна — по очереди; первое нажатие E/Space/клик допечатывает сразу, второе закрывает. Тосты
 печатаются без звука (`toastCharsPerSecond`, 60). Общий печатник — `Typewriter.Type(text, cps, skip, sound)`

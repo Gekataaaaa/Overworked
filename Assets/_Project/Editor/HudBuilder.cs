@@ -54,8 +54,10 @@ namespace Overworked.EditorTools
                 var existingHeartbeat = hud.Find("Heartbeat");
                 var sanity = existingSanity != null ? existingSanity.gameObject : BuildSanityBar(hud);
                 var heartbeat = existingHeartbeat != null ? existingHeartbeat.gameObject : BuildHeartbeat(hud, font);
-                var fullscreen = BuildFullscreen(hud, font, out var fullscreenText);
-                var hint = BuildControlsHint(hud, font);
+                // Всплывающие окна — пиксельный Hardpixel (P3Fonts), как субтитры.
+                var popupFont = P3Fonts.Dialogue();
+                var fullscreen = BuildFullscreen(hud, popupFont, out var fullscreenText);
+                var hint = BuildControlsHint(hud, popupFont);
 
                 // Рассудок и пульс — сразу после субтитров (под телефоном), окна — поверх всего, кроме затемнения.
                 var subtitles = hud.Find("Subtitles");

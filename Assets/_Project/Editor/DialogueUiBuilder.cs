@@ -61,7 +61,8 @@ namespace Overworked.EditorTools
                 group.blocksRaycasts = false;
                 group.interactable = false;
 
-                var text = Tmp("Text", rt, font, "", 38, DannyColor, TextAlignmentOptions.Center);
+                // Субтитры — пиксельный Hardpixel (P3Fonts); стиль System по-прежнему IBM Plex Mono.
+                var text = Tmp("Text", rt, P3Fonts.Dialogue(), "", 38, DannyColor, TextAlignmentOptions.Center);
                 Stretch(text.rectTransform, 16);
                 text.textWrappingMode = TextWrappingModes.Normal;
 

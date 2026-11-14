@@ -72,7 +72,7 @@ namespace Overworked
 
         [Header("Печать")]
         [Tooltip("Скорость печати новых сообщений, символов в секунду (0 — сразу)")]
-        [SerializeField] float charsPerSecond = 60f;
+        [SerializeField] float charsPerSecond = 25f;
 
         [Header("Вибрация")]
         [Tooltip("Сколько секунд трясётся кнопка при новом сообщении")]
