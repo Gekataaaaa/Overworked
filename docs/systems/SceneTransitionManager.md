@@ -23,8 +23,17 @@
 
 Пример — вход в комнату: `FadeOut(0.4f, () => { player.Teleport(entry); FadeIn(0.4f, null); })`.
 
+**Лестница** — префаб `Prefabs/Environment/Staircase` (`StairInteractable`, `Scripts/Core/`):
+`targetFloor` — куда ведёт, `SetLocked(bool)` — запереть/открыть из сценария, `Prompt` — текст
+подсказки. Пока нет `InteractionSystem` (P2), включена галочка **`standaloneE`**: лестница сама
+показывает «[E] Go downstairs» и ловит E. TODO(P1): снять её, когда InteractionSystem заработает.
+
+**Каркасы этажей** — меню **Overworked → P1 → Build Floor Skeletons**: коридор, двери с подписями,
+комнаты под коридором (EntryPoint, ExitDoor, выключенная камера комнаты), игрок, камера, лестница.
+Уже собранный этаж (есть объекты в `Environment/Corridor/Background`) пропускается.
+
 **Отладка (только редактор и dev-билд):** F1 — MainMenu, F2/F3/F4 — Floor_03/02/01,
-F5 — WhiteRoom, F6 — fade туда-обратно (`Scripts/Core/DebugHotkeys.cs`).
+F5 — WhiteRoom, F6 — fade туда-обратно, F7 — панель состояния (`Scripts/Core/DebugHotkeys.cs`).
 
 **Зависит от:** GameManager, PlayerController (блок ввода на время fade out).
 

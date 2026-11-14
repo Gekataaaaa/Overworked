@@ -165,9 +165,9 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 ### Этап 2 · Ч4–Ч7 · Механики сюжета
 
 **P1:**
-- [ ] `PlayerController`: `SetOnlyRight`, `StartInputDrift`, `PlayAnim` (пока заглушки-анимации).
-- [ ] Пауза (Esc).
-- [ ] Лестница → `LoadFloor`, перенос рассудка/имени/телефона между сценами (проверить!).
+- [x] `PlayerController`: `SetOnlyRight`, `StartInputDrift`, `PlayAnim` (пока заглушки-анимации).
+- [x] Пауза (Esc).
+- [x] Лестница → `LoadFloor`, перенос рассудка/имени/телефона между сценами (проверить!).
 
 **P2:**
 - [ ] `MiniGameHost` (оверлей, блок игрока, Esc не ломает).
