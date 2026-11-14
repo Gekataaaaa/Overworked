@@ -107,8 +107,8 @@ namespace Overworked
             if (player == null || player.State == PlayerState.Cutscene) return false;
             if (PauseMenuUI.Instance != null && PauseMenuUI.Instance.IsPaused) return false;
             if (SceneTransitionManager.Instance != null && SceneTransitionManager.Instance.IsLoading) return false;
-            // Tiny UFO — additive-сцена поверх этажа, у неё свой ввод.
-            // TODO(P3): не открывать и во время UI-мини-игр, когда у MiniGameHost появится IsOpen (P2).
+            // Мини-игры (считыватель, Tiny UFO) — у них свой ввод; Tiny UFO ещё и additive-сцена поверх этажа.
+            if (MiniGameHost.Instance != null && MiniGameHost.Instance.IsOpen) return false;
             if (SceneManager.sceneCount > 1) return false;
             return true;
         }
