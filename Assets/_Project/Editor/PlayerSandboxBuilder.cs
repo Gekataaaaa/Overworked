@@ -16,6 +16,8 @@ namespace Overworked.EditorTools
     {
         const string SquarePath = "Assets/_Project/Art/Placeholder_Square.png";
         const string PlayerPrefabPath = "Assets/_Project/Prefabs/Player/Player.prefab";
+        const string CameraPrefabPath = "Assets/_Project/Prefabs/Player/PlayerCamera.prefab";
+        const string StairsPrefabPath = "Assets/_Project/Prefabs/Environment/Staircase.prefab";
         const string ScenePath = "Assets/_Project/Scenes/Sandbox/Sandbox_P1.unity";
 
         // Размеры коридора в юнитах. Камера ортографическая 5.4 → видно 19.2 × 10.8.
@@ -32,7 +34,7 @@ namespace Overworked.EditorTools
         {
             var square = EnsureSquareSprite();
             var prefab = EnsurePlayerPrefab(square);
-            BuildScene(square, prefab);
+            BuildScene(square, prefab, EnsureStairsPrefab(square), EnsureCameraPrefab());
             Debug.Log("[Setup] Sandbox_P1: коридор и игрок готовы");
         }
 
@@ -96,11 +98,11 @@ namespace Overworked.EditorTools
             return prefab;
         }
 
-        static void BuildScene(Sprite square, GameObject playerPrefab)
+        static void BuildScene(Sprite square, GameObject playerPrefab, GameObject stairsPrefab, GameObject cameraPrefab)
         {
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             foreach (var go in scene.GetRootGameObjects())
-                if (go.name is "Environment" or "Player" or "Cameras") Object.DestroyImmediate(go);
+                if (go.name is "Environment" or "Player" or "Cameras" or "Staircase") Object.DestroyImmediate(go);
 
             var env = new GameObject("Environment");
             float top = HalfHeight + BoundsMargin, bottom = -HalfHeight - BoundsMargin;
@@ -127,27 +129,72 @@ namespace Overworked.EditorTools
             var player = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab, scene);
             player.transform.position = new Vector3(0, FloorY + 0.9f, 0);
 
+            // Лестница в правом конце коридора (в песочнице InteractionSystem ещё нет —
+            // проверять через контекстное меню компонента StairInteractable → Interact).
+            var stairsRoot = new GameObject("Staircase");
+            var stairs = (GameObject)PrefabUtility.InstantiatePrefab(stairsPrefab, scene);
+            stairs.transform.SetParent(stairsRoot.transform, false);
+            stairs.transform.position = new Vector3(HalfWidth - 2.5f, FloorY + 1.5f, 0);
+
             var cameras = new GameObject("Cameras");
-            var vcamGo = new GameObject("CM Corridor");
+            var vcamGo = (GameObject)PrefabUtility.InstantiatePrefab(cameraPrefab, scene);
+            vcamGo.name = "CM Corridor";
             vcamGo.transform.SetParent(cameras.transform, false);
-            vcamGo.transform.position = new Vector3(0, 0, -10);
-            var vcam = vcamGo.AddComponent<CinemachineCamera>();
-            vcam.Follow = player.transform;
+            vcamGo.GetComponent<CinemachineConfiner2D>().BoundingShape2D = poly;
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+        }
+
+        /// <summary>
+        /// Камера игрока для коридоров и комнат: следует за Дэнни со смещением в сторону движения.
+        /// В сцене остаётся только назначить границы в CinemachineConfiner2D.
+        /// </summary>
+        static GameObject EnsureCameraPrefab()
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(CameraPrefabPath);
+            if (existing != null) return existing;
+
+            var go = new GameObject("PlayerCamera");
+            go.transform.position = new Vector3(0, 0, -10);
+            var vcam = go.AddComponent<CinemachineCamera>();
             var lens = vcam.Lens;
             lens.OrthographicSize = HalfHeight;
             vcam.Lens = lens;
 
-            var composer = vcamGo.AddComponent<CinemachinePositionComposer>();
+            var composer = go.AddComponent<CinemachinePositionComposer>();
             composer.CameraDistance = 10f;
             composer.Damping = new Vector3(0.8f, 0f, 0f);
             // Смещение в сторону движения (паспорт, раздел 27).
             composer.Lookahead = new LookaheadSettings { Enabled = true, Time = 0.6f, Smoothing = 8f, IgnoreY = true };
 
-            var confiner = vcamGo.AddComponent<CinemachineConfiner2D>();
-            confiner.BoundingShape2D = poly;
+            go.AddComponent<CinemachineConfiner2D>();
+            go.AddComponent<FollowPlayer>();
 
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
+            var prefab = PrefabUtility.SaveAsPrefabAsset(go, CameraPrefabPath);
+            Object.DestroyImmediate(go);
+            return prefab;
+        }
+
+        /// <summary>Лестница-заглушка: серый прямоугольник + триггер + StairInteractable.</summary>
+        static GameObject EnsureStairsPrefab(Sprite square)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(StairsPrefabPath);
+            if (existing != null) return existing;
+
+            var go = new GameObject("Staircase");
+            var col = go.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
+            col.size = new Vector2(2f, 3f);
+            go.AddComponent<StairInteractable>();
+            Rect(go, "Sprite", square, Vector2.zero, new Vector2(2f, 3f), new Color(0.16f, 0.17f, 0.2f), -7);
+            // Ступеньки-полоски, чтобы было понятно, что это лестница.
+            for (int i = 0; i < 4; i++)
+                Rect(go, $"Step_{i}", square, new Vector2(-0.6f + i * 0.4f, -1.2f + i * 0.6f), new Vector2(0.8f, 0.12f), new Color(0.4f, 0.42f, 0.45f), -6);
+
+            var prefab = PrefabUtility.SaveAsPrefabAsset(go, StairsPrefabPath);
+            Object.DestroyImmediate(go);
+            return prefab;
         }
 
         static GameObject Rect(GameObject parent, string name, Sprite square, Vector2 pos, Vector2 size, Color color, int order)

@@ -5,14 +5,14 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UI;
+using static Overworked.EditorTools.UiBuild;
 
 namespace Overworked.EditorTools
 {
     /// <summary>
     /// Собирает сцену MainMenu: меню Start/Quit и пролог-терминал (паспорт, разделы 5 и 21).
-    /// Заодно создаёт динамические TMP-шрифты (PT Sans — основной, IBM Plex Mono — терминал)
-    /// и ассеты текстов пролога в Data/Dialogues.
-    /// Запуск: меню Overworked → P1 → Build Main Menu. Нужны импортированные TMP Essential Resources.
+    /// Заодно импортирует TMP Essentials, создаёт TMP-шрифты (PT Sans, IBM Plex Mono) и тексты пролога.
+    /// Запуск: меню Overworked → P1 → Build Main Menu.
     /// Повторный запуск пересоздаёт только MainMenu Canvas; шрифты и тексты не перезаписывает.
     /// </summary>
     public static class MainMenuBuilder
@@ -27,7 +27,6 @@ namespace Overworked.EditorTools
         static readonly Color TerminalGreen = new Color(0.36f, 0.85f, 0.45f);
         static readonly Color PromptColor = new Color(0.6f, 1f, 0.68f);
         const float FontSize = 30;
-        static readonly Color MenuText = new Color(0.78f, 0.8f, 0.76f);
 
         const string TmpEssentials = "Packages/com.unity.ugui/Package Resources/TMP Essential Resources.unitypackage";
 
@@ -159,7 +158,7 @@ namespace Overworked.EditorTools
 
             // --- Меню
             var menu = Stretch(UI("Menu", canvasGo.transform));
-            var title = Text("Title", menu, mainFont, "OVERWORKED", 140, MenuText, TextAlignmentOptions.Center);
+            var title = Tmp("Title", menu, mainFont, "OVERWORKED", 140, MenuText, TextAlignmentOptions.Center);
             Place(title.rectTransform, new Vector2(0, 180), new Vector2(1400, 200));
             title.characterSpacing = 12;
 
@@ -183,7 +182,7 @@ namespace Overworked.EditorTools
             cvlg.childControlHeight = cvlg.childControlWidth = true;
             cvlg.childForceExpandHeight = false;
 
-            var output = Text("Output", content, monoFont, "", FontSize, TerminalGreen, TextAlignmentOptions.TopLeft);
+            var output = Tmp("Output", content, monoFont, "", FontSize, TerminalGreen, TextAlignmentOptions.TopLeft);
             output.lineSpacing = 8;
 
             var row = UI("InputRow", content);
@@ -192,7 +191,7 @@ namespace Overworked.EditorTools
             hlg.childControlHeight = hlg.childControlWidth = true;
             hlg.childForceExpandWidth = false;
             row.gameObject.AddComponent<LayoutElement>().minHeight = FontSize * 1.5f;
-            var prompt = Text("Prompt", row, monoFont, "Enter your name:", FontSize, PromptColor, TextAlignmentOptions.Left);
+            var prompt = Tmp("Prompt", row, monoFont, "Enter your name:", FontSize, PromptColor, TextAlignmentOptions.Left);
             var input = NameInput(row, monoFont);
 
             var prologue = terminal.gameObject.AddComponent<PrologueTerminal>();
@@ -214,7 +213,7 @@ namespace Overworked.EditorTools
 
             var area = Stretch(UI("Text Area", go.transform));
             area.gameObject.AddComponent<RectMask2D>();
-            var text = Text("Text", area, font, "", FontSize, PromptColor, TextAlignmentOptions.Left);
+            var text = Tmp("Text", area, font, "", FontSize, PromptColor, TextAlignmentOptions.Left);
             Stretch(text.rectTransform);
             text.richText = false;
 
@@ -233,68 +232,6 @@ namespace Overworked.EditorTools
             field.caretBlinkRate = 1.2f;
             field.selectionColor = new Color(TerminalGreen.r, TerminalGreen.g, TerminalGreen.b, 0.3f);
             return field;
-        }
-
-        static Button MenuButton(string name, RectTransform parent, TMP_FontAsset font, string label)
-        {
-            var rt = UI(name, parent);
-            rt.gameObject.AddComponent<LayoutElement>().preferredHeight = 80;
-            var img = rt.gameObject.AddComponent<Image>();
-            img.color = Color.white;
-            var btn = rt.gameObject.AddComponent<Button>();
-            var colors = btn.colors;
-            colors.normalColor = new Color(0.12f, 0.14f, 0.13f);
-            colors.highlightedColor = colors.selectedColor = new Color(0.24f, 0.29f, 0.26f);
-            colors.pressedColor = new Color(0.33f, 0.4f, 0.36f);
-            btn.colors = colors;
-            var t = Text("Label", rt, font, label, 44, MenuText, TextAlignmentOptions.Center);
-            Stretch(t.rectTransform);
-            return btn;
-        }
-
-        // ------------------------------------------------------------ помощники UI
-
-        static RectTransform UI(string name, Transform parent)
-        {
-            var go = new GameObject(name, typeof(RectTransform));
-            go.transform.SetParent(parent, false);
-            return (RectTransform)go.transform;
-        }
-
-        static RectTransform Stretch(RectTransform rt, float margin = 0f)
-        {
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
-            rt.offsetMin = new Vector2(margin, margin);
-            rt.offsetMax = new Vector2(-margin, -margin);
-            return rt;
-        }
-
-        static void Place(RectTransform rt, Vector2 pos, Vector2 size)
-        {
-            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = pos;
-            rt.sizeDelta = size;
-        }
-
-        static TextMeshProUGUI Text(string name, RectTransform parent, TMP_FontAsset font, string text, float size, Color color, TextAlignmentOptions align)
-        {
-            var t = UI(name, parent).gameObject.AddComponent<TextMeshProUGUI>();
-            t.font = font;
-            t.text = text;
-            t.fontSize = size;
-            t.color = color;
-            t.alignment = align;
-            t.raycastTarget = false;
-            return t;
-        }
-
-        /// <summary>Заполняет приватные [SerializeField]-поля компонента по именам.</summary>
-        static void Wire(Object target, params (string field, Object value)[] refs)
-        {
-            var so = new SerializedObject(target);
-            foreach (var (field, value) in refs) so.FindProperty(field).objectReferenceValue = value;
-            so.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }
