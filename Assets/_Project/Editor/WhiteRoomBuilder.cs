@@ -40,6 +40,10 @@ namespace Overworked.EditorTools
         [MenuItem("Overworked/P4/Build White Room")]
         public static void Run()
         {
+            // Сцену открываем ДО загрузки ассетов: OpenScene(Single) выгружает «неиспользуемые» ассеты,
+            // и загруженные раньше DialogueData превращаются в null — реплики в триггеры не попадали.
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+
             var square = PlayerSandboxBuilder.EnsureSquareSprite();
             var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
 
@@ -111,7 +115,8 @@ namespace Overworked.EditorTools
         static void BuildScene(Sprite square, TMP_FontAsset font, DialogueData intro, DialogueData creditsData,
             (float x, DialogueData lines, float hold, bool revealBed, bool lieDown)[] points)
         {
-            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            // Сцена уже открыта в Run (см. комментарий там) — повторный OpenScene снова выгрузил бы ассеты.
+            var scene = EditorSceneManager.GetActiveScene();
             foreach (var go in scene.GetRootGameObjects())
                 if (go.name is "Environment" or "Player" or "Cameras" or "WhiteRoom" or "WhiteRoomUI")
                     Object.DestroyImmediate(go);
