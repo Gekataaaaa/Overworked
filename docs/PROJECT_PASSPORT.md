@@ -561,6 +561,9 @@ Assets/
 
 ## 32. Правила работы с git
 
+> Полные правила (документация, комментарии в коде, git, чеклист PR) —
+> в [CONTRIBUTING.md](../CONTRIBUTING.md). Ниже — краткая выжимка по git.
+
 - Один `.gitignore` для Unity (Library/, Temp/, Obj/, Logs/, UserSettings/, Build/).
 - Asset Serialization = Force Text, Visible Meta Files; `.meta` всегда коммитятся вместе с ассетом.
 - **Сцену этажа редактирует один человек одновременно** — договариваться в чате.
