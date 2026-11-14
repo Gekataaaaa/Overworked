@@ -4,20 +4,29 @@ using UnityEngine;
 namespace Overworked
 {
     /// <summary>
-    /// Проигрывает галлюцинации. ЗАГЛУШКА: сразу ставит рассудок и вызывает done — заполняет P4.
+    /// Точка входа для галлюцинаций (живёт в _Systems): сценарии и триггеры вызывают Play,
+    /// само проигрывание — в HallucinationEvent (визуал, звук, пульс, рассудок).
     /// </summary>
     public class HallucinationManager : SingletonBehaviour<HallucinationManager>
     {
+        /// <summary>Галлюцинация, которая идёт сейчас (null — никакой).</summary>
+        public HallucinationEvent Current { get; private set; }
+
         /// <summary>Проигрывает галлюцинацию h, по окончании вызывает done.</summary>
         public void Play(HallucinationEvent h, Action done = null)
         {
-            Debug.Log($"[Hallucinations] Play {h?.name}");
-            if (h != null)
+            Debug.Log($"[Hallucinations] Play {(h != null ? h.name : "null")}");
+            if (h == null)
             {
-                if (HeartbeatManager.Instance != null) HeartbeatManager.Instance.Spike(h.HeartbeatSpike, h.Duration);
-                if (SanityManager.Instance != null) SanityManager.Instance.SetSanity(h.SanityAfter);
+                done?.Invoke();
+                return;
             }
-            done?.Invoke();
+            Current = h;
+            h.Play(() =>
+            {
+                if (Current == h) Current = null;
+                done?.Invoke();
+            });
         }
     }
 }

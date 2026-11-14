@@ -18,6 +18,7 @@ F работает, только когда игрок управляет Дэн
 | `IsOn`, `Available` | включён ли, доступен ли |
 | `SetAvailable(bool)` | недоступный выключается и не включается |
 | `Toggle()` | то же, что F |
+| `Illuminates(point, maxDistance)` | светит ли на точку (впереди, в пределах луча) — силуэты |
 | `event OnToggled(bool on)` | для сценария «пока не включишь фонарик — дальше не пускает» |
 
 **Отладка:** `Sandbox_P4` (тёмный коридор), F — фонарик, L — доступность.
@@ -25,5 +26,5 @@ F работает, только когда игрок управляет Дэн
 **Зависит от:** PlayerController (позиция, `Facing`, `State`), GameInput, SanityManager, AudioManager.
 
 **Известные ограничения / TODO:**
-- Реакция силуэта на свет — в `SilhouetteBehaviour` (этап 2).
+- Реакция силуэта на свет — в `SilhouetteBehaviour` через `Illuminates(point, maxDistance)` (см. [Hallucinations.md](Hallucinations.md)).
 - Синглтон на сцену: у каждого этажа свой объект фонарика.

@@ -30,7 +30,6 @@ namespace Overworked.EditorTools
             var scene = EditorSceneManager.OpenScene(Scenes + "Floor_03.unity", OpenSceneMode.Single);
             var story = Group(Root("Story"));
             var props = Group(Root("Interactables"));
-            var square = SB.EnsureSquareSprite();
 
             // Ассеты грузим после OpenScene: открытие сцены выгружает загруженное раньше (см. MainMenuBuilder).
             var start = Load<DialogueData>("Dialogues/F3_Start");
@@ -62,11 +61,10 @@ namespace Overworked.EditorTools
                 new DialogueStep { Dialogue = openSpace });
 
             // 1.1 Стол Чарльза — описание при подходе (Inspectable). Записка по E — P2 (NoteInteractable).
-            var desk = SB.Rect(props, "CharlesDesk", square, new Vector2(-9f, FloorY + 0.55f), new Vector2(2.4f, 1.1f),
-                new Color(0.42f, 0.36f, 0.27f), 2);
+            // Сам стол нарисован на фоне этажа — заглушку-прямоугольник не создаём, только зону осмотра.
             var deskZone = new GameObject("CharlesDesk_Inspect");
-            deskZone.transform.SetParent(desk.transform.parent, false);
-            deskZone.transform.position = new Vector3(-9f, FloorY + 1.5f, 0);
+            deskZone.transform.SetParent(props.transform, false);
+            deskZone.transform.position = new Vector3(-10f, FloorY + 1.5f, 0);
             var deskCol = deskZone.AddComponent<BoxCollider2D>();
             deskCol.isTrigger = true;
             deskCol.size = new Vector2(3.5f, 4f);
