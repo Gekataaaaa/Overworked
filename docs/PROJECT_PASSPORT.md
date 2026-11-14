@@ -406,7 +406,9 @@ Scripts/
 │   ├── GameManager.cs            # CurrentFloor, GameState, глобальные ссылки
 │   ├── GameState.cs              # PlayerName, CurrentFloor, флаги прогресса
 │   ├── Bootstrap.cs              # создаёт постоянные системы (DontDestroyOnLoad)
-│   └── SceneTransitionManager.cs
+│   ├── SceneTransitionManager.cs
+│   ├── GameInput.cs              # доступ к действиям ввода: Move, Interact, Flashlight, Phone, Pause
+│   └── DebugHotkeys.cs           # F1–F6: переходы по сценам (только редактор / dev-билд)
 ├── Player/
 │   ├── PlayerController.cs       # движение, блокировка ввода, сбой ввода, «только вправо»
 │   ├── PlayerAnimator.cs
@@ -442,7 +444,6 @@ Scripts/
 ├── Story/
 │   ├── ScriptedSequence.cs       # цепочка шагов сцены (раздел 17)
 │   ├── SequenceTrigger.cs
-│   ├── PrologueTerminal.cs       # пролог и ввод имени
 │   ├── HudOnboarding.cs          # поэтапное появление HUD
 │   ├── NoReturnTrigger.cs        # запрет возврата с уведомлением
 │   ├── FinalScreamer.cs
@@ -476,6 +477,7 @@ Scripts/
     ├── FadeController.cs
     ├── ToastUI.cs
     ├── MainMenuUI.cs
+    ├── PrologueTerminal.cs       # пролог и ввод имени (в UI/, а не Story/: пролог делает P1)
     └── PauseMenuUI.cs
 ```
 

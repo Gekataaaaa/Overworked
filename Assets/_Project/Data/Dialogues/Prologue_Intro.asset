@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ef5854df93ba94c8ebc215135562f9, type: 3}
+  m_Name: Prologue_Intro
+  m_EditorClassIdentifier: Overworked::Overworked.DialogueData
+  Lines:
+  - Speaker: 2
+    Text: '<color=#E0E0E0>WTTS v.4.02 — Work Time Tracking System (tty1)</color>'
+  - Speaker: 2
+    Text: 
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Started Night Shift Service.'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Reached target Floor 03.'
+  - Speaker: 2
+    Text: '[ <color=#FFC857>WARN</color> ] Operator not registered.'
+  - Speaker: 2
+    Text: 
+  - Speaker: 2
+    Text: Night shift requires mandatory operator registration.
+  - Speaker: 2
+    Text: Enter your name to confirm access.
+  - Speaker: 2
+    Text: 
+  - Speaker: 2
+    Text: 'Enter your name:'

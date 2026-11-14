@@ -14,6 +14,8 @@ namespace Overworked
         /// <summary>Загружает сцену этажа: 3, 2, 1; 0 = WhiteRoom.</summary>
         public void LoadFloor(int floor)
         {
+            // Во время перехода вызов проигнорируется — не меняем этаж в состоянии зря.
+            if (SceneTransitionManager.Instance.IsLoading) return;
             State.CurrentFloor = floor;
             string scene = floor == 0 ? "WhiteRoom" : $"Floor_0{floor}";
             Debug.Log($"[Core] LoadFloor({floor}) → {scene}");

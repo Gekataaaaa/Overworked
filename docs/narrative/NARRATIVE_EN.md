@@ -48,16 +48,21 @@
 
 # PROLOGUE. LOGIN
 
-After pressing "Start Game", the screen goes dark. An old corporate terminal window appears, with dim green text and a blinking cursor:
+After pressing "Start Game", the screen goes dark. An old corporate terminal appears, styled as a Linux console: black screen, dim green monospace text, a blinking cursor. The text is typed out line by line:
 
 **SYSTEM:**  
-WORK TIME TRACKING SYSTEM v.4.02  
+WTTS v.4.02 — Work Time Tracking System (tty1)  
+[  OK  ] Started Night Shift Service.  
+[  OK  ] Reached target Floor 03.  
+[ WARN ] Operator not registered.  
 Night shift requires mandatory operator registration.  
-Enter your name to confirm access: [ _ ]
+Enter your name to confirm access.  
+Enter your name: █
 
 The player types a name and presses Enter. The system saves it as {name}.
 
 **SYSTEM:**  
+[  OK  ] Operator registered: {name}  
 WELCOME TO THE STAFF, {name}.  
 DO NOT LEAVE YOUR WORKPLACE.
 
