@@ -50,6 +50,18 @@ namespace Overworked
         /// <summary>Доступен ли фонарик (на Floor_03 — нет).</summary>
         public bool Available { get; private set; }
 
+        /// <summary>
+        /// Светит ли фонарик на точку: включён, точка впереди по взгляду Дэнни, не дальше maxDistance
+        /// и не дальше луча (силуэт в Галлюцинации 2 реагирует на свет).
+        /// </summary>
+        public bool Illuminates(Vector3 point, float maxDistance)
+        {
+            var player = PlayerController.Instance;
+            if (!IsOn || player == null) return false;
+            float dx = (point.x - transform.position.x) * player.Facing;
+            return dx > 0f && dx <= Mathf.Min(maxDistance, range);
+        }
+
         float dropoutUntil;
 
         protected override void Awake()

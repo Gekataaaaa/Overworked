@@ -104,7 +104,7 @@ namespace Overworked
         void Check(ObjectiveData o)
         {
             // Закрыли не то задание, что на карточке (шаг сделан заранее) — карточку не трогаем.
-            if (!hasCard || o != shown) return;
+            if (!hasCard || !ObjectiveManager.Same(o, shown)) return;
             checkMark.enabled = true;
             StopAllCoroutines();
             StartCoroutine(HideLater());

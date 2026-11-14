@@ -61,7 +61,7 @@ namespace Overworked
             if (next == target) return;
             ClearOutline();
             target = next;
-            if (target != null) BuildOutline(target.gameObject);
+            if (target != null) BuildOutline(Visual(target));
             prompt.gameObject.SetActive(target != null);
         }
 
@@ -76,11 +76,15 @@ namespace Overworked
             var text = $"[E] {((IInteractable)target).Prompt}";
             if (prompt.text != text) prompt.text = text;
             // Каждый кадр: объект может двигаться, сжиматься (бормочущий человек).
-            var b = Bounds(target.gameObject);
+            var b = Bounds(Visual(target));
             prompt.transform.position = new Vector3(b.center.x, b.max.y + promptOffset, 0f);
         }
 
         void OnDisable() => SetTarget(null);
+
+        // Что показывать: сам объект или настоящий объект за невидимой заглушкой (HighlightTarget).
+        static GameObject Visual(Component c) =>
+            c.TryGetComponent(out HighlightTarget ht) && ht.target != null ? ht.target : c.gameObject;
 
         // Верх объекта: коллайдер (он есть у всех IInteractable), иначе спрайты.
         static Bounds Bounds(GameObject go)

@@ -193,10 +193,10 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 - [x] ScriptableObject-ассеты **всех** сообщений, диалогов и заданий из NARRATIVE_EN.
 
 **P4:**
-- [ ] `HallucinationManager` + `HallucinationEvent`: звук + визуал + спайк + `SetSanity`.
-- [ ] `SilhouetteBehaviour`: исчезает при подходе / свете фонарика.
-- [ ] `LightFlicker`, `PostFXController` (виньетка, шум, аберрация, размытие), рывок камеры (Impulse).
-- [ ] Заготовки 5 галлюцинаций (H1–H4 и финальная) как префабы.
+- [x] `HallucinationManager` + `HallucinationEvent`: звук + визуал + спайк + `SetSanity` (визуал — квадраты-заглушки).
+- [x] `SilhouetteBehaviour`: исчезает при подходе / свете фонарика.
+- [x] `LightFlicker` (пока не прикреплён к лампам); [ ] `PostFXController` (виньетка, шум, аберрация, размытие), рывок камеры (Impulse).
+- [x] Заготовки 5 галлюцинаций (H1–H4 и финальная) как префабы (`Prefabs/Hallucinations/`, заглушки).
 
 **Синк 2 (Ч7):** **вертикальный срез** — Floor_03 на серых прямоугольниках проходится
 от пролога до лестницы (P3 собирает в своей Sandbox, P1 проверяет).

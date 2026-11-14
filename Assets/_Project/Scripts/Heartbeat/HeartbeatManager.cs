@@ -22,6 +22,9 @@ namespace Overworked
         [SerializeField] float screamerMinBpm = 160f;
         [Tooltip("Верхняя граница пульса на пике скримера — абсолютный потолок, выше не поднимают и спайки")]
         [SerializeField] float screamerMaxBpm = 180f;
+        [Tooltip("Потолок спайка галлюцинации (резкое появление силуэта, вспышка): выше спайк пульс не поднимает. " +
+                 "Скример (PlayScreamer) — отдельно, до screamerMaxBpm")]
+        [SerializeField] float spikeMaxBpm = 140f;
 
         [Header("Как у человека")]
         [Tooltip("Постоянная времени роста пульса, сек: за это время проходится ~63 % пути вверх")]
@@ -75,6 +78,9 @@ namespace Overworked
         /// <summary>Максимальный пульс от рассудка (рассудок 0).</summary>
         public float MaxBpm => maxBpm;
 
+        /// <summary>Потолок спайка галлюцинации (140).</summary>
+        public float SpikeMaxBpm => spikeMaxBpm;
+
         /// <summary>Абсолютный потолок пульса (пик скримера).</summary>
         public float ScreamerMaxBpm => screamerMaxBpm;
 
@@ -113,7 +119,7 @@ namespace Overworked
 
         /// <summary>
         /// Временно поднять пульс на addBpm (галлюцинация): за spikeRise до пика, дальше
-        /// по кривой успокоения спадает к концу seconds. Выше screamerMaxBpm не поднимается.
+        /// по кривой успокоения спадает к концу seconds. Выше spikeMaxBpm (140) спайк не поднимает.
         /// Новый спайк не ослабляет более сильный текущий.
         /// </summary>
         public void Spike(float addBpm, float seconds)
@@ -227,7 +233,8 @@ namespace Overworked
             else
             {
                 Approach(SanityTarget());
-                Bpm = Mathf.Min(screamerMaxBpm, level + Wobble());
+                // Вне скримера пульс не выше потолка спайка (140) — даже с колебаниями.
+                Bpm = Mathf.Min(Mathf.Min(screamerMaxBpm, spikeMaxBpm), level + Wobble());
             }
 
             if (Bpm <= 0f) { beatPhase = 0f; return; }
@@ -319,7 +326,13 @@ namespace Overworked
 
         float Sanity01 => SanityManager.Instance != null ? SanityManager.Instance.Current01 : 1f;
 
-        float SanityTarget() => Mathf.Min(screamerMaxBpm, Mathf.Lerp(maxBpm, minBpm, Sanity01) + CurrentSpike());
+        float SanityTarget()
+        {
+            float baseBpm = Mathf.Lerp(maxBpm, minBpm, Sanity01);
+            // Спайк галлюцинации упирается в spikeMaxBpm, но не опускает пульс, если он уже выше.
+            float spiked = Mathf.Min(baseBpm + CurrentSpike(), Mathf.Max(baseBpm, spikeMaxBpm));
+            return Mathf.Min(screamerMaxBpm, spiked);
+        }
 
         /// <summary>
         /// Плавные колебания в пределах ±wobbleAmount. Perlin редко доходит до краёв,
