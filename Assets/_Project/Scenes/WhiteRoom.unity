@@ -4809,10 +4809,10 @@ MonoBehaviour:
   introLines: {fileID: 11400000, guid: d5f2c4be72be1ee489cc71c21f707789, type: 2}
   debugShowHorrorHud: 1
   bedPoint: {fileID: 1334824019}
-  heartFadeTime: 14
-  hospitalSoundsDelay: 2.5
-  flatlineBeforeWhite: 2
-  whiteFadeTime: 4
+  heartFadeTime: 22
+  hospitalSoundsDelay: 3.5
+  flatlineBeforeWhite: 3.5
+  whiteFadeTime: 7
   whiteOverlay: {fileID: 357996920}
   credits: {fileID: 1354140058}
   creditsText: {fileID: 636776337}

@@ -104,7 +104,11 @@ namespace Overworked
             if (openWindow == null || Time.frameCount == openedFrame) return;
             // Закрываем в LateUpdate: в Update этого кадра пауза (Esc) и InteractionSystem (E) уже видели
             // заблокированного игрока — то же нажатие не откроет паузу и не возьмёт соседний предмет.
-            if (ClosePressed()) CloseWindow();
+            if (ClosePressed())
+            {
+                UiSounds.Click();
+                CloseWindow();
+            }
         }
 
         static bool ClosePressed()

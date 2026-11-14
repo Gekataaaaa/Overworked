@@ -27,7 +27,7 @@ HUD скрыт, пульс Белой комнаты (`HeartbeatManager.EnterWhi
 | `WhiteRoomTrigger` | точка на пути (Collider2D, Is Trigger): реплики, `reveal` (проявить спрайты), `holdPlayer` (остановка, сек), `lieDown` |
 | `HospitalSounds` | заглушки звуков: писк монитора и непрерывный сигнал (генерируются при старте) |
 
-**Настройки (`WhiteRoomSequence`):** `introDelay`, `heartFadeTime` (14 с), `hospitalSoundsDelay`,
+**Настройки (`WhiteRoomSequence`):** `introDelay`, `heartFadeTime` (в сцене 22 с; смерть удлинена по решению команды — ещё `flatlineBeforeWhite` 3.5, `whiteFadeTime` 7, `hospitalSoundsDelay` 3.5), `hospitalSoundsDelay`,
 `flatlineBeforeWhite`, `whiteFadeTime`, `creditsTime` (пропуск любой клавишей после половины),
 свои клипы `monitorBeep`, `ventilatorLoop`, `flatlineLoop` (пусто — заглушки; `ventilatorLoop` пусто — ИВЛ не звучит), громкости.
 

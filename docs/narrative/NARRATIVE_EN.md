@@ -618,8 +618,7 @@ Danny walks closer to the bed.
 
 The pulse slowly drops: 40 → 30 → 20 → 10.
 
-**DANNY:** {name}…  
-**DANNY:** Thank you for staying with me till the end.
+**DANNY:** {name}…
 
 Danny lies down on the bed. This happens automatically when he gets close.
 

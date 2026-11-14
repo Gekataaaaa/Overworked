@@ -102,7 +102,11 @@ namespace Overworked
             // Клик по кнопке UI (например, по кнопке телефона) — не пропуск строки.
             bool click = mouse != null && mouse.leftButton.wasPressedThisFrame
                          && (EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject());
-            if (key || click) skipPressed = true;
+            if (key || click)
+            {
+                skipPressed = true;
+                UiSounds.Click();
+            }
         }
 
         /// <summary>Проигрывает все строки по очереди, затем вызывает done.</summary>
@@ -122,6 +126,7 @@ namespace Overworked
         public void Stop()
         {
             queue.Clear();
+            UiSounds.TypingStop();
             if (routine != null) StopCoroutine(routine);
             routine = null;
             if (group != null) group.alpha = 0f;
@@ -175,11 +180,15 @@ namespace Overworked
                 while (shown < total && !skipPressed)
                 {
                     shown += charsPerSecond * Time.deltaTime;
-                    text.maxVisibleCharacters = Mathf.Min(total, Mathf.FloorToInt(shown));
+                    int visible = Mathf.Min(total, Mathf.FloorToInt(shown));
+                    // Звук «бегущего текста» (из Tiny UFO) играет, пока появляются новые буквы.
+                    if (visible > text.maxVisibleCharacters) UiSounds.TypingTick();
+                    text.maxVisibleCharacters = visible;
                     yield return null;
                 }
             }
             text.maxVisibleCharacters = int.MaxValue;
+            UiSounds.TypingStop();
             skipPressed = false;
 
             float hold = holdBase + holdPerChar * total;

@@ -111,7 +111,7 @@
 | 4 | `WR_03` | D | DANNY ×2 «I kept thinking…» | Зона ближе к кровати |
 | 5 | `WR_04` | D | DANNY «And then I could go home.» | После короткой паузы |
 | 6 | `WR_05` | D | DANNY «Funny. I can't even remember…» | Зона у кровати; пульс 40 → 10 |
-| 7 | `WR_06` | D | DANNY ×2, `{name}` «Thank you for staying with me till the end.» | Перед тем как Дэнни ложится |
+| 7 | `WR_06` | D | DANNY, `{name}` «{name}…» (фраза «Thank you for staying…» убрана по решению команды) | Перед тем как Дэнни ложится |
 
 ---
 

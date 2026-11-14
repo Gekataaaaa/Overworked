@@ -54,7 +54,7 @@ namespace Overworked.EditorTools
                 "One more report. One more shift. Just a little longer.");
             var home = Dialogue("WR_04", "And then I could go home.");
             var sleep = Dialogue("WR_05", "Funny. I can't even remember the last time I slept properly.");
-            var thanks = Dialogue("WR_06", "{name}…", "Thank you for staying with me till the end.");
+            var thanks = Dialogue("WR_06", "{name}…");
             var creditsData = Credits();
 
             BuildScene(square, font, intro, creditsData, new[]
