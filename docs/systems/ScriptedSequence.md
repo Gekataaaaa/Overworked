@@ -42,6 +42,7 @@
 | Teleport | поставить Дэнни в точку | — |
 | Event | любые вызовы через UnityEvent (открыть дверь `SetDoorLocked(false)`, свет…) | — |
 | Play Sequence | запустить другой сценарий | `Wait` |
+| Hud Onboarding | онбординг HUD Floor_03 (`HudOnboarding`) | закрытие подсказки управления |
 
 Цепочка «Макс, следом Босс»: `Message` (Max, **без** WaitUntilRead) → `Message` (Boss, с WaitUntilRead).
 
@@ -53,6 +54,13 @@
 | `Stop()` | оборвать на текущем шаге без `done` |
 | `IsPlaying`, `HasPlayed`, `Finished` | состояние и событие конца |
 | `ScriptedSequence.WaitCallback(start)` | помощник для своих шагов: ждать API в стиле `Action done` |
+
+**HudOnboarding** (Floor_03, сцена 1.0): компонент в группе `Story`. С `hideOnStart` прячет рассудок,
+пульс и телефон при старте этажа; шаг **Hud Onboarding** показывает рассудок + пульс → телефон →
+подсказку управления (паузы `firstDelay`, `stepDelay`, звук `appearClip`) и ждёт, пока игрок её закроет.
+Дэнни стоит всё это время. Пример начала Floor_03:
+`Mini Game` (печать отчёта) → `Dialogue` F3_Start → `Play Anim` StandUp → `Hud Onboarding`.
+В песочнице — клавиша **O**.
 
 **SequenceTrigger:** `requireCompleted` — срабатывать только после выполнения задания (сообщение
 после кухни), `blockIfCompleted` — не срабатывать после него, `once`.

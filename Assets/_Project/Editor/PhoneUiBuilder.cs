@@ -333,7 +333,7 @@ namespace Overworked.EditorTools
 
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             foreach (var go in scene.GetRootGameObjects())
-                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester" or "HudTester" or "StoryDemo") Object.DestroyImmediate(go);
+                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester" or "HudTester" or "StoryDemo" or "HudOnboarding") Object.DestroyImmediate(go);
 
             const float halfWidth = 15f, floorY = -4.2f, top = 5.65f, bottom = -5.65f;
             var env = new GameObject("Environment");
@@ -384,12 +384,20 @@ namespace Overworked.EditorTools
                 darr.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<DialogueData>(TestDialogues[i]);
             dso.ApplyModifiedPropertiesWithoutUndo();
 
-            new GameObject("HudTester").AddComponent<HudTester>();
+            // Онбординг в песочнице не прячет HUD при старте — запускается клавишей O у HudTester.
+            var onboarding = new GameObject("HudOnboarding").AddComponent<HudOnboarding>();
+            var oso = new SerializedObject(onboarding);
+            oso.FindProperty("hideOnStart").boolValue = false;
+            oso.ApplyModifiedPropertiesWithoutUndo();
+            var hudTester = new GameObject("HudTester").AddComponent<HudTester>();
+            var hso = new SerializedObject(hudTester);
+            hso.FindProperty("onboarding").objectReferenceValue = onboarding;
+            hso.ApplyModifiedPropertiesWithoutUndo();
             BuildStoryDemo(square, floorY);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0), DialogueTester (Z/X/C, V), HudTester (N/H/J/K), StoryDemo (зона справа) готовы");
+            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0), DialogueTester (Z/X/C, V), HudTester (N/H/J/K/O), StoryDemo (зона справа) готовы");
         }
 
         /// <summary>

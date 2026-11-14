@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace Overworked
 {
@@ -44,7 +45,7 @@ namespace Overworked
         [Tooltip("Шкала рассудка (левый верх)")]
         [SerializeField] GameObject sanityRoot;
 
-        [Tooltip("Пульс (правый верх)")]
+        [Tooltip("Пульс (левый верх, под шкалой рассудка)")]
         [SerializeField] GameObject heartbeatRoot;
 
         /// <summary>Открыто окно на весь экран или подсказка управления — ввод принадлежит им.</summary>
@@ -67,6 +68,29 @@ namespace Overworked
             if (fullscreenRoot != null) fullscreenRoot.SetActive(false);
             if (controlsHintRoot != null) controlsHintRoot.SetActive(false);
             UpdateHudParts();
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
+        }
+
+        protected override void OnDestroy()
+        {
+            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+            base.OnDestroy();
+        }
+
+        void OnActiveSceneChanged(Scene from, Scene to)
+        {
+            // Новая сцена начинается с полного HUD: то, что спрятал онбординг или сценарий прошлой сцены,
+            // не должно переехать на следующий этаж (Continue, переход по лестнице). Сцена, которой HUD
+            // не нужен целиком (WhiteRoom), или онбординг прячут его заново в своём Start.
+            if (openWindow != null)
+            {
+                // Окно старой сцены: колбэк ссылается на уничтоженные объекты — закрываем без него.
+                onWindowClosed = null;
+                lockedByWindow = false;
+                CloseWindow();
+            }
+            if (hidden.Count == 0) return;
+            foreach (var part in new List<HudPart>(hidden)) SetHudVisible(part, true);
         }
 
         void Update()

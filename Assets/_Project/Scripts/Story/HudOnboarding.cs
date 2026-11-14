@@ -1,0 +1,101 @@
+using System;
+using System.Collections;
+using UnityEngine;
+
+namespace Overworked
+{
+    /// <summary>
+    /// Онбординг HUD в начале Floor_03 (нарратив, сцена 1.0): при старте этажа HUD спрятан, после реплик
+    /// Дэнни элементы появляются по очереди — рассудок и пульс, телефон, подсказка управления.
+    /// Когда игрок закрыл подсказку, онбординг заканчивается. Кладётся в группу Story сцены Floor_03,
+    /// запускается шагом сценария HudOnboarding (или <see cref="Play"/>).
+    /// </summary>
+    public class HudOnboarding : MonoBehaviour
+    {
+        [Tooltip("Спрятать HUD при старте сцены (на Floor_03 — да; в песочнице можно выключить)")]
+        [SerializeField] bool hideOnStart = true;
+
+        [Tooltip("Пауза перед первым элементом, секунды")]
+        [SerializeField] float firstDelay = 0.5f;
+
+        [Tooltip("Пауза между появлением элементов, секунды")]
+        [SerializeField] float stepDelay = 1.2f;
+
+        [Tooltip("Звук появления элемента HUD (может быть пустым)")]
+        [SerializeField] AudioClip appearClip;
+
+        /// <summary>Онбординг сейчас идёт.</summary>
+        public bool IsPlaying { get; private set; }
+
+        // Части, которые прячутся до онбординга. Карточка задания не входит: её показывает ObjectiveUI,
+        // когда задание выдано, а первое задание появляется уже после онбординга.
+        static readonly HudPart[] Parts = { HudPart.Sanity, HudPart.Heartbeat, HudPart.Phone };
+
+        IEnumerator Start()
+        {
+            if (!hideOnStart) yield break;
+            // При смене сцены UIManager сбрасывает видимость HUD (activeSceneChanged). Прячем в Start
+            // и ещё раз кадром позже — так порядок событий загрузки сцены не важен.
+            HideAll();
+            yield return null;
+            if (!IsPlaying) HideAll();
+        }
+
+        /// <summary>Мгновенно прячет рассудок, пульс и телефон.</summary>
+        public void HideAll()
+        {
+            if (UIManager.Instance == null) return;
+            foreach (var part in Parts) UIManager.Instance.SetHudVisible(part, false);
+        }
+
+        /// <summary>
+        /// Проигрывает онбординг: рассудок + пульс → телефон → подсказка управления (ждёт закрытия) → done.
+        /// Дэнни стоит всё это время; управление возвращается, только если его заблокировал сам онбординг.
+        /// </summary>
+        public void Play(Action done = null)
+        {
+            if (IsPlaying)
+            {
+                Debug.LogWarning("[Story] HudOnboarding уже идёт");
+                return;
+            }
+            StartCoroutine(Run(done));
+        }
+
+        IEnumerator Run(Action done)
+        {
+            IsPlaying = true;
+            Debug.Log("[Story] HUD onboarding");
+            var ui = UIManager.Instance;
+            var player = PlayerController.Instance;
+            bool locked = player != null && player.State == PlayerState.Normal;
+            if (locked) player.SetInputLocked(true);
+
+            HideAll();
+            yield return new WaitForSeconds(firstDelay);
+
+            if (ui != null)
+            {
+                ui.SetHudVisible(HudPart.Sanity, true);
+                ui.SetHudVisible(HudPart.Heartbeat, true);
+            }
+            PlayAppear();
+            yield return new WaitForSeconds(stepDelay);
+
+            if (ui != null) ui.SetHudVisible(HudPart.Phone, true);
+            PlayAppear();
+            yield return new WaitForSeconds(stepDelay);
+
+            if (ui != null) yield return ScriptedSequence.WaitCallback(cb => ui.ShowControlsHint(cb));
+
+            if (locked && PlayerController.Instance != null) PlayerController.Instance.SetInputLocked(false);
+            IsPlaying = false;
+            done?.Invoke();
+        }
+
+        void PlayAppear()
+        {
+            if (appearClip != null && AudioManager.Instance != null) AudioManager.Instance.PlaySfx(appearClip);
+        }
+    }
+}

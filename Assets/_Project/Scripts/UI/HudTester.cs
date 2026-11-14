@@ -5,8 +5,8 @@ namespace Overworked
 {
     /// <summary>
     /// Отладка HUD в Sandbox_P3: N — записка на весь экран, H — подсказка управления,
-    /// J — спрятать/показать весь HUD, K — тост. В консоль пишется, когда окно закрыто.
-    /// В сцены этажей не класть.
+    /// J — спрятать/показать весь HUD, K — тост, O — онбординг HUD Floor_03.
+    /// В консоль пишется, когда окно закрыто. В сцены этажей не класть.
     /// </summary>
     public class HudTester : MonoBehaviour
     {
@@ -16,6 +16,9 @@ namespace Overworked
 
         [Tooltip("Текст тестового тоста")]
         [SerializeField] string toastText = "Received: Charles's note.";
+
+        [Tooltip("Онбординг HUD для клавиши O")]
+        [SerializeField] HudOnboarding onboarding;
 
         bool hudVisible = true;
 
@@ -35,6 +38,8 @@ namespace Overworked
                 ui.SetHudVisible(hudVisible);
             }
             if (kb[Key.K].wasPressedThisFrame) ui.ShowToast(toastText);
+            if (kb[Key.O].wasPressedThisFrame && onboarding != null)
+                onboarding.Play(() => Debug.Log("[Story] онбординг HUD закончен"));
         }
     }
 }
