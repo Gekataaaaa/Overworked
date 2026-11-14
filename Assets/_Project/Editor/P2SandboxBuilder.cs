@@ -64,14 +64,17 @@ namespace Overworked.EditorTools
             Room(corridor, HalfWidth, new Color(0.3f, 0.34f, 0.31f), new Color(0.19f, 0.21f, 0.2f));
             var corridorCam = MakeCam(cameras, cameraPrefab, "CM Corridor", Bounds(corridor, HalfWidth + 1f));
 
-            // Комнаты ниже коридора — как на этажах (ProjectSetup: y = -20, -40)
-            var roomA = Child(env, "Room_A");
+            // Структура как у каркаса этажа P1 (Environment/Rooms/Room_X, Corridor/Doors/Door_Room_X,
+            // Cameras/CM Room_X): двери потом разводит тот же инструмент, что и на этажах (RoomWiring).
+            var rooms = Child(env, "Rooms");
+            var doors = Child(corridor, "Doors");
+            var roomA = Child(rooms, "Room_A");
             roomA.transform.position = new Vector3(0, -20, 0);
             Room(roomA, RoomHalfWidth, new Color(0.25f, 0.3f, 0.34f), new Color(0.16f, 0.18f, 0.2f));
             var camA = MakeCam(cameras, cameraPrefab, "CM Room_A", Bounds(roomA, RoomHalfWidth + 1f));
             camA.SetActive(false);
 
-            var roomB = Child(env, "Room_B");
+            var roomB = Child(rooms, "Room_B");
             roomB.transform.position = new Vector3(0, -40, 0);
             Room(roomB, RoomHalfWidth, new Color(0.3f, 0.28f, 0.33f), new Color(0.18f, 0.17f, 0.2f));
             var camB = MakeCam(cameras, cameraPrefab, "CM Room_B", Bounds(roomB, RoomHalfWidth + 1f));
@@ -97,22 +100,16 @@ namespace Overworked.EditorTools
             Set(pass.AddComponent<PickupInteractable>(), ("prompt", "Pick up pass"),
                 ("receivedToast", "Received: Max's pass"), ("setsFlag", "MaxPass"), ("completesObjective", takePass));
 
-            // 3. Декоративная запертая дверь
-            var fake = Thing(inter, "Door_Locked", -9f, new Vector2(1.4f, 2.5f), new Color(0.38f, 0.35f, 0.3f), "LOCKED");
-            Set(fake.AddComponent<DoorInteractable>(), ("lockedMessage", "This doesn't look like the kitchen."));
+            // 3. Декоративная дверь (Door_<число>): просто картинка, E на ней нет
+            Thing(doors, "Door_-9", -9f, new Vector2(1.4f, 2.5f), new Color(0.38f, 0.35f, 0.3f), "NO ENTRY");
 
-            // 4. Дверь в комнату A и выход из неё
-            var doorA = Thing(inter, "Door_Room_A", -3f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "ROOM A");
-            var entryA = Point(roomA, "EntryPoint", -RoomHalfWidth + 2.5f);
-            var backA = Point(corridor, "Door_Room_A_Out", -3f);
-            Set(doorA.AddComponent<DoorInteractable>(), ("prompt", "Enter room A"), ("target", entryA.transform),
-                ("cameraOn", camA), ("cameraOff", corridorCam));
-            var exitA = Thing(roomA, "ExitDoor", -RoomHalfWidth + 1f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "EXIT");
-            Set(exitA.AddComponent<DoorInteractable>(), ("prompt", "Exit"), ("target", backA.transform),
-                ("cameraOn", corridorCam), ("cameraOff", camA));
+            // 4. Комната A: дверь в коридоре, точка входа, дверь выхода
+            Thing(doors, "Door_Room_A", -3f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "ROOM A");
+            Point(roomA, "EntryPoint", 0f);
+            Thing(Child(roomA, "ExitDoor"), "Door", 0f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "EXIT");
 
             // В комнате A: ящик с ключом и бормочущий человек
-            var drawer = Thing(roomA, "Drawer_Key", 2f, new Vector2(1.6f, 1.2f), new Color(0.4f, 0.32f, 0.25f), "DRAWER");
+            var drawer = Thing(roomA, "Drawer_Key", 3f, new Vector2(1.6f, 1.2f), new Color(0.4f, 0.32f, 0.25f), "DRAWER");
             Set(drawer.AddComponent<DrawerInteractable>(), ("prompt", "Open drawer"), ("contentsDialogue", drawerLines),
                 ("receivedToast", "Received: Key to room B"), ("setsFlag", "KeyB"), ("completesObjective", findKey));
             var person = Thing(roomA, "Person", 6f, new Vector2(0.9f, 1.6f), new Color(0.1f, 0.1f, 0.1f), null);
@@ -123,26 +120,25 @@ namespace Overworked.EditorTools
             var reader = turnstile.AddComponent<CardReaderMiniGame>();
             Set(turnstile.AddComponent<TurnstileInteractable>(), ("cardReader", reader));
 
-            // 6. Дверь в комнату B на ключ KeyB; попытка без ключа выдаёт задание
-            var doorB = Thing(inter, "Door_Room_B", 12f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "ROOM B");
-            var entryB = Point(roomB, "EntryPoint", -RoomHalfWidth + 2.5f);
-            var backB = Point(corridor, "Door_Room_B_Out", 12f);
-            var doorBComp = doorB.AddComponent<DoorInteractable>();
-            Set(doorBComp, ("prompt", "Enter room B"), ("target", entryB.transform), ("cameraOn", camB), ("cameraOff", corridorCam),
-                ("doorLocked", true), ("unlockFlag", "KeyB"), ("lockedMessage", "Locked. The key must be in room A."));
-            var exitB = Thing(roomB, "ExitDoor", -RoomHalfWidth + 1f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "EXIT");
-            Set(exitB.AddComponent<DoorInteractable>(), ("prompt", "Exit"), ("target", backB.transform),
-                ("cameraOn", corridorCam), ("cameraOff", camB));
+            // 6. Комната B — на ключ KeyB; попытка без ключа выдаёт задание
+            var doorB = Thing(doors, "Door_Room_B", 12f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "ROOM B");
+            Point(roomB, "EntryPoint", 0f);
+            Thing(Child(roomB, "ExitDoor"), "Door", 0f, new Vector2(1.4f, 2.5f), new Color(0.55f, 0.47f, 0.3f), "EXIT");
+
+            // Разводка комнат — тем же инструментом, что и этажи
+            RoomWiring.Wire(scene);
+            var doorBComp = doorB.GetComponent<DoorInteractable>();
+            Set(doorBComp, ("doorLocked", true), ("unlockFlag", "KeyB"), ("lockedMessage", "Locked. The key must be in room A."));
             // Задание «найди ключ» — при первой попытке открыть запертую дверь
             var giveKeyTask = doorB.AddComponent<ObjectiveGiver>();
             Set(giveKeyTask, ("objective", findKey));
             UnityEditor.Events.UnityEventTools.AddPersistentListener(doorBComp.onLockedTried, giveKeyTask.Give);
             // Задание «сыграй» — при входе в комнату B
-            var playTask = Thing(roomB, "PlayObjective", -RoomHalfWidth + 2.5f, new Vector2(2f, 3f), Color.clear, null);
+            var playTask = Thing(roomB, "PlayObjective", 0f, new Vector2(2f, 3f), Color.clear, null);
             Set(playTask.AddComponent<ObjectiveTrigger>(), ("objective", play));
 
             // 7. Аркадный автомат с Tiny UFO
-            var arcade = Thing(roomB, "Arcade", 3f, new Vector2(1.4f, 2.6f), new Color(0.2f, 0.25f, 0.5f), "ARCADE");
+            var arcade = Thing(roomB, "Arcade", 4f, new Vector2(1.4f, 2.6f), new Color(0.2f, 0.25f, 0.5f), "ARCADE");
             var ufo = arcade.AddComponent<TinyUfoMiniGame>();
             Set(arcade.AddComponent<ArcadeInteractable>(), ("prompt", "Play"), ("miniGame", ufo), ("completesObjective", play));
 

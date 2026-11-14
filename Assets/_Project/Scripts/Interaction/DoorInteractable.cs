@@ -10,10 +10,22 @@ namespace Overworked
     /// или запертая дверь с текстом («This doesn't look like the kitchen.»).
     /// Запертую ключом дверь (Room_102) открывает флаг unlockFlag ("Key102").
     /// Комнаты лежат в той же сцене ниже коридора; у каждой своя CinemachineCamera, выключенная на старте.
+    /// Обычно двери достаточно поля room и направления: точки и камеры берутся из Room.
+    /// Поля target / cameraOn / cameraOff — для особых переходов без комнаты.
     /// </summary>
     public class DoorInteractable : InteractableBase
     {
-        [Header("Переход")]
+        /// <summary>Куда ведёт дверь комнаты.</summary>
+        public enum Direction { IntoRoom, OutToCorridor }
+
+        [Header("Комната")]
+        [Tooltip("Комната, в которую ведёт дверь коридора или из которой ведёт ExitDoor. Пусто — переход по полям ниже")]
+        [SerializeField] Room room;
+
+        [Tooltip("IntoRoom — дверь в коридоре, OutToCorridor — ExitDoor внутри комнаты")]
+        [SerializeField] Direction direction = Direction.IntoRoom;
+
+        [Header("Переход без комнаты")]
         [Tooltip("Куда поставить Дэнни: EntryPoint комнаты или точка у двери в коридоре. Пусто — дверь только заперта")]
         [SerializeField] Transform target;
 
@@ -46,7 +58,12 @@ namespace Overworked
         public UnityEvent onLockedTried;
 
         /// <summary>Сейчас заперта.</summary>
-        public bool IsLocked => target == null || (doorLocked && !(HasUnlockFlag));
+        public bool IsLocked => Target == null || (doorLocked && !HasUnlockFlag);
+
+        bool IntoRoom => room != null && direction == Direction.IntoRoom;
+        Transform Target => room == null ? target : IntoRoom ? room.EntryPoint : room.ReturnPoint;
+        GameObject CameraOn => room == null ? cameraOn : IntoRoom ? room.RoomCamera : room.CorridorCamera;
+        GameObject CameraOff => room == null ? cameraOff : IntoRoom ? room.CorridorCamera : room.RoomCamera;
 
         bool HasUnlockFlag => !string.IsNullOrEmpty(unlockFlag) && HasFlag(unlockFlag);
 
@@ -74,8 +91,14 @@ namespace Overworked
             LockPlayer(true);
             yield return Fade(true);
 
-            PlayerController.Instance.Teleport(target);
+            PlayerController.Instance.Teleport(Target);
             yield return SwitchCameras();
+            // Под затемнением: сценарий комнаты (галлюцинация, скример) стартует, пока экран чёрный.
+            if (room != null)
+            {
+                if (IntoRoom) room.MarkEntered();
+                else room.MarkExited();
+            }
 
             yield return Fade(false);
             LockPlayer(false);
@@ -100,11 +123,13 @@ namespace Overworked
             var savedBlend = brain != null ? brain.DefaultBlend : default;
             if (brain != null) brain.DefaultBlend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Styles.Cut, 0f);
 
-            if (cameraOff != null) cameraOff.SetActive(false);
-            if (cameraOn != null)
+            var on = CameraOn;
+            var off = CameraOff;
+            if (off != null) off.SetActive(false);
+            if (on != null)
             {
-                cameraOn.SetActive(true);
-                var vcam = cameraOn.GetComponent<CinemachineVirtualCameraBase>();
+                on.SetActive(true);
+                var vcam = on.GetComponent<CinemachineVirtualCameraBase>();
                 // Камера не помнит старую позицию — встаёт сразу на игрока, без доводки.
                 if (vcam != null) vcam.PreviousStateIsValid = false;
             }

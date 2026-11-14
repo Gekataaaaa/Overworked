@@ -28,9 +28,15 @@
 - `completesObjective`, `setsFlag` — что сделать после;
 - `onDone` (UnityEvent) — сюда сценарий P3 вешает следующее сообщение, галлюцинацию и т. п.
 
-**Дверь в комнату:** у двери в коридоре `target` = `Room_X/EntryPoint`, `cameraOn` = `CM Room_X`,
-`cameraOff` = `CM Corridor`; у `Room_X/ExitDoor` — наоборот, `target` — точка у двери в коридоре.
-Камера под затемнением переключается резко (без блендинга Cinemachine).
+**Комнаты (`Room`):** компонент на `Environment/Rooms/Room_X` — точка входа, точка возврата в коридор,
+камера комнаты и коридора, события `onEnter` / `onExit` (под затемнением), `Room.Current` (null — коридор)
+и `Room.OnRoomChanged`. Двери достаточно поля `room` и направления (`IntoRoom` у двери в коридоре,
+`OutToCorridor` у `ExitDoor`). Камера под затемнением переключается резко (без блендинга Cinemachine).
+Поля `target` / `cameraOn` / `cameraOff` — для перехода без комнаты.
+
+**Разводка этажей:** меню **Overworked → P2 → Wire Rooms On All Floors** — Floor_03 (кухня),
+Floor_02 (Room_201), Floor_01 (Room_101, Room_102): `Room`, двери входа и выхода, точки возврата.
+Декоративные двери коридора (`Door_<число>`) остаются картинками без E. Повторный запуск безопасен.
 
 **Флаги** — `GameState.Flags` (`InteractableBase.HasFlag` / `SetFlag`). Используемые: `MaxPass`, `Key102`.
 
