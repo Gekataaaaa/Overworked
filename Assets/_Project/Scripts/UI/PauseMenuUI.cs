@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Overworked
@@ -7,7 +8,8 @@ namespace Overworked
     /// <summary>
     /// Пауза по Esc: останавливает время и звук, блокирует Дэнни, показывает Resume / Main Menu / Quit.
     /// Префаб Prefabs/Systems/Resources/PauseMenu, Bootstrap кладёт его внутрь _Systems.
-    /// Не открывается в меню, во время перехода и пока ввод заблокирован (телефон, мини-игра, катсцена).
+    /// Не открывается в меню, во время перехода, пока ввод заблокирован (телефон, мини-игра, катсцена)
+    /// и пока поверх этажа загружена additive-сцена (Tiny UFO со своей паузой).
     /// </summary>
     public class PauseMenuUI : SingletonBehaviour<PauseMenuUI>
     {
@@ -49,6 +51,9 @@ namespace Overworked
             var player = PlayerController.Instance;
             // Нет игрока — это меню; заблокирован — открыт телефон или мини-игра, у них свой Esc.
             if (player == null || player.State != PlayerState.Normal) return false;
+            // Tiny UFO грузится additive-сценой поверх этажа и ловит Esc сам (своя пауза).
+            // Проверяем отдельно от блокировки игрока: её может снять кто-то другой посреди мини-игры.
+            if (SceneManager.sceneCount > 1) return false;
             return SceneTransitionManager.Instance == null || !SceneTransitionManager.Instance.IsLoading;
         }
 
