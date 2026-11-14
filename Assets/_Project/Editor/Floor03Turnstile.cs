@@ -64,6 +64,10 @@ namespace Overworked.EditorTools
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
             string previous = SceneManager.GetActiveScene().path;
 
+            // Сначала сцена, потом ассеты: OpenScene выгружает «неиспользуемые» ассеты, и загруженные
+            // до него тексты/задания превращались в null — в сцену сохранялись пустые ссылки.
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+
             // --- Тексты (NARRATIVE_EN, сцены 1.2–1.3)
             var denied = Dialogue(DeniedPath, (Speaker.Description, "ACCESS DENIED."), (Speaker.Danny, "What?.."));
             var granted = Dialogue(GrantedPath, (Speaker.Description, "ACCESS GRANTED."), (Speaker.Danny, "It worked. Sorry, Max."));
@@ -71,7 +75,6 @@ namespace Overworked.EditorTools
             var takePass = AssetDatabase.LoadAssetAtPath<ObjectiveData>(TakePassPath);
             if (takePass == null) Debug.LogWarning("[Setup] нет F3_TakeMaxPass (P3) — пропуск не закроет задание");
 
-            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             Transform env = null, interactables = null, staircaseRoot = null;
             foreach (var root in scene.GetRootGameObjects())
             {

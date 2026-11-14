@@ -59,6 +59,10 @@ namespace Overworked.EditorTools
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
             string previous = SceneManager.GetActiveScene().path;
 
+            // Сначала сцена, потом ассеты: OpenScene выгружает «неиспользуемые» ассеты, и загруженные
+            // до него тексты/задания превращались в null — в сцену сохранялись пустые ссылки.
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+
             // --- Тексты (NARRATIVE_EN, сцена 3.0)
             var mainExitText = Dialogue(MainExitPath,
                 (Speaker.Description, "The door is locked with an electronic lock. Behind the glass — absolute black emptiness. No street, no streetlights."),
@@ -67,7 +71,6 @@ namespace Overworked.EditorTools
                 (Speaker.Description, "The door is locked. The sign reads: \"BREAK ROOM. KEY IS IN ROOM 101.\""));
             var findKey = Objective(FindKeyPath, "F1_FindKey101", "Find the key in room 101.");
 
-            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             Transform corridor = null;
             foreach (var root in scene.GetRootGameObjects())
                 if (root.name == "Environment") corridor = root.transform.Find("Corridor");

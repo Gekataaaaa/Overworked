@@ -19,7 +19,12 @@ namespace Overworked
         /// <summary>Текущее задание или null.</summary>
         public ObjectiveData Current { get; private set; }
 
-        readonly HashSet<ObjectiveData> completed = new HashSet<ObjectiveData>();
+        // Выполненные — по Id, а не по ассету: два ассета с одним Id (сделаны в разных ветках) — одно задание.
+        readonly HashSet<string> completed = new HashSet<string>();
+
+        /// <summary>Одно ли это задание (по Id).</summary>
+        public static bool Same(ObjectiveData a, ObjectiveData b) =>
+            a != null && b != null && (a == b || a.Id == b.Id);
 
         /// <summary>
         /// Выдаёт новое задание. Повторная выдача текущего или уже выполненного ничего не делает —
@@ -27,7 +32,7 @@ namespace Overworked
         /// </summary>
         public void StartObjective(ObjectiveData o)
         {
-            if (o == null || o == Current || completed.Contains(o)) return;
+            if (o == null || Same(o, Current) || completed.Contains(o.Id)) return;
             Current = o;
             Debug.Log($"[Objectives] Start {o.Id}");
             OnStarted?.Invoke(o);
@@ -39,14 +44,17 @@ namespace Overworked
         /// </summary>
         public void Complete(ObjectiveData o)
         {
-            if (o == null || !completed.Add(o)) return;
+            if (o == null || !completed.Add(o.Id)) return;
             Debug.Log($"[Objectives] Complete {o.Id}");
-            if (Current == o) Current = null;
+            if (Same(Current, o)) Current = null;
             OnCompleted?.Invoke(o);
         }
 
         /// <summary>Выполнено ли задание.</summary>
-        public bool IsCompleted(ObjectiveData o) => o != null && completed.Contains(o);
+        public bool IsCompleted(ObjectiveData o) => o != null && completed.Contains(o.Id);
+
+        /// <summary>Выполнено ли задание с таким Id.</summary>
+        public bool IsCompleted(string id) => !string.IsNullOrEmpty(id) && completed.Contains(id);
 
         /// <summary>Сброс для нового прохождения (из главного меню).</summary>
         public void ResetAll()
