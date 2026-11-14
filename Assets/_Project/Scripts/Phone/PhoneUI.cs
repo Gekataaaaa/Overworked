@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Overworked
@@ -69,6 +70,10 @@ namespace Overworked
         [Tooltip("Имя контакта Boss в заголовке чата")]
         [SerializeField] string bossName = "Boss";
 
+        [Header("Печать")]
+        [Tooltip("Скорость печати новых сообщений, символов в секунду (0 — сразу)")]
+        [SerializeField] float charsPerSecond = 60f;
+
         [Header("Вибрация")]
         [Tooltip("Сколько секунд трясётся кнопка при новом сообщении")]
         [SerializeField] float shakeSeconds = 0.6f;
@@ -81,6 +86,10 @@ namespace Overworked
         readonly List<GameObject> bubbles = new List<GameObject>();
         Coroutine shake;
         Coroutine scrollRoutine;
+        Coroutine typingRoutine;
+        // Непрочитанные сообщения открытого чата: их пузыри печатаются по буквам, история — сразу.
+        readonly HashSet<MessageData> toType = new HashSet<MessageData>();
+        bool typingSkip;
         bool subscribed;
         // Кнопку разрешил HUD (онбординг Floor_03 может её спрятать). Видна она ещё и только при игроке.
         bool shownByHud = true;
@@ -128,6 +137,7 @@ namespace Overworked
         void Update()
         {
             UpdateButtonVisibility();
+            if (panel.activeSelf && typingRoutine != null && SkipPressed()) typingSkip = true;
             if (!panel.activeSelf || GameInput.Move == null) return;
             // Клавиатура: A/D (стрелки) переключают чат Max ↔ Boss. Игрок в это время стоит.
             if (!GameInput.Move.WasPressedThisFrame()) return;
@@ -150,8 +160,24 @@ namespace Overworked
         /// <summary>Спрятать окно.</summary>
         public void Hide()
         {
+            // Телефон закрыли посреди печати — печать и её звук останавливаем (откроют — чат перестроится).
+            if (typingRoutine != null) StopCoroutine(typingRoutine);
+            typingRoutine = null;
+            UiSounds.TypingStop();
             panel.SetActive(false);
         }
+
+        static bool SkipPressed()
+        {
+            var kb = Keyboard.current;
+            var mouse = Mouse.current;
+            return (GameInput.Interact != null && GameInput.Interact.WasPressedThisFrame())
+                   || (kb != null && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
+                   || (mouse != null && mouse.leftButton.wasPressedThisFrame);
+        }
+
+        /// <summary>Кнопка телефона на экране (для прозрачности HUD).</summary>
+        public RectTransform ButtonRect => phoneButton != null ? (RectTransform)phoneButton.transform : null;
 
         /// <summary>Показать или спрятать кнопку телефона (онбординг HUD).</summary>
         public void SetButtonVisible(bool visible)
@@ -189,7 +215,11 @@ namespace Overworked
             var mm = MessageManager.Instance;
             // Есть непрочитанные — MarkRead вызовет OnChanged → HandleChanged → RebuildChat.
             // Иначе перерисовываем сами. Так чат строится один раз, а не дважды.
-            if (mm != null && mm.HasUnread(sender)) mm.MarkRead(sender);
+            if (mm != null && mm.HasUnread(sender))
+            {
+                CollectUnread(sender);
+                mm.MarkRead(sender);
+            }
             else RebuildChat();
         }
 
@@ -206,19 +236,62 @@ namespace Overworked
             var mm = MessageManager.Instance;
             if (mm == null || !openChat.HasValue) return;
 
+            if (typingRoutine != null) StopCoroutine(typingRoutine);
+            typingRoutine = null;
+            UiSounds.TypingStop();
+
+            var typed = new List<GameObject>();
             foreach (var msg in mm.MessagesFrom(openChat.Value))
             {
                 if (msg.Lines == null) continue;
+                bool type = toType.Contains(msg);
                 foreach (var line in msg.Lines)
                 {
                     var bubble = Instantiate(bubbleTemplate, chatContent);
-                    bubble.SetActive(true);
                     bubble.GetComponentInChildren<TextMeshProUGUI>().text = TextFormatter.Format(line);
+                    // Новые пузыри включаются по одному, когда до них доходит печать.
+                    bubble.SetActive(!type);
+                    if (type) typed.Add(bubble);
                     bubbles.Add(bubble);
                 }
             }
+            toType.Clear();
             if (scrollRoutine != null) StopCoroutine(scrollRoutine);
             scrollRoutine = StartCoroutine(ScrollToBottom());
+            if (typed.Count > 0) typingRoutine = StartCoroutine(TypeBubbles(typed));
+        }
+
+        void CollectUnread(Sender sender)
+        {
+            var mm = MessageManager.Instance;
+            foreach (var m in mm.MessagesFrom(sender))
+                if (mm.IsUnread(m)) toType.Add(m);
+        }
+
+        IEnumerator TypeBubbles(List<GameObject> typed)
+        {
+            typingSkip = false;
+            // Ждём, пока прокрутка встанет вниз под уже показанную историю.
+            yield return null;
+            foreach (var bubble in typed)
+            {
+                if (bubble == null) continue;
+                bubble.SetActive(true);
+                var text = bubble.GetComponentInChildren<TextMeshProUGUI>();
+                text.maxVisibleCharacters = 0;
+                LayoutRebuilder.ForceRebuildLayoutImmediate(chatContent);
+                chatScroll.verticalNormalizedPosition = 0f;
+                yield return Typewriter.Type(text, charsPerSecond, () => typingSkip);
+            }
+            foreach (var bubble in typed)
+                if (bubble != null)
+                {
+                    bubble.SetActive(true);
+                    Typewriter.ShowAll(bubble.GetComponentInChildren<TextMeshProUGUI>());
+                }
+            LayoutRebuilder.ForceRebuildLayoutImmediate(chatContent);
+            chatScroll.verticalNormalizedPosition = 0f;
+            typingRoutine = null;
         }
 
         IEnumerator ScrollToBottom()
@@ -248,6 +321,7 @@ namespace Overworked
             // Сообщение пришло в открытый чат — игрок его видит, значит оно прочитано.
             if (MessageManager.Instance.HasUnread(openChat.Value))
             {
+                CollectUnread(openChat.Value);
                 MessageManager.Instance.MarkRead(openChat.Value);
                 return; // MarkRead снова вызовет HandleChanged
             }

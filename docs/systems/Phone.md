@@ -29,6 +29,13 @@ UI собирается меню **Overworked → P3 → Build Phone UI** (пе�
 | `PhoneManager.Instance.SetAvailable(bool)` | включить/выключить телефон (онбординг HUD). Обычно через `UIManager.SetHudVisible(HudPart.Phone, v)` — оно прячет и кнопку |
 | `UIManager.Instance.ShowToast(text)` | тост сверху по центру — см. [UIManager.md](UIManager.md) |
 
+**Шрифт телефона:** весь телефон (сообщения, заголовок, контакты, подсказка, кнопка) — пиксельный Press Start 2P (`Fonts/PressStart2P-Regular.ttf`, лицензия SIL OFL —
+`Fonts/PressStart2P-OFL.txt`, держать рядом со шрифтом и класть в билд). TMP-ассет `PressStart2P SDF`
+создаёт Build Phone UI; запасной шрифт — PT Sans (кириллица, глитч-символы Макса). Тост о новом сообщении — PT Sans (это общий тост, не телефон).
+
+**Печать:** новые (непрочитанные) сообщения при открытии чата печатаются по одному пузырю со звуком
+(`charsPerSecond` на `PhoneUI`, 60); уже прочитанная история появляется сразу. E/Space/клик — допечатать.
+
 **Правила:**
 - Цепочка «Макс, следом Босс» — два вызова `Deliver` подряд; при открытии телефон показывает чат
   самого раннего непрочитанного, переключиться — A/D или мышью.
@@ -44,7 +51,7 @@ UI собирается меню **Overworked → P3 → Build Phone UI** (пе�
 - Во время мини-игр (`MiniGameHost.IsOpen`) телефон не открывается.
 - Кнопка телефона видна только когда в сцене есть игрок (`PlayerController.Instance`): в меню и прологе её нет.
   В WhiteRoom HUD скрыт — сцена должна вызвать `UIManager.SetHudVisible(HudPart.Phone, false)`.
-- Звук вибрации — поле `vibrateClip` на `MessageManager`, пока пустое (звуки собирает P4).
-- В PT Sans нет символов из глитч-сообщений Max на Floor_01 (`▓▒░`, зачёркивание) — понадобится
-  fallback-шрифт, проверить при заполнении `F1_Max_*`.
+- Звук вибрации — `Audio/UI/Resources/UI_PhoneVibrate.wav` (сгенерирован: два «бзз» с дребезгом, 0.8 с),
+  играет через `AudioManager.PlaySfx`; свой клип можно поставить в поле `vibrateClip` на `MessageManager`.
+- Глитч-сообщения Max (`▓▒░`, зачёркивание) берут символы из запасного PT Sans — проверить, все ли есть.
 - `PhoneTester` — только для `Sandbox_P3`.

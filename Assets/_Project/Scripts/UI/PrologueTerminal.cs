@@ -132,6 +132,8 @@ namespace Overworked
                 if (shown.Count > maxBootLines) shown.RemoveAt(0);
                 output.text = string.Join("\n", shown);
                 if (skip) continue;
+                // Строка лога появилась целиком — короткий бип, как у консоли (UiSounds, P3).
+                UiSounds.SelectBlip();
                 float delay = Random.Range(bootLineDelay.x, bootLineDelay.y);
                 if (line.Text != null && line.Text.Contains("FAILED")) delay += failedPause;
                 yield return WaitOrSkip(delay, () => skip = true);
@@ -157,6 +159,8 @@ namespace Overworked
         void OnSubmit(string value)
         {
             if (submitted) return;
+            // Щелчок на Enter, как у остальных «продолжить» (UiSounds, P3).
+            UiSounds.Click();
             string name = value.Trim();
             if (name.Length == 0)
             {
@@ -196,8 +200,11 @@ namespace Overworked
             for (int i = start; i <= total; i++)
             {
                 output.maxVisibleCharacters = i;
+                // Звук печати (UiSounds, P3) — тот же «бегущий текст», что у субтитров.
+                if (i > start) UiSounds.TypingTick();
                 yield return new WaitForSecondsRealtime(charDelay);
             }
+            UiSounds.TypingStop();
         }
 
         /// <summary>Склеивает строки через перенос; skipIndex — строка, которую пропустить (-1 — никакую).</summary>

@@ -24,7 +24,7 @@ namespace Overworked
 
         [Range(0f, 1f)]
         [Tooltip("Громкость печати")]
-        [SerializeField] float typingVolume = 0.7f;
+        [SerializeField] float typingVolume = 0.42f;
 
         [Tooltip("Скорость печати-звука: 0.8 — на 20% медленнее, как в Tiny UFO")]
         [SerializeField] float typingPitch = 0.8f;
@@ -38,10 +38,13 @@ namespace Overworked
 
         [Range(0f, 1f)]
         [Tooltip("Громкость бипа выделения кнопки")]
-        [SerializeField] float selectVolume = 0.6f;
+        [SerializeField] float selectVolume = 1f;
 
-        [Tooltip("Длина бипа выделения — кусочек звука печати, секунды")]
-        [SerializeField] float selectBlipLength = 0.06f;
+        [Tooltip("С какой секунды клипа печати берётся бип: в UI_Typing первые 0.08 с — тишина, дальше удары каждые ~0.07 с")]
+        [SerializeField] float selectBlipStart = 0.08f;
+
+        [Tooltip("Длина бипа выделения, секунды реального времени — ровно один удар печати")]
+        [SerializeField] float selectBlipLength = 0.075f;
 
         AudioSource typingSource, uiSource, blipSource;
         float lastTypeTick = -10f, blipStopAt = -1f;
@@ -117,13 +120,15 @@ namespace Overworked
             if (s != null && s.click != null) s.uiSource.PlayOneShot(s.click, s.clickVolume);
         }
 
-        /// <summary>Короткий бип выделения кнопки (кусочек звука печати).</summary>
+        /// <summary>Одиночный бип выделения кнопки — один удар звука печати.</summary>
         public static void SelectBlip()
         {
             var s = Instance;
             if (s == null || s.typing == null) return;
             s.blipSource.volume = s.selectVolume;
-            s.blipSource.time = 0f;
+            s.blipSource.Stop();
+            // Один удар печати: начинаем с первого удара в клипе, а не с тишины в его начале.
+            s.blipSource.time = Mathf.Min(s.selectBlipStart, s.typing.length - 0.01f);
             s.blipSource.Play();
             s.blipStopAt = Time.unscaledTime + s.selectBlipLength;
         }

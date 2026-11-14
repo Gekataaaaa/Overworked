@@ -28,6 +28,13 @@ namespace Overworked
         [Tooltip("Длительность появления/исчезновения тоста, секунды")]
         [SerializeField] float toastFade = 0.25f;
 
+        [Header("Печать текста")]
+        [Tooltip("Скорость печати записки и подсказки управления, символов в секунду (0 — сразу)")]
+        [SerializeField] float windowCharsPerSecond = 40f;
+
+        [Tooltip("Скорость печати тоста, символов в секунду (0 — сразу)")]
+        [SerializeField] float toastCharsPerSecond = 60f;
+
         [Header("Окна на весь экран")]
         [Tooltip("Окно текста на весь экран (записка, системное сообщение)")]
         [SerializeField] GameObject fullscreenRoot;
@@ -58,9 +65,12 @@ namespace Overworked
         readonly HashSet<HudPart> hidden = new HashSet<HudPart>();
 
         GameObject openWindow;
+        float hudAlpha = 1f;
         Action onWindowClosed;
         int openedFrame;
         bool lockedByWindow;
+        Coroutine windowTyping;
+        bool windowTypingSkip;
 
         void Start()
         {
@@ -89,6 +99,7 @@ namespace Overworked
                 lockedByWindow = false;
                 CloseWindow();
             }
+            if (hudAlpha < 1f) SetHudAlpha(1f);
             if (hidden.Count == 0) return;
             foreach (var part in new List<HudPart>(hidden)) SetHudVisible(part, true);
         }
@@ -107,7 +118,9 @@ namespace Overworked
             if (ClosePressed())
             {
                 UiSounds.Click();
-                CloseWindow();
+                // Первое нажатие допечатывает текст сразу, второе — закрывает окно.
+                if (windowTyping != null) windowTypingSkip = true;
+                else CloseWindow();
             }
         }
 
@@ -140,7 +153,10 @@ namespace Overworked
             while (toasts.Count > 0)
             {
                 toastText.text = toasts.Dequeue();
+                toastText.maxVisibleCharacters = 0;
                 yield return FadeToast(1f);
+                // Тост печатается без звука: он часто совпадает с субтитрами или вибрацией телефона.
+                yield return Typewriter.Type(toastText, toastCharsPerSecond, null, false);
                 // Realtime: тост дочитывается, даже если время остановлено паузой.
                 yield return new WaitForSecondsRealtime(toastSeconds);
                 yield return FadeToast(0f);
@@ -202,11 +218,28 @@ namespace Overworked
             if (lockedByWindow) player.SetInputLocked(true);
             if (PhoneManager.Instance != null) PhoneManager.Instance.Close();
             window.SetActive(true);
+            windowTypingSkip = false;
+            windowTyping = StartCoroutine(TypeWindow(window));
+        }
+
+        /// <summary>Печатает все тексты окна по очереди (заголовок, строки, подсказка «E — close»).</summary>
+        IEnumerator TypeWindow(GameObject window)
+        {
+            var texts = window.GetComponentsInChildren<TMP_Text>(false);
+            // Сначала прячем все, чтобы нижние строки не висели готовыми, пока печатается верхняя.
+            foreach (var t in texts) t.maxVisibleCharacters = 0;
+            foreach (var t in texts)
+                yield return Typewriter.Type(t, windowCharsPerSecond, () => windowTypingSkip);
+            foreach (var t in texts) Typewriter.ShowAll(t);
+            windowTyping = null;
         }
 
         void CloseWindow()
         {
             if (openWindow == null) return;
+            if (windowTyping != null) StopCoroutine(windowTyping);
+            windowTyping = null;
+            UiSounds.TypingStop();
             openWindow.SetActive(false);
             openWindow = null;
             if (lockedByWindow && PlayerController.Instance != null) PlayerController.Instance.SetInputLocked(false);
@@ -249,6 +282,30 @@ namespace Overworked
 
         /// <summary>Видна ли часть HUD по решению сценария.</summary>
         public bool IsHudVisible(HudPart part) => !hidden.Contains(part);
+
+        /// <summary>
+        /// Прозрачность рассудка, пульса и кнопки телефона 0..1 (1 — обычный вид). Для плавного исчезновения
+        /// HUD (смерть в WhiteRoom). Видимость частей (SetHudVisible) не меняет; при смене сцены сбрасывается в 1.
+        /// </summary>
+        public void SetHudAlpha(float alpha)
+        {
+            hudAlpha = Mathf.Clamp01(alpha);
+            ApplyAlpha(sanityRoot);
+            ApplyAlpha(heartbeatRoot);
+            if (phoneUI != null && phoneUI.ButtonRect != null) ApplyAlpha(phoneUI.ButtonRect.gameObject);
+        }
+
+        void ApplyAlpha(GameObject go)
+        {
+            if (go == null) return;
+            var group = go.GetComponent<CanvasGroup>();
+            if (group == null)
+            {
+                if (hudAlpha >= 1f) return;
+                group = go.AddComponent<CanvasGroup>();
+            }
+            group.alpha = hudAlpha;
+        }
 
         void UpdateHudParts()
         {

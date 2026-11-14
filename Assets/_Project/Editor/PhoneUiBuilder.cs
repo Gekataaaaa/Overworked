@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UI;
 using static Overworked.EditorTools.UiBuild;
 
@@ -18,6 +19,8 @@ namespace Overworked.EditorTools
     {
         const string SystemsPath = "Assets/_Project/Prefabs/Systems/Resources/_Systems.prefab";
         const string FontPath = "Assets/_Project/Fonts/PTSans SDF.asset";
+        const string PixelTtfPath = "Assets/_Project/Fonts/PressStart2P-Regular.ttf";
+        const string PixelFontPath = "Assets/_Project/Fonts/PressStart2P SDF.asset";
         const string ScenePath = "Assets/_Project/Scenes/Sandbox/Sandbox_P3.unity";
         static readonly string[] TestMessages =
         {
@@ -70,8 +73,10 @@ namespace Overworked.EditorTools
                 var phoneUi = hud.GetComponent<PhoneUI>();
                 if (phoneUi == null) phoneUi = hud.gameObject.AddComponent<PhoneUI>();
                 var toast = BuildToast(hud, font, out var toastText);
-                var button = BuildPhoneButton(hud, font, out var buttonDot);
-                BuildPhonePanel(hud, font, phoneUi, button, buttonDot);
+                // Весь телефон — пиксельный Press Start 2P (тост остаётся на PT Sans: он не часть телефона).
+                var pixel = EnsurePixelFont(font);
+                var button = BuildPhoneButton(hud, pixel, out var buttonDot);
+                BuildPhonePanel(hud, pixel, pixel, phoneUi, button, buttonDot);
 
                 // FadePanel должен остаться последним — он перекрывает весь HUD при переходах.
                 var fade = hud.Find("FadePanel");
@@ -94,6 +99,44 @@ namespace Overworked.EditorTools
             {
                 PrefabUtility.UnloadPrefabContents(root);
             }
+        }
+
+        /// <summary>
+        /// TMP-ассет пиксельного шрифта Press Start 2P (OFL, лицензия — Fonts/PressStart2P-OFL.txt) для текста
+        /// сообщений. Запасной шрифт — PT Sans: в Press Start 2P нет кириллицы и символов ▓▒░.
+        /// Готовый ассет не пересоздаётся.
+        /// </summary>
+        static TMP_FontAsset EnsurePixelFont(TMP_FontAsset fallback)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(PixelFontPath);
+            if (existing != null) return existing;
+            var ttf = AssetDatabase.LoadAssetAtPath<Font>(PixelTtfPath);
+            if (ttf == null)
+            {
+                Debug.LogWarning("[Setup] нет PressStart2P-Regular.ttf — сообщения телефона останутся на PT Sans");
+                return fallback;
+            }
+            var fa = TMP_FontAsset.CreateFontAsset(ttf, 64, 6, GlyphRenderMode.SDFAA, 512, 512);
+            fa.name = "PressStart2P SDF";
+            AssetDatabase.CreateAsset(fa, PixelFontPath);
+            // Атлас и материал внутри ассета шрифта, иначе после перезапуска они теряются.
+            fa.atlasTextures[0].name = fa.name + " Atlas";
+            AssetDatabase.AddObjectToAsset(fa.atlasTextures[0], fa);
+            fa.material.name = fa.name + " Material";
+            AssetDatabase.AddObjectToAsset(fa.material, fa);
+
+            var chars = new System.Text.StringBuilder();
+            for (char c = ' '; c <= '~'; c++) chars.Append(c);
+            fa.TryAddCharacters(chars.ToString());
+            fa.fallbackFontAssetTable = new System.Collections.Generic.List<TMP_FontAsset> { fallback };
+
+            var so = new SerializedObject(fa);
+            var clear = so.FindProperty("m_ClearDynamicDataOnBuild");
+            if (clear != null) clear.boolValue = true;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(fa);
+            AssetDatabase.SaveAssets();
+            return fa;
         }
 
         // ------------------------------------------------------------ тост
@@ -145,7 +188,7 @@ namespace Overworked.EditorTools
             var simg = screen.gameObject.AddComponent<Image>();
             simg.color = Screen;
             simg.raycastTarget = false;
-            var label = Tmp("Label", screen, font, "Tab", 26, TextDim, TextAlignmentOptions.Center);
+            var label = Tmp("Label", screen, font, "Tab", 16, TextDim, TextAlignmentOptions.Center);
             Stretch(label.rectTransform);
 
             dot = Dot("UnreadDot", rt, 30);
@@ -158,7 +201,7 @@ namespace Overworked.EditorTools
 
         // ------------------------------------------------------------ окно телефона
 
-        static void BuildPhonePanel(RectTransform hud, TMP_FontAsset font, PhoneUI ui, Button phoneButton, GameObject phoneButtonDot)
+        static void BuildPhonePanel(RectTransform hud, TMP_FontAsset font, TMP_FontAsset messageFont, PhoneUI ui, Button phoneButton, GameObject phoneButtonDot)
         {
             var panel = UI("PhonePanel", hud);
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(1f, 0f);
@@ -183,7 +226,7 @@ namespace Overworked.EditorTools
             header.sizeDelta = new Vector2(0, 80);
             header.anchoredPosition = Vector2.zero;
             header.gameObject.AddComponent<Image>().color = Header;
-            var title = Tmp("Title", header, font, "Messages", 38, TextLight, TextAlignmentOptions.Center);
+            var title = Tmp("Title", header, font, "Messages", 24, TextLight, TextAlignmentOptions.Center);
             Stretch(title.rectTransform);
             var back = SmallButton("BackButton", header, font, "<");
             var brt = (RectTransform)back.transform;
@@ -244,12 +287,15 @@ namespace Overworked.EditorTools
             bvlg.padding = new RectOffset(16, 16, 10, 10);
             bvlg.childControlWidth = bvlg.childControlHeight = true;
             bvlg.childForceExpandHeight = false;
-            var btext = Tmp("Text", bubble, font, "Message", 30, TextLight, TextAlignmentOptions.TopLeft);
+            // Press Start 2P широкий — кегль меньше, чем был у PT Sans; чего в нём нет
+            // (кириллица, глитч-символы Макса) — берётся из запасного PT Sans.
+            var btext = Tmp("Text", bubble, messageFont, "Message", 20, TextLight, TextAlignmentOptions.TopLeft);
             btext.textWrappingMode = TextWrappingModes.Normal;
+            btext.lineSpacing = 18;
             bubble.gameObject.SetActive(false);
 
             // Подсказка управления под экраном.
-            var hint = Tmp("Hint", panel, font, "A / D — switch chat     Wheel — scroll     Tab / Esc — close", 22, TextDim, TextAlignmentOptions.Center);
+            var hint = Tmp("Hint", panel, font, "A/D chat   Wheel scroll   Tab/Esc close", 12, TextDim, TextAlignmentOptions.Center);
             hint.rectTransform.anchorMin = new Vector2(0, 0);
             hint.rectTransform.anchorMax = new Vector2(1, 0);
             hint.rectTransform.pivot = new Vector2(0.5f, 0);
@@ -280,7 +326,7 @@ namespace Overworked.EditorTools
             colors.highlightedColor = colors.selectedColor = Header;
             colors.pressedColor = BubbleMax;
             btn.colors = colors;
-            var t = Tmp("Name", rt, font, label, 38, TextLight, TextAlignmentOptions.Left);
+            var t = Tmp("Name", rt, font, label, 24, TextLight, TextAlignmentOptions.Left);
             Stretch(t.rectTransform);
             t.rectTransform.offsetMin = new Vector2(28, 0);
             dot = Dot("UnreadDot", rt, 26);
@@ -304,7 +350,7 @@ namespace Overworked.EditorTools
             colors.highlightedColor = colors.selectedColor = Row;
             colors.pressedColor = BubbleMax;
             btn.colors = colors;
-            var t = Tmp("Label", rt, font, label, 36, TextLight, TextAlignmentOptions.Center);
+            var t = Tmp("Label", rt, font, label, 22, TextLight, TextAlignmentOptions.Center);
             Stretch(t.rectTransform);
             return btn;
         }

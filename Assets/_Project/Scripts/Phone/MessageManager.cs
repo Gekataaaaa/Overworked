@@ -12,8 +12,12 @@ namespace Overworked
     /// </summary>
     public class MessageManager : SingletonBehaviour<MessageManager>
     {
-        [Tooltip("Звук вибрации при новом сообщении (может быть пустым, пока нет звуков)")]
+        [Tooltip("Звук вибрации при новом сообщении. Пусто — Audio/UI/Resources/UI_PhoneVibrate")]
         [SerializeField] AudioClip vibrateClip;
+
+        [Range(0f, 1f)]
+        [Tooltip("Громкость вибрации 0..1")]
+        [SerializeField] float vibrateVolume = 0.4f;
 
         [Tooltip("Тост о новом сообщении от Макса")]
         [SerializeField] string toastMax = "New message from Max";
@@ -44,6 +48,7 @@ namespace Overworked
 
         void Start()
         {
+            if (vibrateClip == null) vibrateClip = Resources.Load<AudioClip>("UI_PhoneVibrate");
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
             TrySubscribe();
         }
@@ -82,7 +87,7 @@ namespace Overworked
             Debug.Log($"[Phone] Deliver {msg.name}");
 
             if (UIManager.Instance != null) UIManager.Instance.ShowToast(msg.Sender == Sender.Max ? toastMax : toastBoss);
-            if (vibrateClip != null && AudioManager.Instance != null) AudioManager.Instance.PlaySfx(vibrateClip);
+            if (vibrateClip != null && AudioManager.Instance != null) AudioManager.Instance.PlaySfx(vibrateClip, vibrateVolume);
 
             OnDelivered?.Invoke(msg);
             OnChanged?.Invoke();
@@ -104,6 +109,9 @@ namespace Overworked
                 if (m.Sender == sender) return true;
             return false;
         }
+
+        /// <summary>Не прочитано ли это сообщение.</summary>
+        public bool IsUnread(MessageData msg) => msg != null && unread.Contains(msg);
 
         /// <summary>Есть ли непрочитанные вообще (точка на кнопке телефона).</summary>
         public bool HasAnyUnread => unread.Count > 0;
