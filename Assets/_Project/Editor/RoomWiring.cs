@@ -159,9 +159,11 @@ namespace Overworked.EditorTools
             Trigger(go);
             if (go.TryGetComponent(out DoorInteractable door))
             {
-                // Уже стоит: подсказку не трогаем, но комнату, направление и «открыто» выставляем —
-                // ранняя версия разводки запирала Room_102 на ключ, которого на этаже ещё нет.
-                Set(door, ("room", room), ("direction", direction), ("doorLocked", false));
+                // Уже стоит: подсказку не трогаем, комнату и направление выставляем.
+                // Дверь на ключ (unlockFlag задан, Room_102) не отпираем — замок поставлен сценой этажа.
+                Set(door, ("room", room), ("direction", direction));
+                if (string.IsNullOrEmpty(new SerializedObject(door).FindProperty("unlockFlag").stringValue))
+                    Set(door, ("doorLocked", false));
                 return;
             }
             Set(go.AddComponent<DoorInteractable>(), ("room", room), ("direction", direction), ("prompt", prompt));

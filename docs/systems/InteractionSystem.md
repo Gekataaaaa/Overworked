@@ -2,9 +2,11 @@
 
 **Владелец:** Программист 2
 
-**Что делает:** находит ближайший к Дэнни объект с `IInteractable` (радиус 1.2), показывает
-«[E] <Prompt>» внизу по центру и по E вызывает `Interact()`. Пока Дэнни заблокирован (телефон,
-мини-игра, катсцена, пауза), подсказки нет.
+**Что делает:** находит ближайший к Дэнни объект с `IInteractable` (радиус 1.2) и по E вызывает
+`Interact()`. `InteractionHighlight` показывает над этим объектом подсказку «[E] <Prompt>» (PT Sans,
+белый с тёмной обводкой, едет за объектом) и обводит его спрайты жёлтым контуром. Пока Дэнни
+заблокирован (телефон, мини-игра, катсцена, пауза) и у запертых объектов (`CanInteract == false`) —
+ни подсказки, ни контура. Настраивать на объектах ничего не нужно.
 
 **Как подключить:** `InteractionSystem` создаёт себя сам при старте игры (DontDestroyOnLoad) —
 никуда класть не нужно. Объекту нужен **Collider2D-триггер** и один из компонентов ниже.
@@ -38,14 +40,23 @@
 Floor_02 (Room_201), Floor_01 (Room_101, Room_102): `Room`, двери входа и выхода, точки возврата.
 Декоративные двери коридора (`Door_<число>`) остаются картинками без E. Повторный запуск безопасен.
 
-**Флаги** — `GameState.Flags` (`InteractableBase.HasFlag` / `SetFlag`). Используемые: `MaxPass`, `Key102`.
+**Сборка этажей по нарративу** (меню **Overworked → P2**, тексты — ассеты `Data/` с именами из таблицы P3):
+- **Build Floor_01 Corridor** — главный выход (`F1_MainExit`), дверь 102 на ключ `Key102` с табличкой
+  (`F1_Door102Locked`) и заданием `F1_FindKey101`;
+- **Build Floor_01 Room 101 Drawer** — тумба в 101: `F1_Drawer101`, флаг `Key102`, задание `F1_FinishWork`;
+- **Place Floor_01 Arcade** — автомат с Tiny UFO в 102;
+- **Swap Floor_01 Rooms 101 and 102** — 102 ближе к началу коридора и сверху, 101 дальше и снизу;
+- **Build Floor_03 Turnstile And Stairs** — пропуск на кухне (`MaxPass`), турникет с барьером и считывателем,
+  лестница заперта до ACCESS GRANTED (`F3_TurnstileDenied` / `F3_TurnstileGranted` / `F3_PassPicked`).
+
+**Флаги** — `GameState.Flags` (`InteractableBase.HasFlag` / `SetFlag`). Используемые: `MaxPass` (пропуск Макса), `Key102` (ключ от 102).
 
 **Публичный API:**
 
 | | |
 |---|---|
 | `InteractionSystem.Instance.Focused` | объект под подсказкой или null |
-| `event OnFocusChanged(IInteractable)` | для HUD P3, если захочет свою подсказку |
+| `event OnFocusChanged(IInteractable)` | объект в фокусе сменился |
 | `InteractableBase.SetLocked(bool)`, `DoorInteractable.SetDoorLocked(bool)` | из сценария |
 | `[ContextMenu] Interact` | проверить объект без игрока |
 
@@ -56,6 +67,8 @@ Floor_02 (Room_201), Floor_01 (Room_101, Room_102): `Room`, двери вход�
 и UIManager (P3 — пока заглушки: тосты и записки пишутся в консоль).
 
 **Известные ограничения / TODO:**
-- Подсказка «[E] …» и карточка задания рисуются своими канвасами; когда у P3 будет место в HUD —
-  перенести в поле `promptText` / поля `ObjectiveUI`.
+- Карточка задания рисуется своим канвасом; когда у P3 будет место в HUD — перенести в поля `ObjectiveUI`.
+- Контур — жёлтая копия спрайта под объектом (unlit, на `outlineThickness` больше с каждой стороны), без
+  outline-шейдера: у спрайтов с прозрачными краями он повторяет прямоугольник спрайта.
+- TODO(P1): убрать у лестницы собственную надпись `promptLabel` — подсказку теперь рисует InteractionHighlight.
 - У лестницы `standaloneE` выключен (P1): E обрабатывает только InteractionSystem.
