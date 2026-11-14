@@ -157,7 +157,9 @@ namespace Overworked
         void OnActiveSceneChanged(Scene from, Scene to)
         {
             // История живёт между этажами, но в главном меню начинается новая игра.
-            if (to.name == "MainMenu") Clear();
+            // Кроме паузы → Main Menu: этаж спрятан под меню (сцен загружено больше одной), Continue вернёт
+            // игрока туда же — история должна остаться. Новую игру всё равно очищает GameManager.ResetState.
+            if (to.name == "MainMenu" && SceneManager.sceneCount == 1) Clear();
         }
     }
 }
