@@ -52,6 +52,7 @@ OWNERS = {
         "Assets/_Project/Scripts/Flashlight/",
         "Assets/_Project/Scripts/Effects/",
         "Assets/_Project/Scripts/Audio/",
+        "Assets/_Project/Scripts/Ending/",
         "Assets/_Project/Scenes/Floor_02.unity",
         "Assets/_Project/Scenes/WhiteRoom.unity",
         "Assets/_Project/Scenes/Sandbox/Sandbox_P4",
