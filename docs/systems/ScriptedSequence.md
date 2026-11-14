@@ -62,6 +62,13 @@
 `Mini Game` (печать отчёта) → `Dialogue` F3_Start → `Play Anim` StandUp → `Hud Onboarding`.
 В песочнице — клавиша **O**.
 
+**NoReturnTrigger** (Floor_02, сцена 2.2) — запрет возврата: зона с `Collider2D` (Is Trigger) позади Дэнни
+после комнаты 201. При входе Дэнни стоит → пауза `pause` → `dialogue` (F2_NoReturn: «Do you still want Danny
+to keep working here?» + «I just want to go home.») → его отводит в `returnPoint` или на `pushDistance` в сторону
+`pushDirection` (+1 — вправо). Срабатывает при каждой попытке; с `shortAfterFirst` повторно — только системная
+строка. `activeAfter` = F2_CheckDocs201 — зона работает только после задания. `pushDistance` должен быть больше
+ширины зоны, иначе Дэнни останется внутри и повтор не сработает. В песочнице — красная зона слева от старта.
+
 **SequenceTrigger:** `requireCompleted` — срабатывать только после выполнения задания (сообщение
 после кухни), `blockIfCompleted` — не срабатывать после него, `once`.
 

@@ -333,7 +333,7 @@ namespace Overworked.EditorTools
 
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             foreach (var go in scene.GetRootGameObjects())
-                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester" or "HudTester" or "StoryDemo" or "HudOnboarding") Object.DestroyImmediate(go);
+                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester" or "HudTester" or "StoryDemo" or "HudOnboarding" or "NoReturnDemo") Object.DestroyImmediate(go);
 
             const float halfWidth = 15f, floorY = -4.2f, top = 5.65f, bottom = -5.65f;
             var env = new GameObject("Environment");
@@ -394,10 +394,33 @@ namespace Overworked.EditorTools
             hso.FindProperty("onboarding").objectReferenceValue = onboarding;
             hso.ApplyModifiedPropertiesWithoutUndo();
             BuildStoryDemo(square, floorY);
+            BuildNoReturnDemo(square, floorY);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0), DialogueTester (Z/X/C, V), HudTester (N/H/J/K/O), StoryDemo (зона справа) готовы");
+            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0), DialogueTester (Z/X/C, V), HudTester (N/H/J/K/O), StoryDemo (зона справа), NoReturnDemo (зона слева) готовы");
+        }
+
+        /// <summary>
+        /// Пример запрета возврата: красная зона слева от старта. Дэнни идёт влево → стоит →
+        /// «Do you still want Danny…» + реплика → его отводит вправо. Повторно — только системная строка.
+        /// </summary>
+        static void BuildNoReturnDemo(Sprite square, float floorY)
+        {
+            var go = new GameObject("NoReturnDemo");
+            go.transform.position = new Vector3(-5f, floorY + 2f, 0f);
+            var col = go.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
+            col.size = new Vector2(1f, 4f);
+            PlayerSandboxBuilder.Rect(go, "Marker", square, Vector2.zero, new Vector2(1f, 4f), new Color(0.9f, 0.25f, 0.2f, 0.25f), -6);
+
+            var trigger = go.AddComponent<NoReturnTrigger>();
+            var so = new SerializedObject(trigger);
+            so.FindProperty("dialogue").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<DialogueData>("Assets/_Project/Data/Dialogues/F2_NoReturn.asset");
+            so.FindProperty("pushDirection").intValue = 1;
+            so.FindProperty("pushDistance").floatValue = 2f;
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>
