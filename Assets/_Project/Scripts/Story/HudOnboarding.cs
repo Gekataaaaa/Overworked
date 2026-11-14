@@ -6,7 +6,7 @@ namespace Overworked
 {
     /// <summary>
     /// Онбординг HUD в начале Floor_03 (нарратив, сцена 1.0): при старте этажа HUD спрятан, после реплик
-    /// Дэнни элементы появляются по очереди — рассудок и пульс, телефон, подсказка управления.
+    /// Дэнни рассудок, пульс и телефон появляются одновременно, затем — подсказка управления.
     /// Когда игрок закрыл подсказку, онбординг заканчивается. Кладётся в группу Story сцены Floor_03,
     /// запускается шагом сценария HudOnboarding (или <see cref="Play"/>).
     /// </summary>
@@ -15,10 +15,10 @@ namespace Overworked
         [Tooltip("Спрятать HUD при старте сцены (на Floor_03 — да; в песочнице можно выключить)")]
         [SerializeField] bool hideOnStart = true;
 
-        [Tooltip("Пауза перед первым элементом, секунды")]
+        [Tooltip("Пауза перед появлением HUD, секунды")]
         [SerializeField] float firstDelay = 0.5f;
 
-        [Tooltip("Пауза между появлением элементов, секунды")]
+        [Tooltip("Пауза между появлением HUD и подсказкой управления, секунды")]
         [SerializeField] float stepDelay = 1.2f;
 
         [Tooltip("Звук появления элемента HUD (может быть пустым)")]
@@ -49,7 +49,7 @@ namespace Overworked
         }
 
         /// <summary>
-        /// Проигрывает онбординг: рассудок + пульс → телефон → подсказка управления (ждёт закрытия) → done.
+        /// Проигрывает онбординг: рассудок, пульс и телефон разом → подсказка управления (ждёт закрытия) → done.
         /// Дэнни стоит всё это время; управление возвращается, только если его заблокировал сам онбординг.
         /// </summary>
         public void Play(Action done = null)
@@ -74,15 +74,9 @@ namespace Overworked
             HideAll();
             yield return new WaitForSeconds(firstDelay);
 
+            // Рассудок, пульс и телефон появляются одновременно.
             if (ui != null)
-            {
-                ui.SetHudVisible(HudPart.Sanity, true);
-                ui.SetHudVisible(HudPart.Heartbeat, true);
-            }
-            PlayAppear();
-            yield return new WaitForSeconds(stepDelay);
-
-            if (ui != null) ui.SetHudVisible(HudPart.Phone, true);
+                foreach (var part in Parts) ui.SetHudVisible(part, true);
             PlayAppear();
             yield return new WaitForSeconds(stepDelay);
 

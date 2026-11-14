@@ -11,7 +11,7 @@
 
 | Меню Overworked → P3 → | Объекты в HUD |
 |---|---|
-| Build HUD | `SanityBar` (+ `Fill`), `Heartbeat` (`Icon`, `BPM`), `FullscreenText`, `ControlsHint` |
+| Build HUD | `FullscreenText`, `ControlsHint`; `SanityBar` и `Heartbeat` — **только если их нет** (их наполняет P4, пересоздание стёрло бы его настройки) |
 | Build Phone UI | `PhoneButton`, `PhonePanel`, `Toast` — см. [Phone.md](Phone.md) |
 | Build Dialogue UI | `Subtitles` — см. [DialogueManager.md](DialogueManager.md) |
 

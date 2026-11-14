@@ -56,7 +56,7 @@
 | `ScriptedSequence.WaitCallback(start)` | помощник для своих шагов: ждать API в стиле `Action done` |
 
 **HudOnboarding** (Floor_03, сцена 1.0): компонент в группе `Story`. С `hideOnStart` прячет рассудок,
-пульс и телефон при старте этажа; шаг **Hud Onboarding** показывает рассудок + пульс → телефон →
+пульс и телефон при старте этажа; шаг **Hud Onboarding** показывает их **одновременно**, затем —
 подсказку управления (паузы `firstDelay`, `stepDelay`, звук `appearClip`) и ждёт, пока игрок её закроет.
 Дэнни стоит всё это время. Пример начала Floor_03:
 `Mini Game` (печать отчёта) → `Dialogue` F3_Start → `Play Anim` StandUp → `Hud Onboarding`.

@@ -10,7 +10,7 @@ namespace Overworked.EditorTools
     /// P3: собирает в HUD префаба _Systems места под шкалу рассудка и пульс под ней (их наполняет P4),
     /// окно текста на весь экран (записка) и подсказку управления; проставляет ссылки в UIManager.
     /// Меню Overworked → P3 → Build HUD. Пересоздаёт только свои объекты: SanityBar, Heartbeat,
-    /// FullscreenText, ControlsHint. Телефон и тост — Build Phone UI, субтитры — Build Dialogue UI.
+    /// FullscreenText, ControlsHint; SanityBar и Heartbeat — только если их нет (их наполняет P4). Телефон и тост — Build Phone UI, субтитры — Build Dialogue UI.
     /// </summary>
     public static class HudBuilder
     {
@@ -42,22 +42,26 @@ namespace Overworked.EditorTools
                     Debug.LogError("[Setup] в _Systems нет HUD или UIManager");
                     return;
                 }
-                foreach (var old in new[] { "SanityBar", "Heartbeat", "FullscreenText", "ControlsHint" })
+                foreach (var old in new[] { "FullscreenText", "ControlsHint" })
                 {
                     var t = hud.Find(old);
                     if (t != null) Object.DestroyImmediate(t.gameObject);
                 }
 
-                var sanity = BuildSanityBar(hud);
-                var heartbeat = BuildHeartbeat(hud, font);
+                // SanityBar и Heartbeat наполняет P4 (SanityBarUI, HeartbeatUI со своими настройками) —
+                // если они уже есть, не пересоздаём, иначе потеряются его компоненты и ссылки.
+                var existingSanity = hud.Find("SanityBar");
+                var existingHeartbeat = hud.Find("Heartbeat");
+                var sanity = existingSanity != null ? existingSanity.gameObject : BuildSanityBar(hud);
+                var heartbeat = existingHeartbeat != null ? existingHeartbeat.gameObject : BuildHeartbeat(hud, font);
                 var fullscreen = BuildFullscreen(hud, font, out var fullscreenText);
                 var hint = BuildControlsHint(hud, font);
 
                 // Рассудок и пульс — сразу после субтитров (под телефоном), окна — поверх всего, кроме затемнения.
                 var subtitles = hud.Find("Subtitles");
                 int low = subtitles != null ? subtitles.GetSiblingIndex() + 1 : 0;
-                sanity.transform.SetSiblingIndex(low);
-                heartbeat.transform.SetSiblingIndex(low + 1);
+                if (existingSanity == null) sanity.transform.SetSiblingIndex(low);
+                if (existingHeartbeat == null) heartbeat.transform.SetSiblingIndex(low + 1);
                 fullscreen.transform.SetAsLastSibling();
                 hint.transform.SetAsLastSibling();
                 var fade = hud.Find("FadePanel");
@@ -67,7 +71,7 @@ namespace Overworked.EditorTools
                     ("fullscreenRoot", fullscreen), ("fullscreenText", fullscreenText), ("controlsHintRoot", hint));
 
                 PrefabUtility.SaveAsPrefabAsset(root, SystemsPath);
-                Debug.Log("[Setup] HUD: рассудок, пульс, записка и подсказка управления собраны в _Systems/HUD");
+                Debug.Log("[Setup] HUD: записка и подсказка управления собраны в _Systems/HUD (рассудок и пульс — только если их не было)");
             }
             finally
             {
