@@ -1,3 +1,4 @@
+using TMPro;
 using System.IO;
 using Unity.Cinemachine;
 using UnityEditor;
@@ -39,7 +40,7 @@ namespace Overworked.EditorTools
         }
 
         /// <summary>Белый квадрат 1×1 юнит — заглушка для всех прямоугольников до прихода арта.</summary>
-        static Sprite EnsureSquareSprite()
+        internal static Sprite EnsureSquareSprite()
         {
             if (!File.Exists(SquarePath))
             {
@@ -60,7 +61,7 @@ namespace Overworked.EditorTools
             return AssetDatabase.LoadAssetAtPath<Sprite>(SquarePath);
         }
 
-        static GameObject EnsurePlayerPrefab(Sprite square)
+        internal static GameObject EnsurePlayerPrefab(Sprite square)
         {
             var existing = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPrefabPath);
             if (existing != null) return existing;
@@ -150,7 +151,7 @@ namespace Overworked.EditorTools
         /// Камера игрока для коридоров и комнат: следует за Дэнни со смещением в сторону движения.
         /// В сцене остаётся только назначить границы в CinemachineConfiner2D.
         /// </summary>
-        static GameObject EnsureCameraPrefab()
+        internal static GameObject EnsureCameraPrefab()
         {
             var existing = AssetDatabase.LoadAssetAtPath<GameObject>(CameraPrefabPath);
             if (existing != null) return existing;
@@ -176,28 +177,49 @@ namespace Overworked.EditorTools
             return prefab;
         }
 
-        /// <summary>Лестница-заглушка: серый прямоугольник + триггер + StairInteractable.</summary>
-        static GameObject EnsureStairsPrefab(Sprite square)
+        /// <summary>
+        /// Лестница-заглушка: серый прямоугольник + триггер + StairInteractable + подсказка «[E] Go downstairs».
+        /// Старый префаб без подсказки пересобирается (путь тот же — GUID и ссылки в сценах сохраняются).
+        /// </summary>
+        internal static GameObject EnsureStairsPrefab(Sprite square)
         {
             var existing = AssetDatabase.LoadAssetAtPath<GameObject>(StairsPrefabPath);
-            if (existing != null) return existing;
+            if (existing != null && existing.transform.Find("PromptLabel") != null) return existing;
 
             var go = new GameObject("Staircase");
             var col = go.AddComponent<BoxCollider2D>();
             col.isTrigger = true;
             col.size = new Vector2(2f, 3f);
-            go.AddComponent<StairInteractable>();
+            var stairs = go.AddComponent<StairInteractable>();
             Rect(go, "Sprite", square, Vector2.zero, new Vector2(2f, 3f), new Color(0.16f, 0.17f, 0.2f), -7);
             // Ступеньки-полоски, чтобы было понятно, что это лестница.
             for (int i = 0; i < 4; i++)
                 Rect(go, $"Step_{i}", square, new Vector2(-0.6f + i * 0.4f, -1.2f + i * 0.6f), new Vector2(0.8f, 0.12f), new Color(0.4f, 0.42f, 0.45f), -6);
+
+            var label = new GameObject("PromptLabel");
+            label.transform.SetParent(go.transform, false);
+            label.transform.localPosition = new Vector3(0, 2.2f, 0);
+            var tmp = label.AddComponent<TextMeshPro>();
+            var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/_Project/Fonts/PTSans SDF.asset");
+            if (font != null) tmp.font = font;
+            tmp.text = "[E] Go downstairs";
+            tmp.fontSize = 3f;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = new Color(0.92f, 0.92f, 0.86f);
+            tmp.sortingOrder = 20;
+            tmp.rectTransform.sizeDelta = new Vector2(6f, 1f);
+            label.SetActive(false);
+
+            var so = new SerializedObject(stairs);
+            so.FindProperty("promptLabel").objectReferenceValue = label;
+            so.ApplyModifiedPropertiesWithoutUndo();
 
             var prefab = PrefabUtility.SaveAsPrefabAsset(go, StairsPrefabPath);
             Object.DestroyImmediate(go);
             return prefab;
         }
 
-        static GameObject Rect(GameObject parent, string name, Sprite square, Vector2 pos, Vector2 size, Color color, int order)
+        internal static GameObject Rect(GameObject parent, string name, Sprite square, Vector2 pos, Vector2 size, Color color, int order)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent.transform, false);

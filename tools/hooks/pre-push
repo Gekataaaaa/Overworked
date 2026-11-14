@@ -4,6 +4,11 @@
 
 remote="$1"
 
+# stdin: <local ref> <local sha> <remote ref> <remote sha> — по строке на ветку.
+# Читаем один раз и сохраняем: он нужен и проверкам, и git lfs pre-push
+# (раньше цикл проверок съедал stdin, и LFS-файлы не загружались на сервер).
+refs=$(cat)
+
 # Найти рабочий Python (на Windows python3 бывает заглушкой из Microsoft Store).
 PY=""
 for c in python3 python py; do
@@ -16,14 +21,14 @@ if [ -z "$PY" ]; then
 else
     git fetch -q "$remote" main 2>/dev/null
     z=0000000000000000000000000000000000000000
-    # stdin: <local ref> <local sha> <remote ref> <remote sha>
-    while read -r local_ref local_sha remote_ref remote_sha; do
+    printf '%s\n' "$refs" | while read -r local_ref local_sha remote_ref remote_sha; do
+        [ -z "$local_sha" ] && continue
         [ "$local_sha" = "$z" ] && continue          # удаление ветки
         branch="${remote_ref#refs/heads/}"
         "$PY" tools/checks.py --rev "$local_sha" --branch "$branch" --base "$remote/main" || exit 1
-    done
+    done || exit 1
 fi
 
 # Без этого Git LFS не загрузит картинки и звуки на сервер.
 command -v git-lfs >/dev/null 2>&1 || { echo >&2 "Git LFS не установлен: https://git-lfs.com"; exit 2; }
-exec git lfs pre-push "$@"
+printf '%s\n' "$refs" | git lfs pre-push "$@"
