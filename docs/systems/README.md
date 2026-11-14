@@ -15,3 +15,4 @@
 | Phone: PhoneManager, MessageManager, PhoneUI, тосты | P3 | [Phone.md](Phone.md) |
 | DialogueManager: субтитры, описания, системный текст | P3 | [DialogueManager.md](DialogueManager.md) |
 | UIManager: HUD, тосты, записка, подсказка управления | P3 | [UIManager.md](UIManager.md) |
+| ScriptedSequence, SequenceTrigger, шаги сценария | P3 | [ScriptedSequence.md](ScriptedSequence.md) |

@@ -148,10 +148,10 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 - [ ] `ObjectiveManager` + `ObjectiveData` + карточка задания с чекбоксом.
 
 **P3:**
-- [ ] `MessageData` / `MessageManager` / `PhoneUI`: Tab и кнопка, контакты Max/Boss, история, вибрация + тост.
-- [ ] `onReadAndClosed`-колбэк после закрытия телефона.
-- [ ] `DialogueManager`: субтитры Danny и описания (DESC) внизу, по очереди, `{name}`.
-- [ ] HUD-префаб: места под рассудок, пульс, задание, подсказку, тосты.
+- [x] `MessageData` / `MessageManager` / `PhoneUI`: Tab и кнопка, контакты Max/Boss, история, вибрация + тост.
+- [x] `onReadAndClosed`-колбэк после закрытия телефона.
+- [x] `DialogueManager`: субтитры Danny и описания (DESC) внизу, по очереди, `{name}`.
+- [x] HUD-префаб: места под рассудок, пульс, задание, подсказку, тосты.
 
 **P4:**
 - [ ] `SanityManager.SetSanity` + `SanityBarUI` (плавно ~1 сек, без процентов).
@@ -180,7 +180,7 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 - [ ] `TurnstileInteractable`, `ArcadeInteractable`, `ComputerInteractable`, `PersonInteractable` (сжатие в точку).
 
 **P3:**
-- [ ] `ScriptedSequence`: шаги — реплика, сообщение (ждать прочтения), блок/разблок, анимация,
+- [x] `ScriptedSequence`: шаги — реплика, сообщение (ждать прочтения), блок/разблок, анимация,
   показать HUD, галлюцинация, мини-игра, задание, вкл/выкл объект, пауза, fade.
 - [ ] `HudOnboarding` (появление HUD по очереди в начале Floor_03), подсказка управления.
 - [ ] `NoReturnTrigger` (уведомление «Do you still want Danny…» и остановка).
