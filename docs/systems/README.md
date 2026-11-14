@@ -8,3 +8,4 @@
 | PlayerController, GameInput, камера | P1 | [PlayerController.md](PlayerController.md) |
 | SceneTransitionManager, FadeController, отладочные F1–F6 | P1 | [SceneTransitionManager.md](SceneTransitionManager.md) |
 | MainMenu, пролог, шрифты | P1 | [MainMenu.md](MainMenu.md) |
+| Тексты игры → ScriptableObject | P3 | [Texts.md](Texts.md) |
