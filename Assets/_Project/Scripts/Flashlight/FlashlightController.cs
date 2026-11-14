@@ -30,8 +30,6 @@ namespace Overworked
         [SerializeField] float coneAngle = 55f;
         [Tooltip("Цвет света (тёплый, чуть жёлтый)")]
         [SerializeField] Color color = new Color(1f, 0.95f, 0.8f);
-        [Tooltip("Скорость поворота луча при смене направления, градусов в секунду")]
-        [SerializeField] float turnSpeed = 900f;
 
         [Header("Мерцание на низком рассудке")]
         [Tooltip("Ниже какого рассудка (0..1) фонарик начинает мерцать")]
@@ -52,7 +50,6 @@ namespace Overworked
         /// <summary>Доступен ли фонарик (на Floor_03 — нет).</summary>
         public bool Available { get; private set; }
 
-        float angle = -90f;
         float dropoutUntil;
 
         protected override void Awake()
@@ -117,11 +114,8 @@ namespace Overworked
             int facing = player.Facing;
             transform.position = player.transform.position + new Vector3(handOffset.x * facing, handOffset.y, 0f);
             // Свет 2D смотрит вдоль своей оси +Y: -90° — вправо, 90° — влево.
-            float targetAngle = facing > 0 ? -90f : 90f;
-            // Не MoveTowardsAngle: между -90 и 90 ровно 180°, «кратчайший путь» неоднозначен, и при повороте
-            // влево→вправо луч проходил по полу. Линейно в [-90, 90] — разворот всегда через верх (0° = вверх).
-            angle = Mathf.MoveTowards(Mathf.Clamp(angle, -90f, 90f), targetAngle, turnSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            // Без анимации поворота: Дэнни развернулся — луч сразу смотрит в ту же сторону.
+            transform.rotation = Quaternion.Euler(0f, 0f, facing > 0 ? -90f : 90f);
         }
 
         float FlickerFactor()
