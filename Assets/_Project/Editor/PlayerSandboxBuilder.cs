@@ -19,9 +19,13 @@ namespace Overworked.EditorTools
         const string ScenePath = "Assets/_Project/Scenes/Sandbox/Sandbox_P1.unity";
 
         // Размеры коридора в юнитах. Камера ортографическая 5.4 → видно 19.2 × 10.8.
-        const float HalfWidth = 15f;
+        const float HalfWidth = 30f;
         const float HalfHeight = 5.4f;
-        const float FloorY = -3f;
+        // Линия пола (горизонт): пол занимает нижние 1.2 юнита кадра.
+        const float FloorY = -4.2f;
+        // Запас границ камеры по вертикали. Если границы ровно равны кадру, Confiner2D
+        // сжимает их в отрезок и прибивает камеру к центру — она перестаёт ехать за игроком.
+        const float BoundsMargin = 0.25f;
 
         [MenuItem("Overworked/P1/Build Player Sandbox")]
         public static void Run()
@@ -99,11 +103,12 @@ namespace Overworked.EditorTools
                 if (go.name is "Environment" or "Player" or "Cameras") Object.DestroyImmediate(go);
 
             var env = new GameObject("Environment");
-            Rect(env, "BackWall", square, new Vector2(0, 0.5f), new Vector2(HalfWidth * 2, 7f), new Color(0.32f, 0.36f, 0.33f), -10);
-            Rect(env, "Floor", square, new Vector2(0, FloorY - 1.2f), new Vector2(HalfWidth * 2, 2.4f), new Color(0.2f, 0.22f, 0.21f), -5);
+            float top = HalfHeight + BoundsMargin, bottom = -HalfHeight - BoundsMargin;
+            Rect(env, "BackWall", square, new Vector2(0, (top + FloorY) / 2), new Vector2(HalfWidth * 2, top - FloorY), new Color(0.32f, 0.36f, 0.33f), -10);
+            Rect(env, "Floor", square, new Vector2(0, (FloorY + bottom) / 2), new Vector2(HalfWidth * 2, FloorY - bottom), new Color(0.2f, 0.22f, 0.21f), -5);
             // Двери-ориентиры: видно, что игрок движется и камера едет.
-            for (int i = -2; i <= 2; i++)
-                Rect(env, $"Door_{i + 3}", square, new Vector2(i * 6f, FloorY + 1.25f), new Vector2(1.4f, 2.5f), new Color(0.45f, 0.4f, 0.3f), -8);
+            for (int i = -4; i <= 4; i++)
+                Rect(env, $"Door_{i + 5}", square, new Vector2(i * 6f, FloorY + 1.25f), new Vector2(1.4f, 2.5f), new Color(0.45f, 0.4f, 0.3f), -8);
 
             Wall(env, "WallLeft", square, -HalfWidth - 0.5f);
             Wall(env, "WallRight", square, HalfWidth + 0.5f);
@@ -115,8 +120,8 @@ namespace Overworked.EditorTools
             poly.isTrigger = true;
             poly.points = new[]
             {
-                new Vector2(-HalfWidth - 1, -HalfHeight), new Vector2(HalfWidth + 1, -HalfHeight),
-                new Vector2(HalfWidth + 1, HalfHeight), new Vector2(-HalfWidth - 1, HalfHeight),
+                new Vector2(-HalfWidth - 1, bottom), new Vector2(HalfWidth + 1, bottom),
+                new Vector2(HalfWidth + 1, top), new Vector2(-HalfWidth - 1, top),
             };
 
             var player = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab, scene);
@@ -160,7 +165,7 @@ namespace Overworked.EditorTools
 
         static void Wall(GameObject parent, string name, Sprite square, float x)
         {
-            var wall = Rect(parent, name, square, new Vector2(x, 0f), new Vector2(1f, HalfHeight * 2), new Color(0.15f, 0.16f, 0.15f), -4);
+            var wall = Rect(parent, name, square, new Vector2(x, 0f), new Vector2(1f, (HalfHeight + BoundsMargin) * 2), new Color(0.15f, 0.16f, 0.15f), -4);
             wall.AddComponent<BoxCollider2D>();
         }
     }
