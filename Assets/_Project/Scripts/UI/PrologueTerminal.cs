@@ -1,13 +1,16 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Overworked
 {
     /// <summary>
-    /// Пролог (паспорт, раздел 5) в виде Linux-терминала: строки загрузки печатаются посимвольно,
-    /// затем строка ввода «Enter your name: █». Имя — не пустое, до 16 символов; Enter → приветствие → Floor_03.
+    /// Пролог (паспорт, раздел 5) в виде Linux-терминала: сначала лог загрузки в стиле Arch Linux
+    /// (ядро с метками времени, службы [  OK  ] / [FAILED], прокрутка, любая клавиша — пропустить),
+    /// затем экран очищается, заголовок tty1 печатается посимвольно и появляется строка ввода «Enter your name: █». Имя — не пустое, до 16 символов; Enter → приветствие → Floor_03.
     /// Тексты — в DialogueData (Data/Dialogues/Prologue_*), поддерживают rich text (&lt;color&gt;).
     /// Последняя строка intro — подпись у поля ввода, остальные печатаются выше.
     /// </summary>
@@ -22,7 +25,22 @@ namespace Overworked
         [Tooltip("Поле ввода имени")]
         [SerializeField] TMP_InputField nameInput;
 
-        [Tooltip("Строки загрузки и приглашение; последняя строка — подпись у поля ввода")]
+        [Tooltip("Лог загрузки в стиле Arch Linux (ядро + службы). Строки выводятся целиком, быстро, с прокруткой")]
+        [SerializeField] DialogueData boot;
+
+        [Tooltip("Пауза между строками лога загрузки: от (x) до (y) секунд, случайно")]
+        [SerializeField] Vector2 bootLineDelay = new Vector2(0.015f, 0.12f);
+
+        [Tooltip("Дополнительная пауза после строки с [FAILED] — чтобы игрок успел её заметить")]
+        [SerializeField] float failedPause = 0.8f;
+
+        [Tooltip("Сколько держать конец лога перед очисткой экрана")]
+        [SerializeField] float bootHold = 1.2f;
+
+        [Tooltip("Сколько строк лога помещается на экран; старые уезжают вверх")]
+        [SerializeField] int maxBootLines = 24;
+
+        [Tooltip("Экран после загрузки: заголовок tty1 и приглашение; последняя строка — подпись у поля ввода")]
         [SerializeField] DialogueData intro;
 
         [Tooltip("Ответ после ввода имени, поддерживает {name}")]
@@ -36,6 +54,9 @@ namespace Overworked
 
         [Tooltip("Максимальная длина имени")]
         [SerializeField] int maxNameLength = 16;
+
+        [Tooltip("Материал CRT (как у автомата Tiny UFO); пусто — терминал без эффекта")]
+        [SerializeField] Material crtMaterial;
 
         bool submitted;
         GameObject inputRow;
@@ -54,7 +75,29 @@ namespace Overworked
             nameInput.onSubmit.RemoveAllListeners();
             nameInput.onSubmit.AddListener(OnSubmit);
             nameInput.text = "";
+            EnableCrt();
             StartCoroutine(IntroRoutine());
+        }
+
+        /// <summary>
+        /// Включает CRT на всё время терминала (загрузка + ввод имени). Меню до этого остаётся чистым,
+        /// а после пролога грузится Floor_03 — эффект уходит вместе со сценой.
+        /// </summary>
+        void EnableCrt()
+        {
+            var cam = Camera.main;
+            if (crtMaterial == null || cam == null) return;
+            // CRT — проход камеры, а overlay-холст рисуется поверх кадра мимо неё. Переводим холст
+            // терминала на эту камеру, чтобы эффект лёг на текст.
+            var canvas = GetComponentInParent<Canvas>().rootCanvas;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = cam;
+            canvas.planeDistance = 1f;
+            // Не «??»: у UnityEngine.Object отсутствующий компонент — «фальшивый null», ?? его не видит.
+            var crt = cam.GetComponent<TerminalCrt>();
+            if (crt == null) crt = cam.gameObject.AddComponent<TerminalCrt>();
+            crt.material = crtMaterial;
+            crt.enabled = true;
         }
 
         IEnumerator IntroRoutine()
@@ -62,9 +105,53 @@ namespace Overworked
             int last = intro != null && intro.Lines != null ? intro.Lines.Length - 1 : -1;
             prompt.text = last >= 0 ? intro.Lines[last].Text : "Enter your name:";
             output.text = "";
+            if (boot != null && boot.Lines != null && boot.Lines.Length > 0)
+            {
+                yield return BootRoutine();
+                // Как getty после загрузки: экран очищается, остаётся заголовок tty и приглашение.
+                output.text = "";
+                yield return new WaitForSecondsRealtime(0.4f);
+            }
             yield return Type(Join(intro, last), false);
             inputRow.SetActive(true);
             nameInput.ActivateInputField();
+        }
+
+        /// <summary>
+        /// Лог загрузки: строки выводятся целиком (не посимвольно) с неровными паузами, экран прокручивается.
+        /// Любая клавиша — промотать до конца.
+        /// </summary>
+        IEnumerator BootRoutine()
+        {
+            var shown = new List<string>();
+            bool skip = false;
+            output.maxVisibleCharacters = int.MaxValue;
+            foreach (var line in boot.Lines)
+            {
+                shown.Add(line.Text);
+                if (shown.Count > maxBootLines) shown.RemoveAt(0);
+                output.text = string.Join("\n", shown);
+                if (skip) continue;
+                float delay = Random.Range(bootLineDelay.x, bootLineDelay.y);
+                if (line.Text != null && line.Text.Contains("FAILED")) delay += failedPause;
+                yield return WaitOrSkip(delay, () => skip = true);
+            }
+            if (!skip) yield return WaitOrSkip(bootHold, () => { });
+        }
+
+        /// <summary>Ждёт seconds (реальное время); если нажата любая клавиша — сразу выходит и вызывает onSkip.</summary>
+        static IEnumerator WaitOrSkip(float seconds, System.Action onSkip)
+        {
+            float end = Time.unscaledTime + seconds;
+            while (Time.unscaledTime < end)
+            {
+                if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
+                {
+                    onSkip();
+                    yield break;
+                }
+                yield return null;
+            }
         }
 
         void OnSubmit(string value)
