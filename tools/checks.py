@@ -20,11 +20,11 @@ ASSETS = "Assets/"
 
 # Кто чем владеет (см. docs/TASKS.md, раздел 1). Пути — префиксы.
 # Общие места (Scripts/UI/, Prefabs/, Art/, Data/ и т. п.) никому не приписаны — их можно трогать всем.
+# Основные сцены (MainMenu, Floor_03/02/01, WhiteRoom) — общие: в них собирается игра из утверждённых механик.
 OWNERS = {
     "p1": [
         "Assets/_Project/Scripts/Core/",
         "Assets/_Project/Scripts/Player/",
-        "Assets/_Project/Scenes/MainMenu.unity",
         "Assets/_Project/Scenes/Sandbox/Sandbox_P1",
         "ProjectSettings/",
         "Packages/",
@@ -35,14 +35,12 @@ OWNERS = {
         "Assets/_Project/Scripts/MiniGames/",
         "Assets/Microgames/",
         "Assets/Core/",
-        "Assets/_Project/Scenes/Floor_01.unity",
         "Assets/_Project/Scenes/Sandbox/Sandbox_P2",
     ],
     "p3": [
         "Assets/_Project/Scripts/Phone/",
         "Assets/_Project/Scripts/Dialogue/",
         "Assets/_Project/Scripts/Story/",
-        "Assets/_Project/Scenes/Floor_03.unity",
         "Assets/_Project/Scenes/Sandbox/Sandbox_P3",
     ],
     "p4": [
@@ -53,8 +51,6 @@ OWNERS = {
         "Assets/_Project/Scripts/Effects/",
         "Assets/_Project/Scripts/Audio/",
         "Assets/_Project/Scripts/Ending/",
-        "Assets/_Project/Scenes/Floor_02.unity",
-        "Assets/_Project/Scenes/WhiteRoom.unity",
         "Assets/_Project/Scenes/Sandbox/Sandbox_P4",
     ],
 }
