@@ -107,17 +107,21 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 ### Этап 0 · Ч0–Ч1 · Фундамент
 
 **P1** (все ждут его пуша, это главный блокер дня):
-- [ ] Unity 6000.5.6f1, шаблон URP 2D, проект в корне репозитория.
-- [ ] `.gitignore` и `.gitattributes` (Git LFS) уже лежат в корне репозитория — не перезаписывать.
-  Force Text, Visible Meta Files, Input System.
-- [ ] Скрипты Overworked — в namespace `Overworked` (в Tiny UFO есть свои `PlayerController`
-  и `UIManager`, namespace защищает от путаницы).
-- [ ] Папки по паспорту (раздел 31), пустые сцены `MainMenu`, `Floor_03/02/01`, `WhiteRoom`, `Sandbox_P1..P4`.
-- [ ] Заглушки всех классов из раздела 3, префаб `_Systems`, `Bootstrap`.
-- [ ] Cinemachine, TextMeshPro (+ кириллица в шрифте).
-- [ ] Пуш в `main` **до Ч1**, сообщение в чат «можно пуллить».
+- [x] Unity 6000.5.6f1, шаблон URP 2D, проект в корне репозитория; Force Text, Visible Meta Files,
+  только новый Input System. **Сделано заранее** (ветка `setup/unity-project`).
+- [x] Скрипты — в namespace `Overworked`, сборка `Overworked.asmdef` (`Assets/_Project/Scripts/`).
+- [x] Папки по паспорту (раздел 31), сцены `MainMenu`, `Floor_03/02/01` (иерархия по шаблону этажа),
+  `WhiteRoom`, `Sandbox_P1..P4`, Build Settings.
+- [x] Заглушки всех классов из раздела 3, префаб `_Systems` (в `Prefabs/Systems/Resources/`), `Bootstrap`.
+- [x] Cinemachine 3.1.7; TextMeshPro входит в uGUI.
+- [ ] Шрифт TextMeshPro с кириллицей и латиницей (в `Fonts/`).
+- [ ] Открыть проект, проверить, что любая сцена запускается без ошибок, сообщение в чат «можно пуллить».
 
-**Все в первые 5 минут:** `git lfs install` и `git config core.hooksPath tools/hooks`.
+Генератор каркаса — меню **Overworked → Setup Project** (`Assets/_Project/Editor/ProjectSetup.cs`):
+повторный запуск досоздаёт недостающее и ничего не перезаписывает.
+
+**Все в первые 5 минут:** `git lfs install`, `git config core.hooksPath tools/hooks`, `git pull`,
+открыть проект в Unity Hub (Add → папка репозитория; первый импорт — несколько минут).
 
 **P2, P3, P4 пока P1 готовит проект** (без Unity):
 - **P2:** изучить исходники в [`External/TinyUFO/`](../External/TinyUFO/README.md): точка входа

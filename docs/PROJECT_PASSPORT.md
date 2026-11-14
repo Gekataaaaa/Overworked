@@ -522,7 +522,8 @@ GameManager хранит `GameState` (CurrentFloor, PlayerName, флаги) и �
 Между сценами живут рассудок, история телефона, имя игрока и HUD. Поэтому префаб
 **`_Systems`** (GameManager, SanityManager, HeartbeatManager, PhoneManager,
 MessageManager, ObjectiveManager, DialogueManager, AudioManager, HUD Canvas)
-создаётся один раз через `Bootstrap` и помечается `DontDestroyOnLoad`. Если сцена
+(`Assets/_Project/Prefabs/Systems/Resources/_Systems.prefab`) создаётся один раз через
+`Bootstrap` до загрузки первой сцены и помечается `DontDestroyOnLoad`. Если сцена
 запущена прямо из редактора, `Bootstrap` сам создаёт `_Systems` и ставит
 тестовое имя.
 
@@ -617,7 +618,8 @@ Assets/
 │   │   ├── Floor_01
 │   │   ├── WhiteRoom
 │   │   └── Sandbox/          # личные тестовые сцены: Sandbox_<имя>, в билд не входят
-│   ├── Scripts/              # см. раздел 22
+│   ├── Scripts/              # см. раздел 22, сборка Overworked.asmdef
+│   ├── Editor/               # инструменты редактора (ProjectSetup — генератор каркаса)
 │   ├── Prefabs/
 │   │   ├── Systems/          # _Systems, HUD Canvas
 │   │   ├── Player/
