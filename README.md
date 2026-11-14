@@ -34,7 +34,8 @@
 и правила работы с git — в **[паспорте проекта](docs/PROJECT_PASSPORT.md)**.
 
 Сюжет, все сцены, реплики и сообщения — в **[нарративном документе](docs/narrative/NARRATIVE.md)**
-(оригинал — [docx](docs/narrative/NARRATIVE.docx)).
+(оригинал — [docx](docs/narrative/NARRATIVE.docx)). Английская версия, которая идёт в игру, —
+[NARRATIVE_EN.md](docs/narrative/NARRATIVE_EN.md).
 
 Правила документации, комментариев в коде и git — в **[CONTRIBUTING.md](CONTRIBUTING.md)**
 (обязательно к прочтению). Документы по отдельным системам — в [docs/systems/](docs/systems/).
