@@ -15,3 +15,8 @@
 | Phone: PhoneManager, MessageManager, PhoneUI, тосты | P3 | [Phone.md](Phone.md) |
 | DialogueManager: субтитры, описания, системный текст | P3 | [DialogueManager.md](DialogueManager.md) |
 | UIManager: HUD, тосты, записка, подсказка управления | P3 | [UIManager.md](UIManager.md) |
+| SanityManager, SanityBarUI | P4 | [SanityManager.md](SanityManager.md) |
+| HeartbeatManager, HeartbeatUI | P4 | [HeartbeatManager.md](HeartbeatManager.md) |
+| FlashlightController | P4 | [FlashlightController.md](FlashlightController.md) |
+| AudioManager, Audio Mixer, сборщик Sandbox_P4 | P4 | [AudioManager.md](AudioManager.md) |
+| WhiteRoomSequence, WhiteRoomTrigger, сборщик сцены WhiteRoom | P4 | [WhiteRoomSequence.md](WhiteRoomSequence.md) |
