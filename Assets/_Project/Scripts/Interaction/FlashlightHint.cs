@@ -19,6 +19,9 @@ namespace Overworked
         [Tooltip("Высота над центром Дэнни, юнитов")]
         [SerializeField] float height = 1.6f;
 
+        [Tooltip("Цвет подсказки — как у подсказки [E] и текста терминала в прологе")]
+        [SerializeField] Color color = new Color(0.36f, 0.85f, 0.45f);
+
         TextMeshPro label;
         float shownAt = -1f;
         bool subscribed;
@@ -68,7 +71,7 @@ namespace Overworked
             label = go.AddComponent<TextMeshPro>();
             label.fontSize = 3f;
             label.alignment = TextAlignmentOptions.Bottom;
-            label.color = Color.white;
+            label.color = color;
             label.textWrappingMode = TextWrappingModes.NoWrap;
             label.rectTransform.sizeDelta = new Vector2(10f, 1f);
             label.rectTransform.pivot = new Vector2(0.5f, 0f);
