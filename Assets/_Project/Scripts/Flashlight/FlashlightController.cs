@@ -118,7 +118,9 @@ namespace Overworked
             transform.position = player.transform.position + new Vector3(handOffset.x * facing, handOffset.y, 0f);
             // Свет 2D смотрит вдоль своей оси +Y: -90° — вправо, 90° — влево.
             float targetAngle = facing > 0 ? -90f : 90f;
-            angle = Mathf.MoveTowardsAngle(angle, targetAngle, turnSpeed * Time.deltaTime);
+            // Не MoveTowardsAngle: между -90 и 90 ровно 180°, «кратчайший путь» неоднозначен, и при повороте
+            // влево→вправо луч проходил по полу. Линейно в [-90, 90] — разворот всегда через верх (0° = вверх).
+            angle = Mathf.MoveTowards(Mathf.Clamp(angle, -90f, 90f), targetAngle, turnSpeed * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
 
