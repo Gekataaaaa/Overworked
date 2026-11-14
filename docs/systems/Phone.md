@@ -27,7 +27,7 @@ UI собирается меню **Overworked → P3 → Build Phone UI** (пе�
 | `PhoneManager.Instance.Open()` / `Close()` / `Toggle()` | открыть/закрыть телефон |
 | `PhoneManager.Instance.IsOpen`, `OnOpened`, `OnClosed` | состояние и события |
 | `PhoneManager.Instance.SetAvailable(bool)` | включить/выключить телефон (онбординг HUD). Обычно через `UIManager.SetHudVisible(HudPart.Phone, v)` — оно прячет и кнопку |
-| `UIManager.Instance.ShowToast(text)` | тост сверху по центру; несколько — по очереди; `{name}` подставляется |
+| `UIManager.Instance.ShowToast(text)` | тост сверху по центру — см. [UIManager.md](UIManager.md) |
 
 **Правила:**
 - Цепочка «Макс, следом Босс» — два вызова `Deliver` подряд; при открытии телефон показывает чат
