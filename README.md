@@ -54,6 +54,14 @@ git lfs install
 git lfs pull
 ```
 
+И включить проверки перед пушем (тоже один раз, нужен Python 3.8+):
+
+```bash
+git config core.hooksPath tools/hooks
+```
+
+Что проверяется — в [CONTRIBUTING.md](CONTRIBUTING.md), раздел 6.
+
 ## Статус
 
 Дизайн и структура проекта зафиксированы. Unity-проект ещё не создан.

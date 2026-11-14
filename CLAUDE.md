@@ -8,3 +8,5 @@
 - Изменил дизайн или архитектуру → обнови паспорт в том же коммите.
 - Тексты игры — на английском (из `docs/narrative/NARRATIVE_EN.md`) и в ScriptableObject
   (`Assets/_Project/Data/`), не в коде. Меняется русский нарратив — обнови и английский.
+- Перед пушем работает хук `tools/hooks/pre-push` (`tools/checks.py`); не обходить его `--no-verify`.
+  Если в репозитории есть `Assets/`, перед коммитом кода запускай `python tools/check_compile.py`.

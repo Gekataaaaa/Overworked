@@ -1,0 +1,25 @@
+# Те же проверки, что и в pre-push хуке (tools/checks.py), но на GitHub —
+# чтобы в main не попало то, что обошло хук.
+name: checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false   # нужны именно LFS-указатели, а не сами файлы
+      - name: Run checks
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            python3 tools/checks.py --ci --rev HEAD --branch "${{ github.head_ref }}" --base "origin/${{ github.base_ref }}"
+          else
+            python3 tools/checks.py --ci --rev HEAD --branch main --base "${{ github.event.before }}"
+          fi

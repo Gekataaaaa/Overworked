@@ -1,0 +1,29 @@
+#!/bin/sh
+# Проверки Overworked перед пушем (tools/checks.py) + стандартный хук Git LFS.
+# Включается один раз: git config core.hooksPath tools/hooks
+
+remote="$1"
+
+# Найти рабочий Python (на Windows python3 бывает заглушкой из Microsoft Store).
+PY=""
+for c in python3 python py; do
+    if command -v "$c" >/dev/null 2>&1 && "$c" -c "import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)" >/dev/null 2>&1; then
+        PY="$c"; break
+    fi
+done
+if [ -z "$PY" ]; then
+    echo "[checks] Python 3.8+ не найден — проверки пропущены. Установите Python." >&2
+else
+    git fetch -q "$remote" main 2>/dev/null
+    z=0000000000000000000000000000000000000000
+    # stdin: <local ref> <local sha> <remote ref> <remote sha>
+    while read -r local_ref local_sha remote_ref remote_sha; do
+        [ "$local_sha" = "$z" ] && continue          # удаление ветки
+        branch="${remote_ref#refs/heads/}"
+        "$PY" tools/checks.py --rev "$local_sha" --branch "$branch" --base "$remote/main" || exit 1
+    done
+fi
+
+# Без этого Git LFS не загрузит картинки и звуки на сервер.
+command -v git-lfs >/dev/null 2>&1 || { echo >&2 "Git LFS не установлен: https://git-lfs.com"; exit 2; }
+exec git lfs pre-push "$@"

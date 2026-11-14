@@ -169,3 +169,8 @@ Packages/packages-lock.json linguist-generated
 
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
+
+# Хуки и скрипты проверок — всегда LF, иначе sh на Linux/Mac падает на 
+tools/hooks/*          text eol=lf
+*.py                    text eol=lf
+*.yml                   text eol=lf

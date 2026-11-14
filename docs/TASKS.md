@@ -37,6 +37,10 @@
   P1 мержит по очереди → все делают `git pull` из `main` и мержат `main` в свою ветку.
 - Сломал `main` — чинишь сразу, всё остальное ждёт.
 - Пушить только то, что **компилируется**. Нет ошибок в консоли — можно пушить.
+- **Проверки перед пушем** включает каждый один раз: `git config core.hooksPath tools/hooks`.
+  Хук не пустит пуш без `.meta`, с конфликтом, в чужую зону, мимо LFS или с отставанием
+  от `main` (подробно — [CONTRIBUTING.md](../CONTRIBUTING.md), раздел 6).
+- Перед синком — `python tools/check_compile.py` (Unity закрыт). P1 запускает её перед каждым мержем.
 
 ---
 
@@ -113,11 +117,12 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 - [ ] Cinemachine, TextMeshPro (+ кириллица в шрифте).
 - [ ] Пуш в `main` **до Ч1**, сообщение в чат «можно пуллить».
 
+**Все в первые 5 минут:** `git lfs install` и `git config core.hooksPath tools/hooks`.
+
 **P2, P3, P4 пока P1 готовит проект** (без Unity):
 - **P2:** изучить исходники в [`External/TinyUFO/`](../External/TinyUFO/README.md): точка входа
   `SpinvMicrogame.Begin`, волны `WaveManager` + `Waves/Wave4.asset`, меню `SpinvMainMenu`.
   Составить список, что выключить (лидерборд, достижения, туториалы, аркада, настройки).
-- **Все:** `git lfs install` один раз на машине — иначе спрайты Tiny UFO придут белыми.
 - **P3:** из [NARRATIVE_EN](narrative/NARRATIVE_EN.md) выписать таблицу: все сообщения, реплики, описания, задания → будущие ScriptableObject (имя ассета, этаж, триггер).
 - **P4:** собрать звуки (гул ламп, сердцебиение, кардиомонитор, ИВЛ, удары, вибрация телефона, ошибка/успех турникета, стрекот клавиатур) — бесплатные CC0.
 
