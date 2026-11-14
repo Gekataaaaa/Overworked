@@ -223,6 +223,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6401476095101949639}
+  - component: {fileID: 565478263286012600}
   m_Layer: 0
   m_Name: Heartbeat
   m_TagString: Untagged
@@ -230,6 +231,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &565478263286012600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678494697288823929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982111e9e290542499e914b8d22092b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Overworked::Overworked.HeartbeatUI
+  bpmText: {fileID: 447331543739926502}
+  icon: {fileID: 4243493852734357592}
+  pulseScale: 1.25
+  pulseTime: 0.15
+  placeUnderSanityBar: 0
+  gapUnderSanityBar: 10
 --- !u!224 &6401476095101949639
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2305,6 +2324,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459098828eb7a704cba1b8e6536e3703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Overworked::Overworked.HeartbeatManager
+  minBpm: 70
+  maxBpm: 120
+  screamerMinBpm: 160
+  screamerMaxBpm: 180
+  riseTime: 1
+  fallTime: 3.5
+  spikeRise: 0.6
+  fallSharpness: 4
+  beatVariability: 0.04
+  wobbleAmount: 5
+  wobbleSpeed: 0.35
+  screamerRiseTime: 2.5
+  screamerHold: 3
+  screamerRecovery: 10
+  bedFadeTime: 12
+  beatClip: {fileID: 0}
+  volumeAtFullSanity: 0.25
+  volumeAtZeroSanity: 0.85
+  screamerVolume: 1
+  scriptedVolume: 0.6
 --- !u!114 &1546310525367356323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2400,6 +2439,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782ed08187cba9c4daa802c921b7ad14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Overworked::Overworked.AudioManager
+  musicGroup: {fileID: 802933839290267350, guid: a8311994a4c8b9b418bf69a3244f3c70, type: 2}
+  ambientGroup: {fileID: 5502899169344021138, guid: a8311994a4c8b9b418bf69a3244f3c70, type: 2}
+  sfxGroup: {fileID: 5235259970015084980, guid: a8311994a4c8b9b418bf69a3244f3c70, type: 2}
+  heartbeatGroup: {fileID: -4302586250878302079, guid: a8311994a4c8b9b418bf69a3244f3c70, type: 2}
+  musicVolume: 0.6
+  ambientVolume: 0.5
+  sfxVolume: 1
+  heartbeatVolume: 1
+  ambientFade: 1
 --- !u!114 &9004855052501712551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4480,6 +4528,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f8b21a009fb87740998d3924c34cab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Overworked::Overworked.SanityBarUI
+  fill: {fileID: 8153656906810727727}
+  fullColor: {r: 0.55, g: 0.68, b: 0.6, a: 1}
+  emptyColor: {r: 0.55, g: 0.12, b: 0.1, a: 1}
 --- !u!1 &8144298604922803888
 GameObject:
   m_ObjectHideFlags: 0

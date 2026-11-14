@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
   - Speaker: 0
-    Text: 'I don''t understand where we are.'
+    Text: I don't understand where we are.
   - Speaker: 0
-    Text: 'This isn''t the office anymore, is it?'
+    Text: This isn't the office anymore, is it?

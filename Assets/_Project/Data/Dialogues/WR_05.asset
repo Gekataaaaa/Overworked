@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
   - Speaker: 0
-    Text: 'Funny. I can''t even remember the last time I slept properly.'
+    Text: Funny. I can't even remember the last time I slept properly.

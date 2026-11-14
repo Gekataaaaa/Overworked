@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
   - Speaker: 0
-    Text: 'I kept thinking that if I just finished the work, I could rest.'
+    Text: I kept thinking that if I just finished the work, I could rest.
   - Speaker: 0
-    Text: 'One more report. One more shift. Just a little longer.'
+    Text: One more report. One more shift. Just a little longer.
