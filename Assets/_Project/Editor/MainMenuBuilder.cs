@@ -20,9 +20,11 @@ namespace Overworked.EditorTools
         const string FontsDir = "Assets/_Project/Fonts";
         const string MainFontPath = FontsDir + "/PTSans SDF.asset";
         const string MonoFontPath = FontsDir + "/IBMPlexMono SDF.asset";
+        const string BootPath = "Assets/_Project/Data/Dialogues/Prologue_Boot.asset";
         const string IntroPath = "Assets/_Project/Data/Dialogues/Prologue_Intro.asset";
         const string WelcomePath = "Assets/_Project/Data/Dialogues/Prologue_Welcome.asset";
         const string ScenePath = "Assets/_Project/Scenes/MainMenu.unity";
+        const string CrtMaterialPath = "Assets/_Project/Materials/TerminalCRT.mat";
 
         static readonly Color TerminalGreen = new Color(0.36f, 0.85f, 0.45f);
         static readonly Color PromptColor = new Color(0.6f, 1f, 0.68f);
@@ -48,24 +50,50 @@ namespace Overworked.EditorTools
 
             // Стартовые тексты, только если ассетов ещё нет; дальше их правят в инспекторе.
             const string ok = "[  <color=#7CFF8A>OK</color>  ]";
-            var intro = EnsureDialogue(IntroPath,
-                "<color=#E0E0E0>WTTS v.4.02 — Work Time Tracking System (tty1)</color>",
+            // Лог загрузки в стиле Arch Linux: ядро с метками времени, затем службы systemd.
+            EnsureDialogue(BootPath,
+                "<color=#8A8A8A>[    0.000000]</color> Linux version 6.9.4-wtts1-1 (wtts@buildhost) (gcc 14.1.1) #1 SMP PREEMPT_DYNAMIC",
+                "<color=#8A8A8A>[    0.000000]</color> Command line: BOOT_IMAGE=/vmlinuz-wtts root=UUID=0f03-a114 rw quiet shift=night",
+                "<color=#8A8A8A>[    0.000000]</color> BIOS-provided physical RAM map:",
+                "<color=#8A8A8A>[    0.004118]</color> DMI: OVERWORK Corp. Office Terminal WS-114, BIOS 4.02 11/13/2009",
+                "<color=#8A8A8A>[    0.118342]</color> ACPI: Core revision 20240322",
+                "<color=#8A8A8A>[    0.296571]</color> PCI: Using configuration type 1 for base access",
+                "<color=#8A8A8A>[    0.437902]</color> usb 1-1: new full-speed USB device number 2 (badge reader)",
+                "<color=#8A8A8A>[    0.552018]</color> input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input3",
+                "<color=#8A8A8A>[    0.873116]</color> EXT4-fs (sda2): mounted filesystem with ordered data mode. Quota mode: none.",
+                "<color=#8A8A8A>[    1.002377]</color> systemd[1]: systemd 256 running in system mode",
+                "<color=#8A8A8A>[    1.004121]</color> systemd[1]: Detected architecture x86-64.",
+                "<color=#8A8A8A>[    1.010532]</color> systemd[1]: Hostname set to <noparse><floor03-ws114></noparse>.",
                 "",
-                ok + " Started Night Shift Service.",
-                ok + " Reached target Floor 03.",
-                "[ <color=#FFC857>WARN</color> ] Operator not registered.",
+                "         Starting Journal Service...",
+                "[  <color=#7CFF8A>OK</color>  ] Started Journal Service.",
+                "[  <color=#7CFF8A>OK</color>  ] Reached target Local File Systems.",
+                "         Starting Network Manager...",
+                "[  <color=#7CFF8A>OK</color>  ] Started Network Manager.",
+                "[  <color=#7CFF8A>OK</color>  ] Started Badge Reader Daemon.",
+                "         Starting Light Control (Floor 03)...",
+                "[  <color=#7CFF8A>OK</color>  ] Started Light Control (Floor 03).",
+                "         Starting Main Exit Door Controller...",
+                "[<color=#FF5C5C>FAILED</color>] Failed to start Main Exit Door Controller.",
+                "See 'systemctl status exit-door.service' for details.",
+                "         Starting Night Shift Service...",
+                "[  <color=#7CFF8A>OK</color>  ] Started Night Shift Service.",
+                "[  <color=#7CFF8A>OK</color>  ] Reached target Floor 03.",
+                "[ <color=#FFC857>WARN</color> ] Operator not registered.");
+            EnsureDialogue(IntroPath,
+                "<color=#E0E0E0>WTTS v.4.02 — Work Time Tracking System (tty1)</color>",
                 "",
                 "Night shift requires mandatory operator registration.",
                 "Enter your name to confirm access.",
                 "",
                 "Enter your name:");
-            var welcome = EnsureDialogue(WelcomePath,
+            EnsureDialogue(WelcomePath,
                 ok + " Operator registered: {name}",
                 "",
                 "WELCOME TO THE STAFF, {name}.",
                 "DO NOT LEAVE YOUR WORKPLACE.");
 
-            BuildScene(mainFont, monoFont, intro, welcome);
+            BuildScene(mainFont, monoFont);
             AssetDatabase.SaveAssets();
             Debug.Log("[Setup] MainMenu: меню и пролог готовы");
         }
@@ -143,7 +171,7 @@ namespace Overworked.EditorTools
 
         // ------------------------------------------------------------ сцена
 
-        static void BuildScene(TMP_FontAsset mainFont, TMP_FontAsset monoFont, DialogueData intro, DialogueData welcome)
+        static void BuildScene(TMP_FontAsset mainFont, TMP_FontAsset monoFont)
         {
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             foreach (var go in scene.GetRootGameObjects())
@@ -197,7 +225,13 @@ namespace Overworked.EditorTools
             var input = NameInput(row, monoFont);
 
             var prologue = terminal.gameObject.AddComponent<PrologueTerminal>();
-            Wire(prologue, ("output", output), ("prompt", prompt), ("nameInput", input), ("intro", intro), ("welcome", welcome));
+            // Тексты грузим здесь, ПОСЛЕ OpenScene: открытие сцены выгружает загруженные раньше ассеты,
+            // и в сцену записались бы пустые ссылки (так пролог раньше остался без текстов).
+            Wire(prologue, ("output", output), ("prompt", prompt), ("nameInput", input),
+                ("boot", AssetDatabase.LoadAssetAtPath<DialogueData>(BootPath)),
+                ("intro", AssetDatabase.LoadAssetAtPath<DialogueData>(IntroPath)),
+                ("welcome", AssetDatabase.LoadAssetAtPath<DialogueData>(WelcomePath)),
+                ("crtMaterial", AssetDatabase.LoadAssetAtPath<Material>(CrtMaterialPath)));
 
             var menuUi = canvasGo.AddComponent<MainMenuUI>();
             Wire(menuUi, ("menuPanel", menu.gameObject), ("continueButton", cont), ("newGameButton", newGame),

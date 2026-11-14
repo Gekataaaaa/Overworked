@@ -48,13 +48,23 @@
 
 # PROLOGUE. LOGIN
 
-After pressing "Start Game", the screen goes dark. An old corporate terminal appears, styled as a Linux console: black screen, dim green monospace text, a blinking cursor. The text is typed out line by line:
+After pressing "New Game", the screen goes dark. The old corporate terminal boots up like an Arch Linux machine: kernel messages with timestamps race up the screen, then system services report in one by one. Any key skips the boot log.
+
+**SYSTEM (boot log, abridged):**  
+[    0.000000] Linux version 6.9.4-wtts1-1 … shift=night  
+[    0.004118] DMI: OVERWORK Corp. Office Terminal WS-114, BIOS 4.02  
+[    1.010532] systemd[1]: Hostname set to <floor03-ws114>.  
+[  OK  ] Started Badge Reader Daemon.  
+[  OK  ] Started Light Control (Floor 03).  
+[FAILED] Failed to start Main Exit Door Controller.  
+[  OK  ] Started Night Shift Service.  
+[  OK  ] Reached target Floor 03.  
+[ WARN ] Operator not registered.
+
+*The failed exit door quietly foreshadows the locked main exit on the first floor.* The screen clears, and the login screen is typed out:
 
 **SYSTEM:**  
 WTTS v.4.02 — Work Time Tracking System (tty1)  
-[  OK  ] Started Night Shift Service.  
-[  OK  ] Reached target Floor 03.  
-[ WARN ] Operator not registered.  
 Night shift requires mandatory operator registration.  
 Enter your name to confirm access.  
 Enter your name: █

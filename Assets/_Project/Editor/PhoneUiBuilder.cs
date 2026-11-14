@@ -25,6 +25,12 @@ namespace Overworked.EditorTools
             "Assets/_Project/Data/Messages/F3_Boss_01.asset",
             "Assets/_Project/Data/Messages/F3_Max_02.asset",
         };
+        static readonly string[] TestDialogues =
+        {
+            "Assets/_Project/Data/Dialogues/F3_Start.asset",
+            "Assets/_Project/Data/Inspectables/F3_CharlesDesk.asset",
+            "Assets/_Project/Data/Dialogues/F2_Monitor201.asset",
+        };
 
         // Палитра проекта: грязно-зелёный, серый, выцветший синий.
         static readonly Color Body = new Color(0.07f, 0.08f, 0.08f, 0.97f);
@@ -327,7 +333,7 @@ namespace Overworked.EditorTools
 
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             foreach (var go in scene.GetRootGameObjects())
-                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester") Object.DestroyImmediate(go);
+                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester" or "HudTester" or "StoryDemo") Object.DestroyImmediate(go);
 
             const float halfWidth = 15f, floorY = -4.2f, top = 5.65f, bottom = -5.65f;
             var env = new GameObject("Environment");
@@ -370,9 +376,54 @@ namespace Overworked.EditorTools
                 arr.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<MessageData>(TestMessages[i]);
             so.ApplyModifiedPropertiesWithoutUndo();
 
+            var dialogueTester = new GameObject("DialogueTester").AddComponent<DialogueTester>();
+            var dso = new SerializedObject(dialogueTester);
+            var darr = dso.FindProperty("dialogues");
+            darr.arraySize = TestDialogues.Length;
+            for (int i = 0; i < TestDialogues.Length; i++)
+                darr.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<DialogueData>(TestDialogues[i]);
+            dso.ApplyModifiedPropertiesWithoutUndo();
+
+            new GameObject("HudTester").AddComponent<HudTester>();
+            BuildStoryDemo(square, floorY);
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log("[Setup] Sandbox_P3: коридор, игрок и PhoneTester готовы (1–3 — сообщения, 0 — Max + Boss)");
+            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0), DialogueTester (Z/X/C, V), HudTester (N/H/J/K), StoryDemo (зона справа) готовы");
+        }
+
+        /// <summary>
+        /// Пример сценария: жёлтая зона справа от старта. Дэнни входит → стоит → сообщение Макса
+        /// (ждём прочтения) → реплики → тост → управление возвращается.
+        /// </summary>
+        static void BuildStoryDemo(Sprite square, float floorY)
+        {
+            var go = new GameObject("StoryDemo");
+            go.transform.position = new Vector3(6f, floorY + 2f, 0f);
+            var col = go.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
+            col.size = new Vector2(1f, 4f);
+            PlayerSandboxBuilder.Rect(go, "Marker", square, Vector2.zero, new Vector2(1f, 4f), new Color(0.9f, 0.8f, 0.2f, 0.25f), -6);
+
+            var seq = go.AddComponent<ScriptedSequence>();
+            var so = new SerializedObject(seq);
+            var steps = so.FindProperty("steps");
+            SequenceStep[] demo =
+            {
+                new LockPlayerStep { Locked = true },
+                new MessageStep { Message = AssetDatabase.LoadAssetAtPath<MessageData>(TestMessages[0]), WaitUntilRead = true },
+                new DialogueStep { Dialogue = AssetDatabase.LoadAssetAtPath<DialogueData>(TestDialogues[0]), Wait = true },
+                new ToastStep { Text = "Demo sequence finished" },
+                new LockPlayerStep { Locked = false },
+            };
+            steps.arraySize = demo.Length;
+            for (int i = 0; i < demo.Length; i++) steps.GetArrayElementAtIndex(i).managedReferenceValue = demo[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            var trigger = go.AddComponent<SequenceTrigger>();
+            var tso = new SerializedObject(trigger);
+            tso.FindProperty("sequence").objectReferenceValue = seq;
+            tso.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }

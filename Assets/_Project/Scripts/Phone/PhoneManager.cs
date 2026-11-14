@@ -106,6 +106,7 @@ namespace Overworked
             var player = PlayerController.Instance;
             if (player == null || player.State == PlayerState.Cutscene) return false;
             if (PauseMenuUI.Instance != null && PauseMenuUI.Instance.IsPaused) return false;
+            if (UIManager.Instance != null && UIManager.Instance.IsFullscreenOpen) return false;
             if (SceneTransitionManager.Instance != null && SceneTransitionManager.Instance.IsLoading) return false;
             // Мини-игры (считыватель, Tiny UFO) — у них свой ввод; Tiny UFO ещё и additive-сцена поверх этажа.
             if (MiniGameHost.Instance != null && MiniGameHost.Instance.IsOpen) return false;

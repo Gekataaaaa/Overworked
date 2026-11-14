@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Overworked
 {
     /// <summary>
-    /// Общие окна интерфейса: тосты, текст на весь экран, видимость частей HUD.
-    /// Живёт в префабе _Systems, ссылки на элементы HUD проставляет Overworked → P3 → Build Phone UI.
-    /// Готово: тосты, видимость телефона. ЗАГЛУШКА: текст на весь экран и остальные части HUD — P3, этап 1.
+    /// Общие окна интерфейса: тосты, текст на весь экран (записка), подсказка управления,
+    /// видимость частей HUD. Живёт в префабе _Systems; ссылки на элементы HUD проставляют
+    /// меню Overworked → P3 → Build Phone UI и Build HUD.
     /// </summary>
     public class UIManager : SingletonBehaviour<UIManager>
     {
@@ -26,17 +27,73 @@ namespace Overworked
         [Tooltip("Длительность появления/исчезновения тоста, секунды")]
         [SerializeField] float toastFade = 0.25f;
 
+        [Header("Окна на весь экран")]
+        [Tooltip("Окно текста на весь экран (записка, системное сообщение)")]
+        [SerializeField] GameObject fullscreenRoot;
+
+        [Tooltip("Текст окна на весь экран")]
+        [SerializeField] TextMeshProUGUI fullscreenText;
+
+        [Tooltip("Подсказка управления (начало Floor_03)")]
+        [SerializeField] GameObject controlsHintRoot;
+
         [Header("HUD")]
         [Tooltip("Интерфейс телефона — для SetHudVisible(Phone)")]
         [SerializeField] PhoneUI phoneUI;
 
+        [Tooltip("Шкала рассудка (левый верх)")]
+        [SerializeField] GameObject sanityRoot;
+
+        [Tooltip("Пульс (правый верх)")]
+        [SerializeField] GameObject heartbeatRoot;
+
+        /// <summary>Открыто окно на весь экран или подсказка управления — ввод принадлежит им.</summary>
+        public bool IsFullscreenOpen => openWindow != null;
+
         readonly Queue<string> toasts = new Queue<string>();
         Coroutine toastRoutine;
+
+        // Части HUD, которые разрешены сценарием. Показываются ещё и только на этаже (есть игрок).
+        readonly HashSet<HudPart> hidden = new HashSet<HudPart>();
+
+        GameObject openWindow;
+        Action onWindowClosed;
+        int openedFrame;
+        bool lockedByWindow;
 
         void Start()
         {
             if (toastGroup != null) toastGroup.alpha = 0f;
+            if (fullscreenRoot != null) fullscreenRoot.SetActive(false);
+            if (controlsHintRoot != null) controlsHintRoot.SetActive(false);
+            UpdateHudParts();
         }
+
+        void Update()
+        {
+            UpdateHudParts();
+        }
+
+        void LateUpdate()
+        {
+            // Окно открыто тем же нажатием E, которым игрок взял записку, — в этом кадре не закрываем.
+            if (openWindow == null || Time.frameCount == openedFrame) return;
+            // Закрываем в LateUpdate: в Update этого кадра пауза (Esc) и InteractionSystem (E) уже видели
+            // заблокированного игрока — то же нажатие не откроет паузу и не возьмёт соседний предмет.
+            if (ClosePressed()) CloseWindow();
+        }
+
+        static bool ClosePressed()
+        {
+            var kb = Keyboard.current;
+            var mouse = Mouse.current;
+            return (GameInput.Interact != null && GameInput.Interact.WasPressedThisFrame())
+                   || (GameInput.Pause != null && GameInput.Pause.WasPressedThisFrame())
+                   || (kb != null && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
+                   || (mouse != null && mouse.leftButton.wasPressedThisFrame);
+        }
+
+        // ------------------------------------------------------------ тосты
 
         /// <summary>
         /// Короткое уведомление: «Received: Charles's note». Несколько подряд показываются по очереди.
@@ -74,22 +131,108 @@ namespace Overworked
             toastGroup.alpha = to;
         }
 
-        /// <summary>Текст на весь экран (записка, системное сообщение). closed — после закрытия игроком.</summary>
+        // ------------------------------------------------------------ окна на весь экран
+
+        /// <summary>
+        /// Текст на весь экран (записка, системное сообщение). Закрывается E / Space / Enter / кликом / Esc,
+        /// затем closed. Дэнни стоит, пока окно открыто (если его уже держит сценарий — управление не возвращаем).
+        /// Текст проходит через TextFormatter ({name}).
+        /// </summary>
         public void ShowFullscreenText(string text, Action closed)
         {
             Debug.Log($"[UI] Fullscreen: {text}");
-            closed?.Invoke();
+            if (fullscreenRoot == null || fullscreenText == null)
+            {
+                closed?.Invoke();
+                return;
+            }
+            fullscreenText.text = TextFormatter.Format(text);
+            OpenWindow(fullscreenRoot, closed);
         }
 
-        /// <summary>Показать или спрятать часть HUD. Phone — ещё и выключает сам телефон.</summary>
+        /// <summary>Подсказка управления (онбординг Floor_03). closed — когда игрок её закрыл.</summary>
+        public void ShowControlsHint(Action closed)
+        {
+            Debug.Log("[UI] Controls hint");
+            if (controlsHintRoot == null)
+            {
+                closed?.Invoke();
+                return;
+            }
+            OpenWindow(controlsHintRoot, closed);
+        }
+
+        void OpenWindow(GameObject window, Action closed)
+        {
+            // Новое окно поверх старого: старое закрываем честно, чтобы его closed не потерялся.
+            if (openWindow != null) CloseWindow();
+            openWindow = window;
+            onWindowClosed = closed;
+            openedFrame = Time.frameCount;
+            var player = PlayerController.Instance;
+            lockedByWindow = player != null && player.State == PlayerState.Normal;
+            if (lockedByWindow) player.SetInputLocked(true);
+            if (PhoneManager.Instance != null) PhoneManager.Instance.Close();
+            window.SetActive(true);
+        }
+
+        void CloseWindow()
+        {
+            if (openWindow == null) return;
+            openWindow.SetActive(false);
+            openWindow = null;
+            if (lockedByWindow && PlayerController.Instance != null) PlayerController.Instance.SetInputLocked(false);
+            lockedByWindow = false;
+            var cb = onWindowClosed;
+            onWindowClosed = null;
+            cb?.Invoke();
+        }
+
+        // ------------------------------------------------------------ HUD
+
+        /// <summary>
+        /// Показать или спрятать часть HUD (онбординг Floor_03, WhiteRoom). Phone — ещё и выключает
+        /// сам телефон, Objective — карточку задания P2. Части HUD видны только на этаже (есть игрок).
+        /// </summary>
         public void SetHudVisible(HudPart part, bool visible)
         {
             Debug.Log($"[UI] {part} visible={visible}");
-            if (part == HudPart.Phone)
+            if (visible) hidden.Remove(part);
+            else hidden.Add(part);
+
+            switch (part)
             {
-                if (phoneUI != null) phoneUI.SetButtonVisible(visible);
-                if (PhoneManager.Instance != null) PhoneManager.Instance.SetAvailable(visible);
+                case HudPart.Phone:
+                    if (phoneUI != null) phoneUI.SetButtonVisible(visible);
+                    if (PhoneManager.Instance != null) PhoneManager.Instance.SetAvailable(visible);
+                    break;
+                case HudPart.Objective:
+                    if (ObjectiveUI.Instance != null) ObjectiveUI.Instance.SetVisible(visible);
+                    break;
             }
+            UpdateHudParts();
+        }
+
+        /// <summary>Показать/спрятать весь HUD разом (WhiteRoom, финальный скример).</summary>
+        public void SetHudVisible(bool visible)
+        {
+            foreach (HudPart part in Enum.GetValues(typeof(HudPart))) SetHudVisible(part, visible);
+        }
+
+        /// <summary>Видна ли часть HUD по решению сценария.</summary>
+        public bool IsHudVisible(HudPart part) => !hidden.Contains(part);
+
+        void UpdateHudParts()
+        {
+            // HUD живёт в _Systems всю игру, а рассудок и пульс нужны только на этаже, где есть Дэнни.
+            bool onFloor = PlayerController.Instance != null;
+            SetActive(sanityRoot, onFloor && !hidden.Contains(HudPart.Sanity));
+            SetActive(heartbeatRoot, onFloor && !hidden.Contains(HudPart.Heartbeat));
+        }
+
+        static void SetActive(GameObject go, bool value)
+        {
+            if (go != null && go.activeSelf != value) go.SetActive(value);
         }
     }
 }

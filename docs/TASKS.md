@@ -148,10 +148,10 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 - [ ] `ObjectiveManager` + `ObjectiveData` + карточка задания с чекбоксом.
 
 **P3:**
-- [ ] `MessageData` / `MessageManager` / `PhoneUI`: Tab и кнопка, контакты Max/Boss, история, вибрация + тост.
-- [ ] `onReadAndClosed`-колбэк после закрытия телефона.
-- [ ] `DialogueManager`: субтитры Danny и описания (DESC) внизу, по очереди, `{name}`.
-- [ ] HUD-префаб: места под рассудок, пульс, задание, подсказку, тосты.
+- [x] `MessageData` / `MessageManager` / `PhoneUI`: Tab и кнопка, контакты Max/Boss, история, вибрация + тост.
+- [x] `onReadAndClosed`-колбэк после закрытия телефона.
+- [x] `DialogueManager`: субтитры Danny и описания (DESC) внизу, по очереди, `{name}`.
+- [x] HUD-префаб: места под рассудок, пульс, задание, подсказку, тосты.
 
 **P4:**
 - [ ] `SanityManager.SetSanity` + `SanityBarUI` (плавно ~1 сек, без процентов).
@@ -180,7 +180,7 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 - [ ] `TurnstileInteractable`, `ArcadeInteractable`, `ComputerInteractable`, `PersonInteractable` (сжатие в точку).
 
 **P3:**
-- [ ] `ScriptedSequence`: шаги — реплика, сообщение (ждать прочтения), блок/разблок, анимация,
+- [x] `ScriptedSequence`: шаги — реплика, сообщение (ждать прочтения), блок/разблок, анимация,
   показать HUD, галлюцинация, мини-игра, задание, вкл/выкл объект, пауза, fade.
 - [ ] `HudOnboarding` (появление HUD по очереди в начале Floor_03), подсказка управления.
 - [ ] `NoReturnTrigger` (уведомление «Do you still want Danny…» и остановка).
@@ -205,7 +205,7 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 | **P3** | `Floor_03` | Мини-игра 1 «Печать отчёта» (провал на 60 %) → онбординг HUD → стол Чарльза → сообщение Макса → кухня + пропуск → турникет (отказ) → сообщение Босса → H1 → считыватель → лестница |
 | **P4** | `Floor_02` | Темнота, фонарик обязателен → сообщения → коридор, H2 + сбой ввода + «Was that you?» → Room_201 (ящик, мини-игра 3) → H3 + «DD» → сообщения → запрет возврата → лестница |
 | **P2** | `Floor_01` | Коридор (выход, дверь 102) → сообщения → Room_101 (H4, бормочущий, ключ) → Room_102 (Tiny UFO) → финальный скример → WhiteRoom |
-| **P4** | `WhiteRoom` | Белый фон, только вправо, реплики, кровать, пульс 40→0, ИВЛ + кардиомонитор, белый fade, титры |
+| **P4** | `WhiteRoom` | Белый фон, только вправо, реплики, кровать, пульс 70→0, ИВЛ + кардиомонитор, белый fade, титры |
 | **P1** | — | Проверка переходов, баги ядра, помощь тому, кто отстаёт; билд-настройки |
 
 Также в этом этапе:
