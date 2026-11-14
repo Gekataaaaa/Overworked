@@ -35,7 +35,10 @@ namespace Overworked
         static IEnumerator Run(GameObject target, Transform player, Action done)
         {
             var t = target.transform;
-            var renderers = target.GetComponentsInChildren<SpriteRenderer>();
+            // Без жёлтой обводки InteractionHighlight: её копии-спрайты вложены в предмет и удаляются,
+            // когда предмет теряет фокус — обращение к ним роняло анимацию и предмет зависал в воздухе.
+            var renderers = System.Array.FindAll(target.GetComponentsInChildren<SpriteRenderer>(),
+                sr => !sr.name.StartsWith("~"));
             var baseColors = new Color[renderers.Length];
             for (int i = 0; i < renderers.Length; i++)
             {
@@ -69,6 +72,7 @@ namespace Overworked
                 t.localScale = startScale * Mathf.Lerp(1.15f, 0.15f, e);
                 for (int i = 0; i < renderers.Length; i++)
                 {
+                    if (renderers[i] == null) continue;   // кто-то удалил спрайт — не роняем анимацию
                     var c = baseColors[i];
                     c.a *= 1f - e;
                     renderers[i].color = c;
