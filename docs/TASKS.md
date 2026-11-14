@@ -114,8 +114,8 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
   `WhiteRoom`, `Sandbox_P1..P4`, Build Settings.
 - [x] Заглушки всех классов из раздела 3, префаб `_Systems` (в `Prefabs/Systems/Resources/`), `Bootstrap`.
 - [x] Cinemachine 3.1.7; TextMeshPro входит в uGUI.
-- [ ] Шрифт TextMeshPro с кириллицей и латиницей (в `Fonts/`).
-- [ ] Открыть проект, проверить, что любая сцена запускается без ошибок, сообщение в чат «можно пуллить».
+- [x] Шрифт TextMeshPro с кириллицей и латиницей (в `Fonts/`): PT Sans + IBM Plex Mono.
+- [x] Открыть проект, проверить, что любая сцена запускается без ошибок, сообщение в чат «можно пуллить».
 
 Генератор каркаса — меню **Overworked → Setup Project** (`Assets/_Project/Editor/ProjectSetup.cs`):
 повторный запуск досоздаёт недостающее и ничего не перезаписывает.
@@ -135,11 +135,11 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 ### Этап 1 · Ч1–Ч4 · Базовые системы (в своих Sandbox)
 
 **P1:**
-- [ ] `PlayerController`: A/D и стрелки, без прыжка, `SetInputLocked`, `Teleport`.
-- [ ] Камера Cinemachine за игроком + Confiner2D.
-- [ ] `FadeController`, `SceneTransitionManager`, `GameManager.LoadFloor`.
-- [ ] `MainMenu`: Start / Quit.
-- [ ] Пролог: терминал, ввод имени (≤16 символов, не пустое), Enter → Floor_03.
+- [x] `PlayerController`: A/D и стрелки, без прыжка, `SetInputLocked`, `Teleport`.
+- [x] Камера Cinemachine за игроком + Confiner2D.
+- [x] `FadeController`, `SceneTransitionManager`, `GameManager.LoadFloor`.
+- [x] `MainMenu`: Start / Quit.
+- [x] Пролог: терминал, ввод имени (≤16 символов, не пустое), Enter → Floor_03.
 
 **P2:**
 - [ ] `InteractionSystem`: ближайший объект в радиусе, подсказка `[E] <Prompt>`.
