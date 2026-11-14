@@ -391,7 +391,7 @@ HUD Canvas (префаб, один на всю игру)
 └── FadePanel          (поверх всего)
 
 MainMenu Canvas
-├── Menu               (Start / Quit)
+├── Menu               (Continue / New Game / Quit)
 └── PrologueTerminal   (окно авторизации, ввод имени)
 ```
 
@@ -409,7 +409,8 @@ Scripts/
 │   ├── SceneTransitionManager.cs
 │   ├── GameInput.cs              # доступ к действиям ввода: Move, Interact, Flashlight, Phone, Pause
 │   ├── DebugHotkeys.cs           # F1–F7: переходы по сценам, панель состояния (только редактор / dev-билд)
-│   └── StairInteractable.cs      # лестница → GameManager.LoadFloor (IInteractable)
+│   ├── StairInteractable.cs      # лестница → GameManager.LoadFloor (IInteractable)
+│   └── ResumePoint.cs            # точка для Continue: сцена, позиция, рассудок, камеры (в памяти)
 ├── Player/
 │   ├── PlayerController.cs       # движение, блокировка ввода, сбой ввода, «только вправо»
 │   ├── PlayerAnimator.cs
@@ -484,7 +485,11 @@ Scripts/
     └── PauseMenuUI.cs            # префаб Prefabs/Systems/Resources/PauseMenu, Bootstrap кладёт в _Systems
 ```
 
-`SaveSystem` не нужен: игра короткая и линейная.
+`SaveSystem` не нужен: игра короткая и линейная. Кнопка **Continue** появляется только после
+выхода в меню через паузу и возвращает в то же место; точка хранится в памяти до конца запуска
+(`Core/ResumePoint.cs`, подробнее — [docs/systems/MainMenu.md](systems/MainMenu.md)).
+Одноразовые события в сценах этажей отмечаются флагами в `GameState.Flags`, чтобы не повториться
+после Continue.
 
 ## 23. ScriptableObjects
 
