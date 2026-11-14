@@ -26,6 +26,8 @@ namespace Overworked.EditorTools
         const string ScenePath = "Assets/_Project/Scenes/MainMenu.unity";
         const string CrtMaterialPath = "Assets/_Project/Materials/TerminalCRT.mat";
 
+        const string LogoPath = "Assets/_Project/Art/UI/Logo/Logo.png";
+        static readonly Color MenuBackground = new Color(0.86f, 0.85f, 0.81f);
         static readonly Color TerminalGreen = new Color(0.36f, 0.85f, 0.45f);
         static readonly Color PromptColor = new Color(0.6f, 1f, 0.68f);
         const float FontSize = 30;
@@ -186,13 +188,29 @@ namespace Overworked.EditorTools
 
             // --- Меню
             var menu = Stretch(UI("Menu", canvasGo.transform));
-            var title = Tmp("Title", menu, mainFont, "OVERWORKED", 140, MenuText, TextAlignmentOptions.Center);
-            Place(title.rectTransform, new Vector2(0, 180), new Vector2(1400, 200));
-            title.characterSpacing = 12;
+            // Светлый «бумажный» фон: логотип тёмный (бордовый → почти чёрный) и нарисован на белом.
+            menu.gameObject.AddComponent<Image>().color = MenuBackground;
+
+            var logoSprite = AssetDatabase.LoadAssetAtPath<Sprite>(LogoPath);
+            if (logoSprite != null)
+            {
+                var logo = UI("Logo", menu).gameObject.AddComponent<Image>();
+                logo.sprite = logoSprite;
+                logo.preserveAspect = true;
+                logo.raycastTarget = false;
+                Place(logo.rectTransform, new Vector2(0, 230), new Vector2(1100, 470));
+            }
+            else
+            {
+                // Без картинки — прежний текстовый заголовок, тёмным по светлому.
+                var title = Tmp("Title", menu, mainFont, "OVERWORKED", 140, new Color(0.25f, 0.05f, 0.05f), TextAlignmentOptions.Center);
+                Place(title.rectTransform, new Vector2(0, 180), new Vector2(1400, 200));
+                title.characterSpacing = 12;
+            }
 
             var buttons = UI("Buttons", menu);
             // Высота под три кнопки по 80 + отступы; Continue скрывается, если нет сохранения.
-            Place(buttons, new Vector2(0, -180), new Vector2(360, 280));
+            Place(buttons, new Vector2(0, -200), new Vector2(360, 280));
             var vlg = buttons.gameObject.AddComponent<VerticalLayoutGroup>();
             vlg.spacing = 20;
             vlg.childControlHeight = vlg.childControlWidth = true;
