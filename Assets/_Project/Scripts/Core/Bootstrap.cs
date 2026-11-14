@@ -11,6 +11,9 @@ namespace Overworked
         /// <summary>Путь префаба внутри папки Resources.</summary>
         public const string SystemsPath = "_Systems";
 
+        /// <summary>Путь префаба меню паузы внутри папки Resources.</summary>
+        public const string PauseMenuPath = "PauseMenu";
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void CreateSystems()
         {
@@ -24,6 +27,14 @@ namespace Overworked
             var systems = Object.Instantiate(prefab);
             systems.name = SystemsPath;
             Object.DontDestroyOnLoad(systems);
+
+            // Пауза — отдельный префаб, чтобы не править _Systems одновременно с P3 (HUD).
+            var pause = Resources.Load<GameObject>(PauseMenuPath);
+            if (pause != null) Object.Instantiate(pause, systems.transform).name = PauseMenuPath;
+            else Debug.LogWarning($"[Core] нет Resources/{PauseMenuPath}.prefab — пауза недоступна");
+
+            // В редакторе и development-билде — отладочные F1–F6 (переходы по сценам).
+            if (Debug.isDebugBuild) systems.AddComponent<DebugHotkeys>();
         }
     }
 }

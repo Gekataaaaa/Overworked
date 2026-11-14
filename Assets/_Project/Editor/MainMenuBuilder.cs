@@ -1,0 +1,237 @@
+using System.IO;
+using TMPro;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.TextCore.LowLevel;
+using UnityEngine.UI;
+using static Overworked.EditorTools.UiBuild;
+
+namespace Overworked.EditorTools
+{
+    /// <summary>
+    /// Собирает сцену MainMenu: меню Start/Quit и пролог-терминал (паспорт, разделы 5 и 21).
+    /// Заодно импортирует TMP Essentials, создаёт TMP-шрифты (PT Sans, IBM Plex Mono) и тексты пролога.
+    /// Запуск: меню Overworked → P1 → Build Main Menu.
+    /// Повторный запуск пересоздаёт только MainMenu Canvas; шрифты и тексты не перезаписывает.
+    /// </summary>
+    public static class MainMenuBuilder
+    {
+        const string FontsDir = "Assets/_Project/Fonts";
+        const string MainFontPath = FontsDir + "/PTSans SDF.asset";
+        const string MonoFontPath = FontsDir + "/IBMPlexMono SDF.asset";
+        const string IntroPath = "Assets/_Project/Data/Dialogues/Prologue_Intro.asset";
+        const string WelcomePath = "Assets/_Project/Data/Dialogues/Prologue_Welcome.asset";
+        const string ScenePath = "Assets/_Project/Scenes/MainMenu.unity";
+
+        static readonly Color TerminalGreen = new Color(0.36f, 0.85f, 0.45f);
+        static readonly Color PromptColor = new Color(0.6f, 1f, 0.68f);
+        const float FontSize = 30;
+
+        const string TmpEssentials = "Packages/com.unity.ugui/Package Resources/TMP Essential Resources.unitypackage";
+
+        [MenuItem("Overworked/P1/Build Main Menu")]
+        public static void Run()
+        {
+            if (Resources.Load<TMP_Settings>("TMP Settings") == null)
+            {
+                // TMP Essentials (настройки, шейдеры) ещё не в проекте — импортируем сами и продолжаем после импорта.
+                Debug.Log("[Setup] импорт TMP Essential Resources…");
+                AssetDatabase.importPackageCompleted += OnTmpImported;
+                AssetDatabase.ImportPackage(TmpEssentials, false);
+                return;
+            }
+
+            var mainFont = EnsureFontAsset($"{FontsDir}/PTSans-Regular.ttf", MainFontPath);
+            var monoFont = EnsureFontAsset($"{FontsDir}/IBMPlexMono-Regular.ttf", MonoFontPath);
+            SetDefaultFont(mainFont);
+
+            // Стартовые тексты, только если ассетов ещё нет; дальше их правят в инспекторе.
+            const string ok = "[  <color=#7CFF8A>OK</color>  ]";
+            var intro = EnsureDialogue(IntroPath,
+                "<color=#E0E0E0>WTTS v.4.02 — Work Time Tracking System (tty1)</color>",
+                "",
+                ok + " Started Night Shift Service.",
+                ok + " Reached target Floor 03.",
+                "[ <color=#FFC857>WARN</color> ] Operator not registered.",
+                "",
+                "Night shift requires mandatory operator registration.",
+                "Enter your name to confirm access.",
+                "",
+                "Enter your name:");
+            var welcome = EnsureDialogue(WelcomePath,
+                ok + " Operator registered: {name}",
+                "",
+                "WELCOME TO THE STAFF, {name}.",
+                "DO NOT LEAVE YOUR WORKPLACE.");
+
+            BuildScene(mainFont, monoFont, intro, welcome);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Setup] MainMenu: меню и пролог готовы");
+        }
+
+        static void OnTmpImported(string packageName)
+        {
+            AssetDatabase.importPackageCompleted -= OnTmpImported;
+            AssetDatabase.Refresh();
+            if (Resources.Load<TMP_Settings>("TMP Settings") == null)
+            {
+                Debug.LogError("[Setup] TMP Essential Resources не импортировались — Window → TextMeshPro → Import TMP Essential Resources");
+                return;
+            }
+            Run();
+        }
+
+        // ------------------------------------------------------------ шрифты
+
+        /// <summary>
+        /// Динамический SDF-шрифт: глифы досоздаются по мере надобности, поэтому имя игрока
+        /// на любом языке отрисуется. Латиница и кириллица заранее запечены в атлас.
+        /// </summary>
+        static TMP_FontAsset EnsureFontAsset(string ttfPath, string assetPath)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(assetPath);
+            if (existing != null) return existing;
+
+            var font = AssetDatabase.LoadAssetAtPath<Font>(ttfPath);
+            var fa = TMP_FontAsset.CreateFontAsset(font, 90, 9, GlyphRenderMode.SDFAA, 1024, 1024);
+            fa.name = Path.GetFileNameWithoutExtension(assetPath);
+            AssetDatabase.CreateAsset(fa, assetPath);
+            // Атлас и материал должны лежать внутри ассета шрифта, иначе после перезапуска они теряются.
+            fa.atlasTextures[0].name = fa.name + " Atlas";
+            AssetDatabase.AddObjectToAsset(fa.atlasTextures[0], fa);
+            fa.material.name = fa.name + " Material";
+            AssetDatabase.AddObjectToAsset(fa.material, fa);
+
+            var chars = new System.Text.StringBuilder();
+            for (char c = ' '; c <= '~'; c++) chars.Append(c);
+            for (char c = 'А'; c <= 'я'; c++) chars.Append(c);
+            chars.Append("Ёё—–…«»№’“”");
+            fa.TryAddCharacters(chars.ToString());
+
+            // Глифы, досозданные во время игры, не тащим в билд — меньше мусора в атласе.
+            var so = new SerializedObject(fa);
+            var clear = so.FindProperty("m_ClearDynamicDataOnBuild");
+            if (clear != null) clear.boolValue = true;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            EditorUtility.SetDirty(fa);
+            return fa;
+        }
+
+        static void SetDefaultFont(TMP_FontAsset font)
+        {
+            var settings = Resources.Load<TMP_Settings>("TMP Settings");
+            var so = new SerializedObject(settings);
+            so.FindProperty("m_defaultFontAsset").objectReferenceValue = font;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(settings);
+        }
+
+        // ------------------------------------------------------------ тексты
+
+        static DialogueData EnsureDialogue(string path, params string[] lines)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<DialogueData>(path);
+            if (existing != null) return existing;
+            var d = ScriptableObject.CreateInstance<DialogueData>();
+            d.Lines = new DialogueLine[lines.Length];
+            for (int i = 0; i < lines.Length; i++) d.Lines[i] = new DialogueLine { Speaker = Speaker.System, Text = lines[i] };
+            AssetDatabase.CreateAsset(d, path);
+            return d;
+        }
+
+        // ------------------------------------------------------------ сцена
+
+        static void BuildScene(TMP_FontAsset mainFont, TMP_FontAsset monoFont, DialogueData intro, DialogueData welcome)
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            foreach (var go in scene.GetRootGameObjects())
+                if (go.name == "MainMenu Canvas") Object.DestroyImmediate(go);
+
+            var canvasGo = new GameObject("MainMenu Canvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            canvasGo.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+            var scaler = canvasGo.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.matchWidthOrHeight = 0.5f;
+
+            // --- Меню
+            var menu = Stretch(UI("Menu", canvasGo.transform));
+            var title = Tmp("Title", menu, mainFont, "OVERWORKED", 140, MenuText, TextAlignmentOptions.Center);
+            Place(title.rectTransform, new Vector2(0, 180), new Vector2(1400, 200));
+            title.characterSpacing = 12;
+
+            var buttons = UI("Buttons", menu);
+            Place(buttons, new Vector2(0, -140), new Vector2(360, 180));
+            var vlg = buttons.gameObject.AddComponent<VerticalLayoutGroup>();
+            vlg.spacing = 20;
+            vlg.childControlHeight = vlg.childControlWidth = true;
+            vlg.childForceExpandHeight = false;
+            var start = MenuButton("StartButton", buttons, mainFont, "Start");
+            var quit = MenuButton("QuitButton", buttons, mainFont, "Quit");
+
+            // --- Пролог-терминал
+            var terminal = Stretch(UI("PrologueTerminal", canvasGo.transform));
+            terminal.gameObject.AddComponent<Image>().color = Color.black;
+
+            // Как консоль Linux (tty): весь экран чёрный, текст от левого верхнего угла, без рамок.
+            var content = Stretch(UI("Content", terminal), 56);
+            var cvlg = content.gameObject.AddComponent<VerticalLayoutGroup>();
+            cvlg.spacing = 0;
+            cvlg.childControlHeight = cvlg.childControlWidth = true;
+            cvlg.childForceExpandHeight = false;
+
+            var output = Tmp("Output", content, monoFont, "", FontSize, TerminalGreen, TextAlignmentOptions.TopLeft);
+            output.lineSpacing = 8;
+
+            var row = UI("InputRow", content);
+            var hlg = row.gameObject.AddComponent<HorizontalLayoutGroup>();
+            hlg.spacing = 18;
+            hlg.childControlHeight = hlg.childControlWidth = true;
+            hlg.childForceExpandWidth = false;
+            row.gameObject.AddComponent<LayoutElement>().minHeight = FontSize * 1.5f;
+            var prompt = Tmp("Prompt", row, monoFont, "Enter your name:", FontSize, PromptColor, TextAlignmentOptions.Left);
+            var input = NameInput(row, monoFont);
+
+            var prologue = terminal.gameObject.AddComponent<PrologueTerminal>();
+            Wire(prologue, ("output", output), ("prompt", prompt), ("nameInput", input), ("intro", intro), ("welcome", welcome));
+
+            var menuUi = canvasGo.AddComponent<MainMenuUI>();
+            Wire(menuUi, ("menuPanel", menu.gameObject), ("startButton", start), ("quitButton", quit), ("prologue", prologue));
+
+            terminal.gameObject.SetActive(false);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+        }
+
+        static TMP_InputField NameInput(RectTransform parent, TMP_FontAsset font)
+        {
+            var go = UI("NameInput", parent).gameObject;
+            go.AddComponent<Image>().color = Color.clear;
+            go.AddComponent<LayoutElement>().flexibleWidth = 1;
+
+            var area = Stretch(UI("Text Area", go.transform));
+            area.gameObject.AddComponent<RectMask2D>();
+            var text = Tmp("Text", area, font, "", FontSize, PromptColor, TextAlignmentOptions.Left);
+            Stretch(text.rectTransform);
+            text.richText = false;
+
+            var field = go.AddComponent<TMP_InputField>();
+            field.textViewport = area;
+            field.textComponent = text;
+            field.fontAsset = font;
+            field.pointSize = FontSize;
+            field.lineType = TMP_InputField.LineType.SingleLine;
+            field.richText = false;
+            field.characterLimit = 16;
+            // Толстая мигающая каретка — как курсор старого терминала.
+            field.customCaretColor = true;
+            field.caretColor = PromptColor;
+            field.caretWidth = 14;
+            field.caretBlinkRate = 1.2f;
+            field.selectionColor = new Color(TerminalGreen.r, TerminalGreen.g, TerminalGreen.b, 0.3f);
+            return field;
+        }
+    }
+}

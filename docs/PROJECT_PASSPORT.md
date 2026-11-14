@@ -406,11 +406,15 @@ Scripts/
 │   ├── GameManager.cs            # CurrentFloor, GameState, глобальные ссылки
 │   ├── GameState.cs              # PlayerName, CurrentFloor, флаги прогресса
 │   ├── Bootstrap.cs              # создаёт постоянные системы (DontDestroyOnLoad)
-│   └── SceneTransitionManager.cs
+│   ├── SceneTransitionManager.cs
+│   ├── GameInput.cs              # доступ к действиям ввода: Move, Interact, Flashlight, Phone, Pause
+│   ├── DebugHotkeys.cs           # F1–F7: переходы по сценам, панель состояния (только редактор / dev-билд)
+│   └── StairInteractable.cs      # лестница → GameManager.LoadFloor (IInteractable)
 ├── Player/
 │   ├── PlayerController.cs       # движение, блокировка ввода, сбой ввода, «только вправо»
 │   ├── PlayerAnimator.cs
-│   └── PlayerState.cs            # Normal / Locked / Cutscene
+│   ├── PlayerState.cs            # Normal / Locked / Cutscene
+│   └── FollowPlayer.cs           # на CinemachineCamera: Follow = игрок при старте сцены
 ├── Interaction/
 │   ├── IInteractable.cs
 │   ├── InteractionSystem.cs
@@ -423,7 +427,7 @@ Scripts/
 │   ├── PersonInteractable.cs
 │   ├── TurnstileInteractable.cs
 │   ├── ArcadeInteractable.cs
-│   └── StairInteractable.cs
+│   └── (StairInteractable — в Core/, лестница делает P1)
 ├── Objectives/
 │   ├── ObjectiveManager.cs
 │   ├── ObjectiveData.cs          # ScriptableObject
@@ -442,7 +446,6 @@ Scripts/
 ├── Story/
 │   ├── ScriptedSequence.cs       # цепочка шагов сцены (раздел 17)
 │   ├── SequenceTrigger.cs
-│   ├── PrologueTerminal.cs       # пролог и ввод имени
 │   ├── HudOnboarding.cs          # поэтапное появление HUD
 │   ├── NoReturnTrigger.cs        # запрет возврата с уведомлением
 │   ├── FinalScreamer.cs
@@ -476,7 +479,8 @@ Scripts/
     ├── FadeController.cs
     ├── ToastUI.cs
     ├── MainMenuUI.cs
-    └── PauseMenuUI.cs
+    ├── PrologueTerminal.cs       # пролог и ввод имени (в UI/, а не Story/: пролог делает P1)
+    └── PauseMenuUI.cs            # префаб Prefabs/Systems/Resources/PauseMenu, Bootstrap кладёт в _Systems
 ```
 
 `SaveSystem` не нужен: игра короткая и линейная.
