@@ -4,7 +4,8 @@
 `Ч12` — готовый билд. Если стартуете в 10:00, то Ч4 = 14:00 и т. д.
 
 Источники: [паспорт](PROJECT_PASSPORT.md) (как устроено), [нарратив EN](narrative/NARRATIVE_EN.md)
-(тексты для игры), [CONTRIBUTING.md](../CONTRIBUTING.md) (правила кода и git).
+(тексты для игры), [CONTRIBUTING.md](../CONTRIBUTING.md) (правила кода и git),
+[External/TinyUFO](../External/TinyUFO/README.md) (исходники финальной мини-игры).
 
 **Главный принцип дня:** сначала скелет, который проходится от меню до титров на серых
 прямоугольниках, потом — мясо. Красота — только после того, как игра проходится целиком.
@@ -103,14 +104,20 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 
 **P1** (все ждут его пуша, это главный блокер дня):
 - [ ] Unity 6000.5.6f1, шаблон URP 2D, проект в корне репозитория.
-- [ ] `.gitignore` для Unity, Force Text, Visible Meta Files, Input System.
+- [ ] `.gitignore` и `.gitattributes` (Git LFS) уже лежат в корне репозитория — не перезаписывать.
+  Force Text, Visible Meta Files, Input System.
+- [ ] Скрипты Overworked — в namespace `Overworked` (в Tiny UFO есть свои `PlayerController`
+  и `UIManager`, namespace защищает от путаницы).
 - [ ] Папки по паспорту (раздел 31), пустые сцены `MainMenu`, `Floor_03/02/01`, `WhiteRoom`, `Sandbox_P1..P4`.
 - [ ] Заглушки всех классов из раздела 3, префаб `_Systems`, `Bootstrap`.
 - [ ] Cinemachine, TextMeshPro (+ кириллица в шрифте).
 - [ ] Пуш в `main` **до Ч1**, сообщение в чат «можно пуллить».
 
 **P2, P3, P4 пока P1 готовит проект** (без Unity):
-- **P2:** разобрать Tiny UFO — список скриптов/ассетов, нужных для одной волны (копия 4-й), что выкинуть.
+- **P2:** изучить исходники в [`External/TinyUFO/`](../External/TinyUFO/README.md): точка входа
+  `SpinvMicrogame.Begin`, волны `WaveManager` + `Waves/Wave4.asset`, меню `SpinvMainMenu`.
+  Составить список, что выключить (лидерборд, достижения, туториалы, аркада, настройки).
+- **Все:** `git lfs install` один раз на машине — иначе спрайты Tiny UFO придут белыми.
 - **P3:** из [NARRATIVE_EN](narrative/NARRATIVE_EN.md) выписать таблицу: все сообщения, реплики, описания, задания → будущие ScriptableObject (имя ассета, этаж, триггер).
 - **P4:** собрать звуки (гул ламп, сердцебиение, кардиомонитор, ИВЛ, удары, вибрация телефона, ошибка/успех турникета, стрекот клавиатур) — бесплатные CC0.
 
@@ -156,7 +163,11 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 **P2:**
 - [ ] `MiniGameHost` (оверлей, блок игрока, Esc не ломает).
 - [ ] **Мини-игра 2 — Считыватель**: удержать E, отпустить в зелёной зоне.
-- [ ] **Мини-игра 4 — Tiny UFO**: меню Play/Quit, одна волна, победа/поражение/выход.
+- [ ] **Мини-игра 4 — Tiny UFO** (по [инструкции](../External/TinyUFO/README.md)):
+  1. скопировать `External/TinyUFO/Assets/Core` и `.../Microgames/gc26_spinv` в `Assets/`
+     **по тем же путям**, проверить, что `gc26_spinv_Main` запускается как есть — **до Ч5**;
+  2. урезать: меню Play/Quit, только `Wave4`, поражение → волна заново;
+  3. `TinyUfoMiniGame : IMiniGame` — грузит сцену additive, победа → `true`, Quit → `false`.
 - [ ] `TurnstileInteractable`, `ArcadeInteractable`, `ComputerInteractable`, `PersonInteractable` (сжатие в точку).
 
 **P3:**

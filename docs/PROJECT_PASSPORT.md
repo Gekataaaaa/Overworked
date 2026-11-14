@@ -176,10 +176,11 @@ Unity-сцены: `MainMenu`, `Floor_03`, `Floor_02`, `Floor_01`, `WhiteRoom`.
 | 3 | Настройка сигнала монитора | 2 | Два ползунка «Частота» и «Резкость», навести чёткость | Чётко → скрытое сообщение |
 | 4 | Tiny UFO | 1 | Меню Play / Quit, одна волна (копия 4-й волны Tiny UFO) | Победа → задание выполнено; поражение → волна заново; Quit → выход без выполнения |
 
-**Tiny UFO** — готовая игра автора (репозиторий `Gekataaaaa/tiny-ufo`). Переносится
-как отдельный модуль `Assets/_Project/MiniGames/TinyUFO/` (скрипты, спрайты, звуки,
-префаб); лишнее (прогресс, способности за пределами волны 4, настройки, лидерборд)
-не переносится.
+**Tiny UFO** — готовая игра автора. Исходники лежат в репозитории в
+[`External/TinyUFO/`](../External/TinyUFO/README.md) (вне `Assets/`, Unity их не видит).
+Переносятся в `Assets/Core/` и `Assets/Microgames/gc26_spinv/` **по исходным путям**
+(на них завязан генератор сцены), запускаются additive-сценой поверх `Floor_01`.
+Лишнее (прогресс, лидерборд, достижения, туториалы, аркада, настройки) выключается.
 
 Управление в мини-игре 3 — клавиатурой: W/S выбирают ползунок, A/D двигают
 (мышь тоже работает).
@@ -452,7 +453,7 @@ Scripts/
 │   ├── PrintReportMiniGame.cs
 │   ├── CardReaderMiniGame.cs
 │   ├── SignalTuningMiniGame.cs
-│   └── TinyUFO/                  # перенесённый код Tiny UFO
+│   └── TinyUfoMiniGame.cs        # обёртка IMiniGame над Tiny UFO (код игры — в Microgames/)
 ├── Sanity/
 │   ├── SanityManager.cs
 │   └── SanityBarUI.cs
@@ -636,10 +637,12 @@ Assets/
 │   ├── Fonts/
 │   ├── Audio/                # см. раздел 20
 │   ├── Data/                 # см. раздел 23
-│   ├── MiniGames/
-│   │   └── TinyUFO/          # арт и звуки Tiny UFO (одна волна)
 │   └── Settings/             # URP Asset, 2D Renderer, Volume Profiles, Audio Mixer, Input Actions
+├── Core/                     # GC26.Core из Tiny UFO (IMicrogame)
+├── Microgames/gc26_spinv/    # Tiny UFO — по исходному пути, см. External/TinyUFO
 └── Plugins/                  # сторонние ассеты — вне _Project
+
+External/TinyUFO/             # исходник Tiny UFO для переноса (вне Assets/)
 ```
 
 ## 32. Правила работы с git
