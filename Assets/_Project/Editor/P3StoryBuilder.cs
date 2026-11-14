@@ -32,7 +32,7 @@ namespace Overworked.EditorTools
                 new WaitStep { Seconds = 0.6f },
                 new DialogueStep { Dialogue = Load<DialogueData>("Dialogues/F2_Start") });
 
-            // 2.0 Первое включение фонарика: Макс, следом Босс (задание F2_CheckDocs201 — LinkedObjective сообщения),
+            // 2.0 Первое включение фонарика: Макс, следом Босс (задание F2_CheckDocs201 даёт не он, а лестница — P2),
             // после прочтения — реплика Дэнни.
             var flash = Sequence(group, "2.0 FlashlightMessages", playOnStart: false, lockPlayer: true,
                 new MessageStep { Message = Load<MessageData>("Messages/F2_Max_01"), WaitUntilRead = false },

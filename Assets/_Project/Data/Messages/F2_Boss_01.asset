@@ -20,4 +20,4 @@ MonoBehaviour:
   - 'You''ll find out what happens to people who can''t set priorities.'
   - 'No bonus for you this month.'
   Floor: 2
-  LinkedObjective: {fileID: 11400000, guid: 7122c7f7bbb141dbab3c3e3a3ea25a8a, type: 2}
+  LinkedObjective: {fileID: 0}

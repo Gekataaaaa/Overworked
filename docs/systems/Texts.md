@@ -59,8 +59,8 @@
 |---|---|---|---|---|---|
 | 1 | `F2_Start` | D | DANNY ×2 «So dark…» | 2.0 | Старт этажа, затем подсказка F |
 | 2 | `F2_Max_01` | M | MAX ×6 «Danny, wait.» | 2.0 | Первое включение фонарика (`FlashlightController.OnToggled`) |
-| 3 | `F2_Boss_01` | M | BOSS ×5 «You're wasting time on the wrong tasks, Danny.» | 2.0 | Цепочка после `F2_Max_01`; `LinkedObjective` = `F2_CheckDocs201` |
-| 4 | `F2_CheckDocs201` | O | «Check the documents in room 201.» | 2.0 | Выдаётся `F2_Boss_01`; закрывается после мини-игры 3 |
+| 3 | `F2_Boss_01` | M | BOSS ×5 «You're wasting time on the wrong tasks, Danny.» | 2.0 | Цепочка после `F2_Max_01` (на первом включении фонарика). Задание не выдаёт — его выдаёт лестница (решение команды) |
+| 4 | `F2_CheckDocs201` | O | «Check the documents in room 201.» | 2.0 | Выдаётся при попытке спуститься по лестнице (P2, `StairsLockedNotice`); закрывается ящиком в 201 |
 | 5 | `F2_Boss01_After` | D | DANNY ×2 «Yeah. Like I was ever getting one.» | 2.0 | После закрытия `F2_Boss_01` |
 | 6 | `F2_BrokenLamp` | I | DESC + DANNY | 2.1 | Необязательный |
 | 7 | `F2_Mug` | I | DESC + DANNY | 2.1 | Необязательный |
