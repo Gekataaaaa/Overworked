@@ -447,9 +447,7 @@ Scripts/
 │   ├── ScriptedSequence.cs       # цепочка шагов сцены (раздел 17)
 │   ├── SequenceTrigger.cs
 │   ├── HudOnboarding.cs          # поэтапное появление HUD
-│   ├── NoReturnTrigger.cs        # запрет возврата с уведомлением
-│   ├── FinalScreamer.cs
-│   └── WhiteRoomSequence.cs
+│   └── NoReturnTrigger.cs        # запрет возврата с уведомлением
 ├── MiniGames/
 │   ├── IMiniGame.cs
 │   ├── MiniGameHost.cs           # открыть/закрыть оверлей, блокировка управления
@@ -471,6 +469,9 @@ Scripts/
 │   └── FlashlightController.cs
 ├── Audio/
 │   └── AudioManager.cs
+├── Ending/                       # P4: финал игры
+│   ├── FinalScreamer.cs          # скример в конце Floor_01 (раздел 10)
+│   └── WhiteRoomSequence.cs      # сцена WhiteRoom: пульс 40 → 0, кровать, титры
 ├── Effects/
 │   ├── PostFXController.cs       # виньетка, шум, аберрация, размытие
 │   └── LightFlicker.cs
