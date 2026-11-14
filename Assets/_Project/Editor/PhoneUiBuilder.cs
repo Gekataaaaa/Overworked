@@ -25,6 +25,12 @@ namespace Overworked.EditorTools
             "Assets/_Project/Data/Messages/F3_Boss_01.asset",
             "Assets/_Project/Data/Messages/F3_Max_02.asset",
         };
+        static readonly string[] TestDialogues =
+        {
+            "Assets/_Project/Data/Dialogues/F3_Start.asset",
+            "Assets/_Project/Data/Inspectables/F3_CharlesDesk.asset",
+            "Assets/_Project/Data/Dialogues/F2_Monitor201.asset",
+        };
 
         // Палитра проекта: грязно-зелёный, серый, выцветший синий.
         static readonly Color Body = new Color(0.07f, 0.08f, 0.08f, 0.97f);
@@ -327,7 +333,7 @@ namespace Overworked.EditorTools
 
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             foreach (var go in scene.GetRootGameObjects())
-                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester") Object.DestroyImmediate(go);
+                if (go.name is "Environment" or "Player" or "Cameras" or "PhoneTester" or "DialogueTester") Object.DestroyImmediate(go);
 
             const float halfWidth = 15f, floorY = -4.2f, top = 5.65f, bottom = -5.65f;
             var env = new GameObject("Environment");
@@ -370,9 +376,17 @@ namespace Overworked.EditorTools
                 arr.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<MessageData>(TestMessages[i]);
             so.ApplyModifiedPropertiesWithoutUndo();
 
+            var dialogueTester = new GameObject("DialogueTester").AddComponent<DialogueTester>();
+            var dso = new SerializedObject(dialogueTester);
+            var darr = dso.FindProperty("dialogues");
+            darr.arraySize = TestDialogues.Length;
+            for (int i = 0; i < TestDialogues.Length; i++)
+                darr.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<DialogueData>(TestDialogues[i]);
+            dso.ApplyModifiedPropertiesWithoutUndo();
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log("[Setup] Sandbox_P3: коридор, игрок и PhoneTester готовы (1–3 — сообщения, 0 — Max + Boss)");
+            Debug.Log("[Setup] Sandbox_P3: коридор, игрок, PhoneTester (1–3, 0) и DialogueTester (Z/X/C, V) готовы");
         }
     }
 }
