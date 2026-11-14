@@ -104,13 +104,21 @@ def ext(path):
 def check_meta(files):
     """1. У каждого ассета и папки в Assets/ есть .meta, у каждого .meta — ассет."""
     errors = []
-    in_assets = [f for f in files if f.startswith(ASSETS)]
+    # Unity не импортирует файлы и папки, начинающиеся с "." или кончающиеся на "~" (.gitkeep и т. п.)
+    def ignored(path):
+        return any(part.startswith(".") or part.endswith("~") for part in path.split("/"))
+
+    in_assets = [f for f in files if f.startswith(ASSETS) and not ignored(f)]
     present = set(in_assets)
     dirs = set()
-    for f in in_assets:
+    # Папки берём и из игнорируемых файлов: папка с одним .gitkeep тоже существует и требует .meta.
+    for f in files:
+        if not f.startswith(ASSETS):
+            continue
         parts = f.split("/")
         for i in range(2, len(parts)):  # Assets/A, Assets/A/B …
-            dirs.add("/".join(parts[:i]))
+            if not ignored("/".join(parts[:i])):
+                dirs.add("/".join(parts[:i]))
     targets = present | dirs
     for f in in_assets:
         if f.endswith(".meta"):
