@@ -8,3 +8,6 @@
 | PlayerController, GameInput, камера | P1 | [PlayerController.md](PlayerController.md) |
 | SceneTransitionManager, FadeController, отладочные F1–F6 | P1 | [SceneTransitionManager.md](SceneTransitionManager.md) |
 | MainMenu, пролог, шрифты | P1 | [MainMenu.md](MainMenu.md) |
+| InteractionSystem, двери, предметы, турникет | P2 | [InteractionSystem.md](InteractionSystem.md) |
+| ObjectiveManager, карточка задания | P2 | [ObjectiveManager.md](ObjectiveManager.md) |
+| MiniGameHost, считыватель, Tiny UFO | P2 | [MiniGameHost.md](MiniGameHost.md) |

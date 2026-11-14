@@ -167,7 +167,7 @@ Unity-сцены: `MainMenu`, `Floor_03`, `Floor_02`, `Floor_01`, `WhiteRoom`.
 ## 9. Мини-игры
 
 Все мини-игры — UI-оверлей поверх сцены этажа; на время мини-игры управление Дэнни
-заблокировано. Общий интерфейс `IMiniGame` (Start / OnWin / OnQuit).
+заблокировано. Общий интерфейс `IMiniGame.Begin(Action<bool> onFinish)` (true — победа, false — выход).
 
 | # | Название | Этаж | Механика | Итог |
 |---|---|---|---|---|
@@ -303,7 +303,9 @@ Heartbeat — не здоровье и не HP, а визуально-звуко
 | Arcade | Запустить Tiny UFO |
 | Stairs | Переход на следующий этаж |
 
-Все объекты реализуют `IInteractable`; связь с заданиями — через `ObjectiveTarget`.
+Все объекты реализуют `IInteractable` (общая база `InteractableBase`). Связь с заданиями — поля
+`requiresObjective` / `completesObjective` у объекта, зона `ObjectiveTrigger` и `ObjectiveGiver` для UnityEvent
+(подробно — [docs/systems/InteractionSystem.md](systems/InteractionSystem.md)).
 
 ## 17. Скриптовые сцены
 
@@ -432,7 +434,8 @@ Scripts/
 ├── Objectives/
 │   ├── ObjectiveManager.cs
 │   ├── ObjectiveData.cs          # ScriptableObject
-│   ├── ObjectiveTarget.cs
+│   ├── ObjectiveTrigger.cs       # зона: выдать/закрыть задание
+│   ├── ObjectiveGiver.cs         # Give()/Complete() для UnityEvent
 │   └── ObjectiveUI.cs
 ├── Phone/
 │   ├── PhoneManager.cs

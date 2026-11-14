@@ -3,6 +3,7 @@
     "rootNamespace": "Overworked",
     "references": [
         "Unity.InputSystem",
+        "GC26.Core",
         "Unity.TextMeshPro",
         "UnityEngine.UI",
         "Unity.Cinemachine",

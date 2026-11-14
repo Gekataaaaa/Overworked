@@ -5,6 +5,12 @@
 [External/TinyUFO](../External/TinyUFO/README.md). Когда обёртка заработает, из этого файла
 делается `docs/systems/TinyUfoMiniGame.md` по шаблону.
 
+> **Статус (этап 2):** перенос сделан — игра в `Assets/Core` и `Assets/Microgames/gc26_spinv`, обёртка
+> `TinyUfoMiniGame`, описание — [systems/MiniGameHost.md](systems/MiniGameHost.md). Отличия от плана ниже:
+> этаж не нужно строить вдали от начала координат — на время игры `TinyUfoMiniGame` сам выключает
+> рендеры, коллайдеры, свет и камеру этажа; Esc в паузе Overworked P1 уже отключил (PR #5);
+> `Core/Editor/MicrogameSync.cs` и сборка под Android не перенесены.
+
 ## 1. Как устроена игра
 
 Одна сцена `gc26_spinv_Main`, шесть корневых объектов:
