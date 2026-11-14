@@ -79,8 +79,12 @@ namespace Overworked.EditorTools
             var kitchenDoor = FindKitchenDoor();
             if (kitchenDoor != null)
             {
-                kitchenDoor.SetDoorLocked(true);
-                EditorUtility.SetDirty(kitchenDoor);
+                // Не «It's locked.»: до задания Макса дверь вообще не взаимодействует — без подсказки и обводки
+                // (startLocked у InteractableBase → CanInteract = false). Откроет сценарий через SetLocked(false).
+                kitchenDoor.SetDoorLocked(false);
+                var so = new SerializedObject(kitchenDoor);
+                so.FindProperty("startLocked").boolValue = true;
+                so.ApplyModifiedPropertiesWithoutUndo();
             }
             else Debug.LogWarning("[Chain] Floor_03: не найдена дверь в кухню (DoorInteractable → Kitchen)");
 
@@ -96,7 +100,7 @@ namespace Overworked.EditorTools
             var unlockKitchen = new EventStep { Note = "Unlock kitchen" };
             if (kitchenDoor != null)
                 UnityEditor.Events.UnityEventTools.AddBoolPersistentListener(unlockKitchen.OnRun,
-                    new UnityEngine.Events.UnityAction<bool>(kitchenDoor.SetDoorLocked), false);
+                    new UnityEngine.Events.UnityAction<bool>(kitchenDoor.SetLocked), false);
             var boss = Sequence(story, "1.3 DeniedBossThenMax", playOnStart: false, lockPlayer: true,
                 new MessageStep { Message = boss01, WaitUntilRead = true },
                 new MessageStep { Message = max01, WaitUntilRead = true },
