@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ef5854df93ba94c8ebc215135562f9, type: 3}
+  m_Name: Prologue_Boot
+  m_EditorClassIdentifier: Overworked::Overworked.DialogueData
+  Lines:
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.000000]</color> Linux version 6.9.4-wtts1-1 (wtts@buildhost) (gcc 14.1.1) #1 SMP PREEMPT_DYNAMIC'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.000000]</color> Command line: BOOT_IMAGE=/vmlinuz-wtts root=UUID=0f03-a114 rw quiet shift=night'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.000000]</color> BIOS-provided physical RAM map:'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.004118]</color> DMI: OVERWORK Corp. Office Terminal WS-114, BIOS 4.02 11/13/2009'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.118342]</color> ACPI: Core revision 20240322'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.296571]</color> PCI: Using configuration type 1 for base access'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.437902]</color> usb 1-1: new full-speed USB device number 2 (badge reader)'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.552018]</color> input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input3'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    0.873116]</color> EXT4-fs (sda2): mounted filesystem with ordered data mode. Quota mode: none.'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    1.002377]</color> systemd[1]: systemd 256 running in system mode'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    1.004121]</color> systemd[1]: Detected architecture x86-64.'
+  - Speaker: 2
+    Text: '<color=#8A8A8A>[    1.010532]</color> systemd[1]: Hostname set to <noparse><floor03-ws114></noparse>.'
+  - Speaker: 2
+    Text: ''
+  - Speaker: 2
+    Text: '         Starting Journal Service...'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Started Journal Service.'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Reached target Local File Systems.'
+  - Speaker: 2
+    Text: '         Starting Network Manager...'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Started Network Manager.'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Started Badge Reader Daemon.'
+  - Speaker: 2
+    Text: '         Starting Light Control (Floor 03)...'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Started Light Control (Floor 03).'
+  - Speaker: 2
+    Text: '         Starting Main Exit Door Controller...'
+  - Speaker: 2
+    Text: '[<color=#FF5C5C>FAILED</color>] Failed to start Main Exit Door Controller.'
+  - Speaker: 2
+    Text: 'See ''systemctl status exit-door.service'' for details.'
+  - Speaker: 2
+    Text: '         Starting Night Shift Service...'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Started Night Shift Service.'
+  - Speaker: 2
+    Text: '[  <color=#7CFF8A>OK</color>  ] Reached target Floor 03.'
+  - Speaker: 2
+    Text: '[ <color=#FFC857>WARN</color> ] Operator not registered.'
