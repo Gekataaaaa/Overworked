@@ -364,7 +364,9 @@ namespace Overworked
             if (screamer == ScreamerPhase.Recover)
                 volume = Mathf.Lerp(screamerVolume, volume, NaturalFall(Mathf.Clamp01((Time.time - phaseStart) / recoverDuration)));
 
-            if (AudioManager.Instance != null) AudioManager.Instance.PlayHeartbeat(beatClip, volume);
+            // Во время мини-игры (Tiny UFO на автомате) пульс Дэнни не слышен — у игры свой звук.
+            bool miniGame = MiniGameHost.Instance != null && MiniGameHost.Instance.IsOpen;
+            if (!miniGame && AudioManager.Instance != null) AudioManager.Instance.PlayHeartbeat(beatClip, volume);
             OnBeat?.Invoke();
         }
 
