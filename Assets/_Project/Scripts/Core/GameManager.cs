@@ -64,11 +64,13 @@ namespace Overworked
             SceneTransitionManager.Instance.Load(point.Scene);
         }
 
-        /// <summary>Новое прохождение (из главного меню): имя спросят заново, Continue пропадает.</summary>
+        /// <summary>Новое прохождение (из главного меню): имя спросят заново, Continue пропадает, задания сбрасываются.</summary>
         public void ResetState()
         {
             State = new GameState();
             Resume = null;
+            // Задания живут в _Systems и пережили бы новую игру (просьба P2).
+            if (ObjectiveManager.Instance != null) ObjectiveManager.Instance.ResetAll();
         }
     }
 }

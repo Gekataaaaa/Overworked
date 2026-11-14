@@ -25,8 +25,8 @@
 
 **Лестница** — префаб `Prefabs/Environment/Staircase` (`StairInteractable`, `Scripts/Core/`):
 `targetFloor` — куда ведёт, `SetLocked(bool)` — запереть/открыть из сценария, `Prompt` — текст
-подсказки. Пока нет `InteractionSystem` (P2), включена галочка **`standaloneE`**: лестница сама
-показывает «[E] Go downstairs» и ловит E. TODO(P1): снять её, когда InteractionSystem заработает.
+подсказки. E и подсказку обрабатывает `InteractionSystem` (P2). Галочка **`standaloneE`** (выключена)
+нужна только в тестовых сценах без InteractionSystem: тогда лестница сама ловит E.
 
 **Каркасы этажей** — меню **Overworked → P1 → Build Floor Skeletons**: коридор, двери с подписями,
 комнаты под коридором (EntryPoint, ExitDoor, выключенная камера комнаты), игрок, камера, лестница.
