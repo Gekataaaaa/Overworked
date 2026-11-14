@@ -88,6 +88,16 @@ namespace Overworked.EditorTools
             }
             else Debug.LogWarning("[Chain] Floor_03: не найдена дверь в кухню (DoorInteractable → Kitchen)");
 
+            // Пропуск Макса (P2) должен закрывать задание: в сцене P2 ссылка пустая — его сборщик (Floor03Turnstile)
+            // грузит ассет до OpenScene, и тот выгружается. Карточка задания после выполнения уйдёт сама (ObjectiveUI).
+            foreach (var pickup in Object.FindObjectsByType<PickupInteractable>(FindObjectsInactive.Include))
+            {
+                var so = new SerializedObject(pickup);
+                if (so.FindProperty("setsFlag").stringValue != "MaxPass") continue;
+                so.FindProperty("completesObjective").objectReferenceValue = takePass;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+
             // 1.3 Выход из кухни после пропуска — второе сообщение Макса.
             // Сработает, когда пропуск подобран (Pickup с completesObjective = F3_TakeMaxPass).
             Zone(story, "1.3 MaxThanks", 9f, 3f, takePass,
