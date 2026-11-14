@@ -127,8 +127,14 @@ namespace Overworked
             return sb.ToString();
         }
 
-        // Режем символы, которые сломают подстановку {name} и rich text в сообщениях Босса.
-        static char ValidateChar(string text, int index, char c) =>
-            c is '<' or '>' or '{' or '}' or '\n' or '\r' ? '\0' : c;
+        // Имя только латиницей (игра на английском): буквы A–Z, цифры, пробел и дефис не первым символом.
+        // Заодно отсекаются < > { }, которые сломали бы rich text и подстановку {name}.
+        static char ValidateChar(string text, int index, char c)
+        {
+            bool latin = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+            bool digit = c >= '0' && c <= '9';
+            bool allowed = latin || digit || ((c == ' ' || c == '-') && index > 0);
+            return allowed ? c : '\0';
+        }
     }
 }

@@ -4,9 +4,9 @@ namespace Overworked
 {
     /// <summary>
     /// Состояние одного прохождения: имя игрока, этаж, сюжетные флаги.
-    /// Живёт в GameManager и переживает смену сцен.
+    /// Живёт в GameManager и переживает смену сцен. Не [Serializable]: Unity его не сохраняет,
+    /// а HashSet сериализатор Unity всё равно не поддерживает.
     /// </summary>
-    [System.Serializable]
     public class GameState
     {
         /// <summary>Имя из пролога. "Tester" — когда сцена запущена прямо из редактора.</summary>

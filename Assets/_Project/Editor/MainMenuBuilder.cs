@@ -10,7 +10,7 @@ using static Overworked.EditorTools.UiBuild;
 namespace Overworked.EditorTools
 {
     /// <summary>
-    /// Собирает сцену MainMenu: меню Start/Quit и пролог-терминал (паспорт, разделы 5 и 21).
+    /// Собирает сцену MainMenu: меню Continue / New Game / Quit и пролог-терминал (паспорт, разделы 5 и 21).
     /// Заодно импортирует TMP Essentials, создаёт TMP-шрифты (PT Sans, IBM Plex Mono) и тексты пролога.
     /// Запуск: меню Overworked → P1 → Build Main Menu.
     /// Повторный запуск пересоздаёт только MainMenu Canvas; шрифты и тексты не перезаписывает.
@@ -163,12 +163,14 @@ namespace Overworked.EditorTools
             title.characterSpacing = 12;
 
             var buttons = UI("Buttons", menu);
-            Place(buttons, new Vector2(0, -140), new Vector2(360, 180));
+            // Высота под три кнопки по 80 + отступы; Continue скрывается, если нет сохранения.
+            Place(buttons, new Vector2(0, -180), new Vector2(360, 280));
             var vlg = buttons.gameObject.AddComponent<VerticalLayoutGroup>();
             vlg.spacing = 20;
             vlg.childControlHeight = vlg.childControlWidth = true;
             vlg.childForceExpandHeight = false;
-            var start = MenuButton("StartButton", buttons, mainFont, "Start");
+            var cont = MenuButton("ContinueButton", buttons, mainFont, "Continue");
+            var newGame = MenuButton("NewGameButton", buttons, mainFont, "New Game");
             var quit = MenuButton("QuitButton", buttons, mainFont, "Quit");
 
             // --- Пролог-терминал
@@ -198,7 +200,8 @@ namespace Overworked.EditorTools
             Wire(prologue, ("output", output), ("prompt", prompt), ("nameInput", input), ("intro", intro), ("welcome", welcome));
 
             var menuUi = canvasGo.AddComponent<MainMenuUI>();
-            Wire(menuUi, ("menuPanel", menu.gameObject), ("startButton", start), ("quitButton", quit), ("prologue", prologue));
+            Wire(menuUi, ("menuPanel", menu.gameObject), ("continueButton", cont), ("newGameButton", newGame),
+                ("quitButton", quit), ("prologue", prologue));
 
             terminal.gameObject.SetActive(false);
             EditorSceneManager.MarkSceneDirty(scene);

@@ -138,7 +138,7 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
 - [x] `PlayerController`: A/D и стрелки, без прыжка, `SetInputLocked`, `Teleport`.
 - [x] Камера Cinemachine за игроком + Confiner2D.
 - [x] `FadeController`, `SceneTransitionManager`, `GameManager.LoadFloor`.
-- [x] `MainMenu`: Start / Quit.
+- [x] `MainMenu`: Start / Quit → позже Continue / New Game / Quit (Continue — после выхода в меню через паузу).
 - [x] Пролог: терминал, ввод имени (≤16 символов, не пустое), Enter → Floor_03.
 
 **P2:**
