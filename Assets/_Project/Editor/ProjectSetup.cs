@@ -21,6 +21,7 @@ namespace Overworked.EditorTools
         const string Root = "Assets/_Project";
         const string ScenesDir = Root + "/Scenes";
         const string SystemsPrefab = Root + "/Prefabs/Systems/Resources/_Systems.prefab";
+        const string TinyUfoScene = "Assets/Microgames/gc26_spinv/Scenes/gc26_spinv_Main.unity";
 
         static readonly string[] Folders =
         {
@@ -65,7 +66,7 @@ namespace Overworked.EditorTools
             for (int i = 1; i <= 4; i++)
                 CreateScene($"Sandbox/Sandbox_P{i}", s => AddCamera(new Color(0.12f, 0.14f, 0.13f)));
 
-            EditorBuildSettings.scenes = new[]
+            var buildScenes = new System.Collections.Generic.List<EditorBuildSettingsScene>
             {
                 new EditorBuildSettingsScene($"{ScenesDir}/MainMenu.unity", true),
                 new EditorBuildSettingsScene($"{ScenesDir}/Floor_03.unity", true),
@@ -73,6 +74,9 @@ namespace Overworked.EditorTools
                 new EditorBuildSettingsScene($"{ScenesDir}/Floor_01.unity", true),
                 new EditorBuildSettingsScene($"{ScenesDir}/WhiteRoom.unity", true),
             };
+            // Tiny UFO грузится additive-сценой поверх Floor_01 — в билде без неё не запустится.
+            if (File.Exists(TinyUfoScene)) buildScenes.Add(new EditorBuildSettingsScene(TinyUfoScene, true));
+            EditorBuildSettings.scenes = buildScenes.ToArray();
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

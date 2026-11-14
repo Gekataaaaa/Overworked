@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/WhiteRoom.unity
     guid: bf2828709cd04ee4892fc97cbc4a7591
+  - enabled: 1
+    path: Assets/Microgames/gc26_spinv/Scenes/gc26_spinv_Main.unity
+    guid: c560568a9d28cd646b14ea4ad5f9d1e9
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
