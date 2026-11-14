@@ -19,9 +19,9 @@ namespace Overworked
         [Tooltip("Заперта на старте (откроет сценарий через SetLocked(false))")]
         [SerializeField] bool startLocked;
 
-        [Tooltip("ВРЕМЕННО: лестница сама ловит E и показывает подсказку, пока нет InteractionSystem (P2). " +
-                 "Выключить, когда InteractionSystem заработает, иначе E обработается дважды")]
-        [SerializeField] bool standaloneE = true;
+        [Tooltip("Лестница сама ловит E и показывает подсказку — только для тестовых сцен без InteractionSystem. " +
+                 "В обычных сценах выключено: E обрабатывает InteractionSystem, иначе нажатие сработает дважды")]
+        [SerializeField] bool standaloneE;
 
         [Tooltip("Подсказка «[E] …» над лестницей для автономного режима")]
         [SerializeField] GameObject promptLabel;

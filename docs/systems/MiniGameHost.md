@@ -38,7 +38,7 @@ public class MyGame : MonoBehaviour, IMiniGame
 **Зависит от:** PlayerController, GameInput (E, Esc), ObjectiveUI, GC26.Core (`IMicrogame`).
 
 **Известные ограничения / TODO:**
-- TODO(P1): добавить `Assets/Microgames/gc26_spinv/Scenes/gc26_spinv_Main.unity` в Build Settings.
+- `gc26_spinv_Main` добавлена в Build Settings (P1).
   Без этого Tiny UFO запускается только в редакторе (грузится по пути).
 - Не запускать **Tools → Space Invaders → Build Game**: пересоздаст сцену Tiny UFO и сотрёт урезание.
 - Интерфейс Tiny UFO рассчитан на портрет; на 16:9 поле шире — проверить на глаз.

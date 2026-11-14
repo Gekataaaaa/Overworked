@@ -29,6 +29,6 @@
 **Зависит от:** TextFormatter.
 
 **Известные ограничения / TODO:**
-- TODO(P1): вызывать `ObjectiveManager.Instance.ResetAll()` при новой игре из меню.
+- `ResetAll()` вызывается из `GameManager.ResetState()` при New Game (P1).
 - `ObjectiveUI` не знает про `UIManager.SetHudVisible(HudPart.Objective)` — P3 может вызывать
   `ObjectiveUI.SetVisible` оттуда.
