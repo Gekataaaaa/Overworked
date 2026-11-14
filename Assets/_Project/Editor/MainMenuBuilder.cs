@@ -191,6 +191,11 @@ namespace Overworked.EditorTools
             // Светлый «бумажный» фон: логотип тёмный (бордовый → почти чёрный) и нарисован на белом.
             menu.gameObject.AddComponent<Image>().color = MenuBackground;
 
+            // Анимированное «зерно» поверх фона (под логотипом и пунктами), чуть затемняет бумагу.
+            var noise = Stretch(UI("Noise", menu)).gameObject;
+            noise.AddComponent<RawImage>().color = new Color(1f, 1f, 1f, 0.16f);
+            noise.AddComponent<UiNoise>();
+
             var logoSprite = AssetDatabase.LoadAssetAtPath<Sprite>(LogoPath);
             if (logoSprite != null)
             {
@@ -208,16 +213,16 @@ namespace Overworked.EditorTools
                 title.characterSpacing = 12;
             }
 
+            // Пункты как в консоли: текст моноширинным шрифтом, у выбранного стрелка «> » (ConsoleMenuItem).
             var buttons = UI("Buttons", menu);
-            // Высота под три кнопки по 80 + отступы; Continue скрывается, если нет сохранения.
-            Place(buttons, new Vector2(0, -200), new Vector2(360, 280));
+            Place(buttons, new Vector2(0, -200), new Vector2(360, 220));
             var vlg = buttons.gameObject.AddComponent<VerticalLayoutGroup>();
-            vlg.spacing = 20;
+            vlg.spacing = 6;
             vlg.childControlHeight = vlg.childControlWidth = true;
             vlg.childForceExpandHeight = false;
-            var cont = MenuButton("ContinueButton", buttons, mainFont, "Continue");
-            var newGame = MenuButton("NewGameButton", buttons, mainFont, "New Game");
-            var quit = MenuButton("QuitButton", buttons, mainFont, "Quit");
+            var cont = ConsoleItem("ContinueButton", buttons, monoFont, "Continue");
+            var newGame = ConsoleItem("NewGameButton", buttons, monoFont, "New Game");
+            var quit = ConsoleItem("QuitButton", buttons, monoFont, "Quit");
 
             // --- Пролог-терминал
             var terminal = Stretch(UI("PrologueTerminal", canvasGo.transform));
@@ -258,6 +263,29 @@ namespace Overworked.EditorTools
             terminal.gameObject.SetActive(false);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
+        }
+
+        /// <summary>Пункт меню-консоли: Button без видимого фона (прозрачный Image ловит мышь) + ConsoleMenuItem.</summary>
+        static Button ConsoleItem(string name, RectTransform parent, TMP_FontAsset font, string text)
+        {
+            var rt = UI(name, parent);
+            rt.gameObject.AddComponent<LayoutElement>().preferredHeight = 60;
+            var bg = rt.gameObject.AddComponent<Image>();
+            bg.color = Color.clear;
+            var button = rt.gameObject.AddComponent<Button>();
+            button.transition = Selectable.Transition.None;
+            button.targetGraphic = bg;
+
+            var label = Tmp("Label", rt, font, "  " + text, 44, Color.black, TextAlignmentOptions.Left);
+            Stretch(label.rectTransform);
+            label.raycastTarget = false;
+
+            var item = rt.gameObject.AddComponent<ConsoleMenuItem>();
+            Wire(item, ("label", label));
+            var so = new SerializedObject(item);
+            so.FindProperty("text").stringValue = text;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return button;
         }
 
         static TMP_InputField NameInput(RectTransform parent, TMP_FontAsset font)

@@ -46,6 +46,8 @@ namespace Overworked
             quitButton.onClick.AddListener(OnQuit);
             menuPanel.SetActive(true);
             prologue.gameObject.SetActive(false);
+            // CRT как у терминала и автомата Tiny UFO — уже на меню.
+            prologue.EnableCrt();
             // Выделяем первую кнопку, чтобы меню работало и с клавиатуры (стрелки + Enter).
             (canContinue ? continueButton : newGameButton).Select();
         }
