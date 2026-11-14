@@ -1,0 +1,2158 @@
+fileFormatVersion: 2
+guid: 9b137a6422c343e4794120d69691dc3b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1695639998440947429
+    second: Anomaly_WallWriting_0
+  - first:
+      213: 2453610721494662316
+    second: Anomaly_WallWriting_1
+  - first:
+      213: -8265415936627875689
+    second: Anomaly_WallWriting_2
+  - first:
+      213: -4667052565243338430
+    second: Anomaly_WallWriting_3
+  - first:
+      213: 8609635366326412098
+    second: Anomaly_WallWriting_4
+  - first:
+      213: 6290130297752845622
+    second: Anomaly_WallWriting_5
+  - first:
+      213: 2294235576064387944
+    second: Anomaly_WallWriting_6
+  - first:
+      213: -1948632852784559405
+    second: Anomaly_WallWriting_7
+  - first:
+      213: 1776150026596280367
+    second: Anomaly_WallWriting_8
+  - first:
+      213: 8928507149800467885
+    second: Anomaly_WallWriting_9
+  - first:
+      213: 3056373251877190890
+    second: Anomaly_WallWriting_10
+  - first:
+      213: -3867242387519226264
+    second: Anomaly_WallWriting_11
+  - first:
+      213: -8143812209526349048
+    second: Anomaly_WallWriting_12
+  - first:
+      213: 3990554245415667598
+    second: Anomaly_WallWriting_13
+  - first:
+      213: -8719009250528368377
+    second: Anomaly_WallWriting_14
+  - first:
+      213: 32037486976232091
+    second: Anomaly_WallWriting_15
+  - first:
+      213: -1985083849198714435
+    second: Anomaly_WallWriting_16
+  - first:
+      213: -5274032316554297091
+    second: Anomaly_WallWriting_17
+  - first:
+      213: -3923900187803792353
+    second: Anomaly_WallWriting_18
+  - first:
+      213: -5246060651386322865
+    second: Anomaly_WallWriting_19
+  - first:
+      213: -1262621711847686779
+    second: Anomaly_WallWriting_20
+  - first:
+      213: 4988135144979577806
+    second: Anomaly_WallWriting_21
+  - first:
+      213: 9048986931115309886
+    second: Anomaly_WallWriting_22
+  - first:
+      213: -4142903162883215681
+    second: Anomaly_WallWriting_23
+  - first:
+      213: -1634450800257501425
+    second: Anomaly_WallWriting_24
+  - first:
+      213: -4558873372230234420
+    second: Anomaly_WallWriting_25
+  - first:
+      213: 8940339973900549562
+    second: Anomaly_WallWriting_26
+  - first:
+      213: -8516921889116608712
+    second: Anomaly_WallWriting_27
+  - first:
+      213: 6048427239404381345
+    second: Anomaly_WallWriting_28
+  - first:
+      213: 7388942462857164984
+    second: Anomaly_WallWriting_29
+  - first:
+      213: 6898213351001311560
+    second: Anomaly_WallWriting_30
+  - first:
+      213: -6656961528746185362
+    second: Anomaly_WallWriting_31
+  - first:
+      213: -294255411595897930
+    second: Anomaly_WallWriting_32
+  - first:
+      213: -4164886835153987888
+    second: Anomaly_WallWriting_33
+  - first:
+      213: -3582882816410645173
+    second: Anomaly_WallWriting_34
+  - first:
+      213: -6577008810501607853
+    second: Anomaly_WallWriting_35
+  - first:
+      213: 8914226283837238992
+    second: Anomaly_WallWriting_36
+  - first:
+      213: -2371909366697732115
+    second: Anomaly_WallWriting_37
+  - first:
+      213: 4835866112166802378
+    second: Anomaly_WallWriting_38
+  - first:
+      213: -4302829492716559513
+    second: Anomaly_WallWriting_39
+  - first:
+      213: 278899965428387909
+    second: Anomaly_WallWriting_40
+  - first:
+      213: -7664572259426030736
+    second: Anomaly_WallWriting_41
+  - first:
+      213: -3249845066076846107
+    second: Anomaly_WallWriting_42
+  - first:
+      213: 363812172440393725
+    second: Anomaly_WallWriting_43
+  - first:
+      213: 7049888032085871688
+    second: Anomaly_WallWriting_44
+  - first:
+      213: -5495601436564548614
+    second: Anomaly_WallWriting_45
+  - first:
+      213: -4821019721262364155
+    second: Anomaly_WallWriting_46
+  - first:
+      213: 73281644735372950
+    second: Anomaly_WallWriting_47
+  - first:
+      213: 2318059529889773868
+    second: Anomaly_WallWriting_48
+  - first:
+      213: 8218580933526989614
+    second: Anomaly_WallWriting_49
+  - first:
+      213: -5795803325267326677
+    second: Anomaly_WallWriting_50
+  - first:
+      213: 3037388650445916089
+    second: Anomaly_WallWriting_51
+  - first:
+      213: 2719432933584180451
+    second: Anomaly_WallWriting_52
+  - first:
+      213: 5204141777295335871
+    second: Anomaly_WallWriting_53
+  - first:
+      213: 3652973075235917446
+    second: Anomaly_WallWriting_54
+  - first:
+      213: 4564417567849247937
+    second: Anomaly_WallWriting_55
+  - first:
+      213: 5205115907261649843
+    second: Anomaly_WallWriting_56
+  - first:
+      213: 6037726140753496443
+    second: Anomaly_WallWriting_57
+  - first:
+      213: -8270364262697700249
+    second: Anomaly_WallWriting_58
+  - first:
+      213: -2603697954586025798
+    second: Anomaly_WallWriting_59
+  - first:
+      213: 1131422137639036481
+    second: Anomaly_WallWriting_60
+  - first:
+      213: -2302363834071967085
+    second: Anomaly_WallWriting_61
+  - first:
+      213: 5043354179930266229
+    second: Anomaly_WallWriting_62
+  - first:
+      213: -7374528948469552409
+    second: Anomaly_WallWriting_63
+  - first:
+      213: 1294828401146876904
+    second: Anomaly_WallWriting_64
+  - first:
+      213: 58033167643002355
+    second: Anomaly_WallWriting_65
+  - first:
+      213: 6382541655424914147
+    second: Anomaly_WallWriting_66
+  - first:
+      213: -8982417868431601170
+    second: Anomaly_WallWriting_67
+  - first:
+      213: 9127134332298227671
+    second: Anomaly_WallWriting_68
+  - first:
+      213: -6066636426092792899
+    second: Anomaly_WallWriting_69
+  - first:
+      213: -7933483240416131997
+    second: Anomaly_WallWriting_70
+  - first:
+      213: -6704748614925205466
+    second: Anomaly_WallWriting_71
+  - first:
+      213: -3962940332252115802
+    second: Anomaly_WallWriting_72
+  - first:
+      213: -6959837775607097662
+    second: Anomaly_WallWriting_73
+  - first:
+      213: 6196012404202039153
+    second: Anomaly_WallWriting_74
+  - first:
+      213: 5918224749799210617
+    second: Anomaly_WallWriting_75
+  - first:
+      213: -2275246903730272607
+    second: Anomaly_WallWriting_76
+  - first:
+      213: 1072770845544825294
+    second: Anomaly_WallWriting_77
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 153.6
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_0
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 275
+        width: 28
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b11cbf1c760e778e0800000000000000
+      internalID: -1695639998440947429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_1
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 144
+        width: 60
+        height: 168
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cac77cf83f9fc0220800000000000000
+      internalID: 2453610721494662316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_2
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 283
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79061786ff75b4d80800000000000000
+      internalID: -8265415936627875689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_3
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 286
+        width: 23
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24168944b6c4b3fb0800000000000000
+      internalID: -4667052565243338430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_4
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 288
+        width: 32
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 243a687ffb19b7770800000000000000
+      internalID: 8609635366326412098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_5
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 289
+        width: 28
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63dfa74ed280b4750800000000000000
+      internalID: 6290130297752845622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_6
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 293
+        width: 22
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86ba16ed913c6df10800000000000000
+      internalID: 2294235576064387944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_7
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 292
+        width: 26
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dace14aeb015f4e0800000000000000
+      internalID: -1948632852784559405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_8
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 296
+        width: 26
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f28621be90726a810800000000000000
+      internalID: 1776150026596280367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_9
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 297
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dad646e82fd68eb70800000000000000
+      internalID: 8928507149800467885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_10
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 66
+        width: 81
+        height: 255
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aec352b774b6a6a20800000000000000
+      internalID: 3056373251877190890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_11
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 307
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86e359fb98bc45ac0800000000000000
+      internalID: -3867242387519226264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 233
+        width: 49
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80361b571fd5bfe80800000000000000
+      internalID: -8143812209526349048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_13
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 252
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e878dee71fb416730800000000000000
+      internalID: 3990554245415667598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_14
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 252
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70969ec284bdff680800000000000000
+      internalID: -8719009250528368377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_15
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 250
+        width: 21
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9ae6b6bce1d17000800000000000000
+      internalID: 32037486976232091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_16
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 250
+        width: 16
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db1452fa1c09374e0800000000000000
+      internalID: -1985083849198714435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_17
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 250
+        width: 19
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df0c9d51d8fdec6b0800000000000000
+      internalID: -5274032316554297091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_18
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 124
+        width: 46
+        height: 148
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1ccdd3a1918b89c0800000000000000
+      internalID: -3923900187803792353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_19
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 248
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f40c6f3e1af3237b0800000000000000
+      internalID: -5246060651386322865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_20
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 47
+        width: 61
+        height: 225
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58d7f932e344a7ee0800000000000000
+      internalID: -1262621711847686779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_21
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 219
+        width: 18
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecb36207c7a693540800000000000000
+      internalID: 4988135144979577806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_22
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 175
+        width: 37
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3bb7469ba5749d70800000000000000
+      internalID: 9048986931115309886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_23
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 245
+        width: 18
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbee08df5837186c0800000000000000
+      internalID: -4142903162883215681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_24
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 244
+        width: 41
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f077cc728a34159e0800000000000000
+      internalID: -1634450800257501425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_25
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 235
+        width: 18
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cceca3862d0abb0c0800000000000000
+      internalID: -4558873372230234420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_26
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 89
+        width: 38
+        height: 147
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abd319b96d7721c70800000000000000
+      internalID: 8940339973900549562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_27
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 206
+        width: 28
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 837a47b9aa0ddc980800000000000000
+      internalID: -8516921889116608712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_28
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 207
+        width: 24
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a4ae7e378450f350800000000000000
+      internalID: 6048427239404381345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_29
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 209
+        width: 22
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b8b66c850cca8660800000000000000
+      internalID: 7388942462857164984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_30
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 208
+        width: 28
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8494a439e706bbf50800000000000000
+      internalID: 6898213351001311560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_31
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 137
+        width: 28
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6d64ab72c8bd93a0800000000000000
+      internalID: -6656961528746185362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_32
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 211
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b3179e13489aebf0800000000000000
+      internalID: -294255411595897930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_33
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 176
+        width: 45
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d612fc6d795336c0800000000000000
+      internalID: -4164886835153987888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_34
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 211
+        width: 24
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4d0ef7bf0b074ec0800000000000000
+      internalID: -3582882816410645173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_35
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 224
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35eef655555c9b4a0800000000000000
+      internalID: -6577008810501607853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_36
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 161
+        width: 20
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dea1975391b5bb70800000000000000
+      internalID: 8914226283837238992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_37
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 164
+        width: 28
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de75f867ff8451fd0800000000000000
+      internalID: -2371909366697732115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_38
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 168
+        width: 19
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac33d058b927c1340800000000000000
+      internalID: 4835866112166802378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_39
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 168
+        width: 24
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7632e8daf574944c0800000000000000
+      internalID: -4302829492716559513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_40
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 168
+        width: 21
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5405a377a0aded300800000000000000
+      internalID: 278899965428387909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_41
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 123
+        width: 22
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07b29918328f1a590800000000000000
+      internalID: -7664572259426030736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_42
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 177
+        width: 22
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e70f6d712b36e2d0800000000000000
+      internalID: -3249845066076846107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_43
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 180
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df7d5474e358c0500800000000000000
+      internalID: 363812172440393725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_44
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 122
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84c81c230db36d160800000000000000
+      internalID: 7049888032085871688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_45
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 140
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af391724c93bbb3b0800000000000000
+      internalID: -5495601436564548614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_46
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 143
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50a010b3b1c481db0800000000000000
+      internalID: -4821019721262364155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_47
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 146
+        width: 23
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69e12038449540100800000000000000
+      internalID: 73281644735372950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_48
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 150
+        width: 21
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c29f94f5cd66b2020800000000000000
+      internalID: 2318059529889773868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_49
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 75
+        width: 37
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2bacaca0d34e0270800000000000000
+      internalID: 8218580933526989614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_50
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 114
+        width: 31
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b29c969459b219fa0800000000000000
+      internalID: -5795803325267326677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_51
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 117
+        width: 22
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b7c1a282e8f62a20800000000000000
+      internalID: 3037388650445916089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_52
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 61
+        height: 148
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e498cc48dd5db520800000000000000
+      internalID: 2719432933584180451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_53
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 90
+        width: 16
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb1657caf53d83840800000000000000
+      internalID: 5204141777295335871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_54
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 88
+        width: 26
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68ec08b58a7f1b230800000000000000
+      internalID: 3652973075235917446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_55
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 89
+        width: 17
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c4f43a3891185f30800000000000000
+      internalID: 4564417567849247937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_56
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 88
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b3d01bf6594c3840800000000000000
+      internalID: 5205115907261649843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_57
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 87
+        width: 20
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b79c3be8fef4ac350800000000000000
+      internalID: 6037726140753496443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_58
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 86
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76471d67583c93d80800000000000000
+      internalID: -8270364262697700249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_59
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 85
+        width: 26
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab02d7a518ecddbd0800000000000000
+      internalID: -2603697954586025798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_60
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 84
+        width: 20
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 146ecfc807e93bf00800000000000000
+      internalID: 1131422137639036481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_61
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 86
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39a1f669a4c5c00e0800000000000000
+      internalID: -2302363834071967085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_62
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 85
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57a9933e7e79df540800000000000000
+      internalID: 5043354179930266229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_63
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 84
+        width: 20
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ea23a84ef868a990800000000000000
+      internalID: -7374528948469552409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_64
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 83
+        width: 43
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e3527f029728f110800000000000000
+      internalID: 1294828401146876904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_65
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 52
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f54d86cbdc2ec000800000000000000
+      internalID: 58033167643002355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_66
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 52
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e25cb7c1d7539850800000000000000
+      internalID: 6382541655424914147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_67
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 31
+        width: 26
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee153002a8a085380800000000000000
+      internalID: -8982417868431601170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_68
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 52
+        width: 20
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7df68ed41581aae70800000000000000
+      internalID: 9127134332298227671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_69
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 54
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db33b49105afecba0800000000000000
+      internalID: -6066636426092792899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_70
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 53
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3644b77b60b96e190800000000000000
+      internalID: -7933483240416131997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_71
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 54
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 620471378a2f3f2a0800000000000000
+      internalID: -6704748614925205466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_72
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 27
+        width: 26
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ac4b0ea3cec009c0800000000000000
+      internalID: -3962940332252115802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_73
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 53
+        width: 20
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c6189afa60b96f90800000000000000
+      internalID: -6959837775607097662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_74
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 55
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17760682478acf550800000000000000
+      internalID: 6196012404202039153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_75
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 54
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97ef4b8cd02c12250800000000000000
+      internalID: 5918224749799210617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_76
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 53
+        width: 19
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a689deeef2bc60e0800000000000000
+      internalID: -2275246903730272607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anomaly_WallWriting_77
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 53
+        width: 42
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec14816766f33ee00800000000000000
+      internalID: 1072770845544825294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Anomaly_WallWriting_0: -1695639998440947429
+      Anomaly_WallWriting_1: 2453610721494662316
+      Anomaly_WallWriting_10: 3056373251877190890
+      Anomaly_WallWriting_11: -3867242387519226264
+      Anomaly_WallWriting_12: -8143812209526349048
+      Anomaly_WallWriting_13: 3990554245415667598
+      Anomaly_WallWriting_14: -8719009250528368377
+      Anomaly_WallWriting_15: 32037486976232091
+      Anomaly_WallWriting_16: -1985083849198714435
+      Anomaly_WallWriting_17: -5274032316554297091
+      Anomaly_WallWriting_18: -3923900187803792353
+      Anomaly_WallWriting_19: -5246060651386322865
+      Anomaly_WallWriting_2: -8265415936627875689
+      Anomaly_WallWriting_20: -1262621711847686779
+      Anomaly_WallWriting_21: 4988135144979577806
+      Anomaly_WallWriting_22: 9048986931115309886
+      Anomaly_WallWriting_23: -4142903162883215681
+      Anomaly_WallWriting_24: -1634450800257501425
+      Anomaly_WallWriting_25: -4558873372230234420
+      Anomaly_WallWriting_26: 8940339973900549562
+      Anomaly_WallWriting_27: -8516921889116608712
+      Anomaly_WallWriting_28: 6048427239404381345
+      Anomaly_WallWriting_29: 7388942462857164984
+      Anomaly_WallWriting_3: -4667052565243338430
+      Anomaly_WallWriting_30: 6898213351001311560
+      Anomaly_WallWriting_31: -6656961528746185362
+      Anomaly_WallWriting_32: -294255411595897930
+      Anomaly_WallWriting_33: -4164886835153987888
+      Anomaly_WallWriting_34: -3582882816410645173
+      Anomaly_WallWriting_35: -6577008810501607853
+      Anomaly_WallWriting_36: 8914226283837238992
+      Anomaly_WallWriting_37: -2371909366697732115
+      Anomaly_WallWriting_38: 4835866112166802378
+      Anomaly_WallWriting_39: -4302829492716559513
+      Anomaly_WallWriting_4: 8609635366326412098
+      Anomaly_WallWriting_40: 278899965428387909
+      Anomaly_WallWriting_41: -7664572259426030736
+      Anomaly_WallWriting_42: -3249845066076846107
+      Anomaly_WallWriting_43: 363812172440393725
+      Anomaly_WallWriting_44: 7049888032085871688
+      Anomaly_WallWriting_45: -5495601436564548614
+      Anomaly_WallWriting_46: -4821019721262364155
+      Anomaly_WallWriting_47: 73281644735372950
+      Anomaly_WallWriting_48: 2318059529889773868
+      Anomaly_WallWriting_49: 8218580933526989614
+      Anomaly_WallWriting_5: 6290130297752845622
+      Anomaly_WallWriting_50: -5795803325267326677
+      Anomaly_WallWriting_51: 3037388650445916089
+      Anomaly_WallWriting_52: 2719432933584180451
+      Anomaly_WallWriting_53: 5204141777295335871
+      Anomaly_WallWriting_54: 3652973075235917446
+      Anomaly_WallWriting_55: 4564417567849247937
+      Anomaly_WallWriting_56: 5205115907261649843
+      Anomaly_WallWriting_57: 6037726140753496443
+      Anomaly_WallWriting_58: -8270364262697700249
+      Anomaly_WallWriting_59: -2603697954586025798
+      Anomaly_WallWriting_6: 2294235576064387944
+      Anomaly_WallWriting_60: 1131422137639036481
+      Anomaly_WallWriting_61: -2302363834071967085
+      Anomaly_WallWriting_62: 5043354179930266229
+      Anomaly_WallWriting_63: -7374528948469552409
+      Anomaly_WallWriting_64: 1294828401146876904
+      Anomaly_WallWriting_65: 58033167643002355
+      Anomaly_WallWriting_66: 6382541655424914147
+      Anomaly_WallWriting_67: -8982417868431601170
+      Anomaly_WallWriting_68: 9127134332298227671
+      Anomaly_WallWriting_69: -6066636426092792899
+      Anomaly_WallWriting_7: -1948632852784559405
+      Anomaly_WallWriting_70: -7933483240416131997
+      Anomaly_WallWriting_71: -6704748614925205466
+      Anomaly_WallWriting_72: -3962940332252115802
+      Anomaly_WallWriting_73: -6959837775607097662
+      Anomaly_WallWriting_74: 6196012404202039153
+      Anomaly_WallWriting_75: 5918224749799210617
+      Anomaly_WallWriting_76: -2275246903730272607
+      Anomaly_WallWriting_77: 1072770845544825294
+      Anomaly_WallWriting_8: 1776150026596280367
+      Anomaly_WallWriting_9: 8928507149800467885
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

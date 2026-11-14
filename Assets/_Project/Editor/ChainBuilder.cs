@@ -9,7 +9,8 @@ namespace Overworked.EditorTools
     /// <summary>
     /// Общая игровая цепочка (интегратор P1): расставляет в основных сценах механики, которые уже есть
     /// в main, чтобы после New Game игра проходилась по нарративу, а не по тестовым сценам.
-    /// Сейчас — Floor_03 из механик P3: стартовые реплики, онбординг HUD, подсказка управления,
+    /// Сейчас — Floor_03 из механик P3: вступление за столом (печатает, реплики, встаёт — арт Danny_Seated),
+    /// стартовые реплики, онбординг HUD, подсказка управления,
     /// реплики в опенспейсе, стол Чарльза, сообщения Макса (с заданием) и Босса.
     /// Floor_02 и Floor_01 — фонарик P4 в руках у Дэнни с начала этажа (Floor_02 затемнён).
     /// Всё кладётся в группу Story/Chain (и Interactables/Chain) — повторный запуск пересобирает только её,
@@ -43,19 +44,8 @@ namespace Overworked.EditorTools
             var boss01 = Load<MessageData>("Messages/F3_Boss_01");
             var takePass = Load<ObjectiveData>("Objectives/F3_TakeMaxPass");
 
-            // 1.0 Начало: Дэнни стоит, реплики, HUD появляется по частям, подсказка управления.
-            // TODO(P3): перед репликами — мини-игра 1 «Печать отчёта», когда будет готова.
-            var opening = Sequence(story, "1.0 Opening", playOnStart: true, lockPlayer: true,
-                new HudStep { AllParts = true, Visible = false },
-                new WaitStep { Seconds = 0.6f },
-                new DialogueStep { Dialogue = start },
-                new HudStep { Part = HudPart.Sanity, Visible = true },
-                new HudStep { Part = HudPart.Heartbeat, Visible = true },
-                new WaitStep { Seconds = 0.5f },
-                new HudStep { Part = HudPart.Phone, Visible = true },
-                new HudStep { Part = HudPart.Objective, Visible = true },
-                new WaitStep { Seconds = 0.3f },
-                new ControlsHintStep());
+            // 1.0 Начало. TODO(P3): перед репликами — мини-игра 1 «Печать отчёта», когда будет готова.
+            var opening = Sequence(story, "1.0 Opening", playOnStart: true, lockPlayer: true, OpeningSteps(start));
 
             // 1.1 Опенспейс — реплики при первом проходе.
             Zone(story, "1.1 OpenSpace", -15f, 2f, null,
@@ -142,6 +132,94 @@ namespace Overworked.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             Debug.Log($"[Chain] Floor_03: собрано ({opening.name} + зоны)");
+        }
+
+        /// <summary>
+        /// Шаги 1.0 Opening. Если в сцене есть арт сидящего Дэнни (Corridor/Props/Danny_Seated с детьми
+        /// Typing / Idle / StandUp): Дэнни за своим столом — подсказка управления — печатает — перестаёт и сидит —
+        /// стартовые реплики — встаёт — вместо арта появляется игрок — HUD по частям.
+        /// Без арта — прежний вариант: Дэнни стоит, реплики, HUD, подсказка управления.
+        /// </summary>
+        static SequenceStep[] OpeningSteps(DialogueData start)
+        {
+            var seated = FindInScene("Danny_Seated");
+            var playerSprite = FindPlayerSprite();
+            GameObject typing = Child(seated, "Typing"), idle = Child(seated, "Idle"), standUp = Child(seated, "StandUp");
+            var hud = new SequenceStep[]
+            {
+                new HudStep { Part = HudPart.Sanity, Visible = true },
+                new HudStep { Part = HudPart.Heartbeat, Visible = true },
+                new WaitStep { Seconds = 0.5f },
+                new HudStep { Part = HudPart.Phone, Visible = true },
+                new HudStep { Part = HudPart.Objective, Visible = true },
+                new WaitStep { Seconds = 0.3f },
+            };
+            if (playerSprite == null || typing == null || idle == null || standUp == null)
+            {
+                if (seated != null) Debug.LogWarning("[Chain] Floor_03: у Danny_Seated нет Typing/Idle/StandUp или нет спрайта игрока — вступление без арта");
+                var simple = new System.Collections.Generic.List<SequenceStep>
+                {
+                    new HudStep { AllParts = true, Visible = false },
+                    new WaitStep { Seconds = 0.6f },
+                    new DialogueStep { Dialogue = start },
+                };
+                simple.AddRange(hud);
+                simple.Add(new ControlsHintStep());
+                return simple.ToArray();
+            }
+
+            // Арт сидящего выключен вне вступления: в редакторе и при любом сбое сценария не будет двух Дэнни.
+            seated.SetActive(false);
+            typing.SetActive(true);
+            idle.SetActive(false);
+            standUp.SetActive(false);
+            var steps = new System.Collections.Generic.List<SequenceStep>
+            {
+                new SetActiveStep { Target = seated, Active = true },
+                new SetActiveStep { Target = playerSprite, Active = false },
+                new HudStep { AllParts = true, Visible = false },
+                new WaitStep { Seconds = 0.6f },
+                new ControlsHintStep(),
+                new WaitStep { Seconds = 2.5f },                  // печатает
+                new SetActiveStep { Target = typing, Active = false },
+                new SetActiveStep { Target = idle, Active = true },
+                new WaitStep { Seconds = 0.8f },                  // сидит
+                new DialogueStep { Dialogue = start },            // «Damn… It's late already.» — почему встаёт из-за компьютера
+                new SetActiveStep { Target = idle, Active = false },
+                new SetActiveStep { Target = standUp, Active = true },
+                new WaitStep { Seconds = 2f },                    // клип Danny_StandUp — 1.76 с
+                new SetActiveStep { Target = seated, Active = false },
+                new SetActiveStep { Target = playerSprite, Active = true },
+            };
+            steps.AddRange(hud);
+            return steps.ToArray();
+        }
+
+        /// <summary>Объект сцены по имени, включая выключенные.</summary>
+        static GameObject FindInScene(string name)
+        {
+            foreach (var root in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+                foreach (var t in root.GetComponentsInChildren<Transform>(true))
+                    if (t.name == name) return t.gameObject;
+            return null;
+        }
+
+        static GameObject Child(GameObject parent, string name)
+        {
+            if (parent == null) return null;
+            var t = parent.transform.Find(name);
+            return t != null ? t.gameObject : null;
+        }
+
+        /// <summary>Спрайт Дэнни-игрока (Player/Sprite): на время вступления его заменяет арт сидящего.</summary>
+        static GameObject FindPlayerSprite()
+        {
+            foreach (var player in Object.FindObjectsByType<PlayerController>(FindObjectsInactive.Include))
+            {
+                var t = player.transform.Find("Sprite");
+                if (t != null) return t.gameObject;
+            }
+            return null;
         }
 
         /// <summary>Дверь из коридора в кухню: DoorInteractable с направлением IntoRoom и комнатой Kitchen.</summary>
