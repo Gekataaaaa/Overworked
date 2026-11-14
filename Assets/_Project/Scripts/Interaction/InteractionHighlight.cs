@@ -26,6 +26,9 @@ namespace Overworked
         [Tooltip("Порядок отрисовки подсказки: поверх Дэнни и предметов")]
         [SerializeField] int promptSortingOrder = 100;
 
+        [Tooltip("Цвет подсказки [E] — как у текста терминала в прологе")]
+        [SerializeField] Color promptColor = new Color(0.36f, 0.85f, 0.45f);
+
         const string OutlineName = "~FocusOutline";
 
         TextMeshPro prompt;
@@ -40,7 +43,7 @@ namespace Overworked
             prompt = go.AddComponent<TextMeshPro>();
             prompt.fontSize = fontSize;
             prompt.alignment = TextAlignmentOptions.Bottom;
-            prompt.color = Color.white;
+            prompt.color = promptColor;
             prompt.textWrappingMode = TextWrappingModes.NoWrap;
             prompt.rectTransform.sizeDelta = new Vector2(8f, 1f);
             prompt.rectTransform.pivot = new Vector2(0.5f, 0f);
