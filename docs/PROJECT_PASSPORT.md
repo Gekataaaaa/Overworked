@@ -262,7 +262,7 @@ Heartbeat — не здоровье и не HP, а визуально-звуко
 
 **Событие после прочтения.** Некоторые события начинаются, когда игрок **закрыл
 телефон** после конкретного сообщения (например, Галлюцинация 1 после сообщения
-Босса у турникета). Для этого у `MessageData` есть `OnReadEvent`.
+Босса у турникета). Для этого у `MessageManager.Deliver(msg, onReadAndClosed)` есть колбэк: он срабатывает, когда игрок открыл чат контакта и закрыл телефон; тогда же выдаётся `LinkedObjective`.
 
 Глитч-текст Макса хранится в данных как готовая строка (символы, двоичный код,
 зачёркивание) — генерировать его не нужно.
@@ -497,7 +497,7 @@ Data/
 ```
 
 - **MessageData**: `Sender` (Boss/Max), `Lines[]` (несколько строк одним сообщением,
-  поддерживают `{name}`), `Floor`, `LinkedObjective`, `OnReadEvent`.
+  поддерживают `{name}`), `Floor`, `LinkedObjective` (выдаётся, когда сообщение прочитано и телефон закрыт).
 - **ObjectiveData**: `Id`, `Title`.
 - **DialogueData**: список строк `{Speaker: Danny/Description/System, Text}`.
 - Префикс этажа в имени ассета (`F3_`, `F2_`, `F1_`).
@@ -508,7 +508,7 @@ Data/
 
 ```
 Turnstile (E, своя карта) → Toast "ACCESS DENIED" → MessageManager.Deliver(F3_Boss_01)
-Игрок читает и закрывает телефон → OnReadEvent → HallucinationEvent "H1"
+Игрок читает и закрывает телефон → колбэк onReadAndClosed → HallucinationEvent "H1"
    ├── LightFlicker + PostFX (размытие) + звон + стрекот клавиатур
    ├── HeartbeatManager.Spike()
    └── SanityManager.SetSanity(90)
