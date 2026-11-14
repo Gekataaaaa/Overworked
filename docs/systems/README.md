@@ -11,3 +11,5 @@
 | InteractionSystem, двери, предметы, турникет | P2 | [InteractionSystem.md](InteractionSystem.md) |
 | ObjectiveManager, карточка задания | P2 | [ObjectiveManager.md](ObjectiveManager.md) |
 | MiniGameHost, считыватель, Tiny UFO | P2 | [MiniGameHost.md](MiniGameHost.md) |
+| Тексты игры → ScriptableObject | P3 | [Texts.md](Texts.md) |
+| Phone: PhoneManager, MessageManager, PhoneUI, тосты | P3 | [Phone.md](Phone.md) |
