@@ -184,7 +184,7 @@ AudioManager.Instance.PlaySfx(AudioClip c); PlayAmbient(AudioClip c); StopAll()
   показать HUD, галлюцинация, мини-игра, задание, вкл/выкл объект, пауза, fade.
 - [ ] `HudOnboarding` (появление HUD по очереди в начале Floor_03), подсказка управления.
 - [ ] `NoReturnTrigger` (уведомление «Do you still want Danny…» и остановка).
-- [ ] ScriptableObject-ассеты **всех** сообщений, диалогов и заданий из NARRATIVE_EN.
+- [x] ScriptableObject-ассеты **всех** сообщений, диалогов и заданий из NARRATIVE_EN.
 
 **P4:**
 - [ ] `HallucinationManager` + `HallucinationEvent`: звук + визуал + спайк + `SetSanity`.
