@@ -33,6 +33,9 @@ namespace Overworked
         static readonly HashSet<string> StateFields = new HashSet<string>
         {
             "used", "locked", "doorLocked", "fired", "done", "won", "started", "onboarded", "introDone", "visited",
+            // Турникет: своя карта уже отказала (иначе после Continue снова «Use your card» при пропуске Макса);
+            // описание при подходе и полные реплики «No return» — только в первый раз.
+            "denied", "shown", "shownOnce",
             "<HasPlayed>k__BackingField", "<SanityApplied>k__BackingField", "<HasHit>k__BackingField",
             "<Available>k__BackingField", "<IsOn>k__BackingField", "<Visited>k__BackingField",
         };
