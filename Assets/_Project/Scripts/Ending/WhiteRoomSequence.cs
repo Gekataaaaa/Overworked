@@ -97,7 +97,8 @@ namespace Overworked
                 foreach (HudPart part in Enum.GetValues(typeof(HudPart)))
                 {
                     bool horror = part == HudPart.Sanity || part == HudPart.Heartbeat;
-                    UIManager.Instance.SetHudVisible(part, debugShowHorrorHud && horror);
+                    // Отладочный показ шкал — только в редакторе и dev-билде: у игрока в WhiteRoom HUD скрыт всегда.
+                    UIManager.Instance.SetHudVisible(part, debugShowHorrorHud && Debug.isDebugBuild && horror);
                 }
 
             var player = PlayerController.Instance;

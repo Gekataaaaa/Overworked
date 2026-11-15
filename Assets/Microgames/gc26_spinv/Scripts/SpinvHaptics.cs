@@ -28,7 +28,9 @@ namespace GC26.Spinv
         public static void Vibrate(long milliseconds, int amplitude)
         {
             if (!Enabled) return;
+    #if UNITY_ANDROID || UNITY_IOS
             if (requestPermission) Handheld.Vibrate();
+    #endif
     #if UNITY_ANDROID && !UNITY_EDITOR
             try
             {
