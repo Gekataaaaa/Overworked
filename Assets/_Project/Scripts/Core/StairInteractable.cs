@@ -26,6 +26,19 @@ namespace Overworked
         [Tooltip("Подсказка «[E] …» над лестницей для автономного режима")]
         [SerializeField] GameObject promptLabel;
 
+        [Header("Звук спуска")]
+        [Tooltip("Шаги по лестнице по E (Audio/SFX/SFX_StairsDown). Пусто — без звука")]
+        [SerializeField] AudioClip descendSound;
+
+        [Tooltip("Громкость звука спуска 0..1")]
+        [Range(0f, 1f)] [SerializeField] float descendVolume = 1f;
+
+        [Tooltip("Сколько секунд звук играет в полную громкость (переход между этажами — около 2 с)")]
+        [SerializeField] float descendHold = 2.5f;
+
+        [Tooltip("За сколько секунд звук затухает после этого")]
+        [SerializeField] float descendFade = 1.5f;
+
         bool locked;
         bool used;
         bool playerInside;
@@ -75,6 +88,9 @@ namespace Overworked
             used = true;
             ShowPrompt(false);
             Debug.Log($"[Core] Stairs → floor {targetFloor}");
+            // Клип длиннее перехода: играет поверх затемнения и затухает уже на новом этаже, а не обрывается.
+            if (descendSound != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySfxFading(descendSound, descendVolume, descendHold, descendFade);
             GameManager.Instance.LoadFloor(targetFloor);
         }
 

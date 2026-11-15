@@ -15,6 +15,7 @@
 | Метод | Что делает |
 |---|---|
 | `PlaySfx(AudioClip)`, `PlaySfx(AudioClip, float volume)` | короткий звук, можно несколько сразу |
+| `PlaySfxFading(AudioClip, float volume, float hold, float fade)` | звук на своём источнике: `hold` с в полную громкость, затем затухает за `fade` с; переживает смену сцены (шаги по лестнице) |
 | `PlayAmbient(AudioClip)` | зацикленный фон с плавной сменой; тот же клип не перезапускается; null — выключить |
 | `PlayMusic(AudioClip)` | музыка; null — выключить |
 | `PlayHeartbeat(AudioClip, float volume)` | удар сердца (вызывает HeartbeatManager) |

@@ -27,6 +27,9 @@
 `targetFloor` — куда ведёт, `SetLocked(bool)` — запереть/открыть из сценария, `Prompt` — текст
 подсказки. E и подсказку обрабатывает `InteractionSystem` (P2). Галочка **`standaloneE`** (выключена)
 нужна только в тестовых сценах без InteractionSystem: тогда лестница сама ловит E.
+По E играет звук спуска `descendSound` (в префабе — `Audio/SFX/SFX_StairsDown`): через
+`AudioManager.PlaySfxFading` он идёт поверх затемнения, `descendHold` (2.5 с) в полную громкость и
+затухает за `descendFade` (1.5 с) уже на новом этаже.
 
 **Каркасы этажей** — меню **Overworked → P1 → Build Floor Skeletons**: коридор, двери с подписями,
 комнаты под коридором (EntryPoint, ExitDoor, выключенная камера комнаты), игрок, камера, лестница.

@@ -286,6 +286,7 @@ MonoBehaviour:
   startLocked: 0
   standaloneE: 0
   promptLabel: {fileID: 7735123946319180706}
+  descendSound: {fileID: 8300000, guid: 7a1c09e73bc940828b46999f1efd6dfe, type: 3}
 --- !u!1 &5995159787832075601
 GameObject:
   m_ObjectHideFlags: 0

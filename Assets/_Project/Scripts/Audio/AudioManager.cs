@@ -70,6 +70,36 @@ namespace Overworked
         }
 
         /// <summary>
+        /// Звук на канале SFX на своём источнике: holdSeconds в полную громкость, затем затухает за fadeSeconds
+        /// и источник удаляется. Источник живёт в _Systems, поэтому переживает смену сцены (шаги по лестнице).
+        /// </summary>
+        public void PlaySfxFading(AudioClip c, float volume, float holdSeconds, float fadeSeconds)
+        {
+            if (c == null) return;
+            var src = CreateSource("SFX_Fading", sfxGroup, false);
+            src.clip = c;
+            src.volume = volume * sfxVolume;
+            src.Play();
+            StartCoroutine(FadeOutAndRemove(src, holdSeconds, fadeSeconds));
+        }
+
+        // Время unscaled: таймер идёт и при timeScale = 0 (переход между этажами не зависит от игрового времени).
+        IEnumerator FadeOutAndRemove(AudioSource src, float hold, float fade)
+        {
+            for (float t = 0f; t < hold && Alive(src); t += Time.unscaledDeltaTime) yield return null;
+            float start = src != null ? src.volume : 0f;
+            for (float t = 0f; t < fade && Alive(src); t += Time.unscaledDeltaTime)
+            {
+                src.volume = start * (1f - t / fade);
+                yield return null;
+            }
+            if (src != null) Destroy(src.gameObject);
+        }
+
+        // На паузе AudioListener.pause останавливает источник (isPlaying = false) — это не конец звука.
+        static bool Alive(AudioSource src) => src != null && (src.isPlaying || AudioListener.pause);
+
+        /// <summary>
         /// Фоновый зацикленный звук (гул ламп, ИВЛ). Старый фон плавно затухает, новый проявляется.
         /// Тот же клип повторно не перезапускается; null — плавно выключить фон.
         /// </summary>

@@ -129,8 +129,14 @@ namespace Overworked
             OverlayUi.Box(rt, "BoxInner", new Color(0.08f, 0.08f, 0.08f), new Vector2(0f, 0.5f), new Vector2(25f, 0f), new Vector2(24f, 24f));
             var check = OverlayUi.Box(rt, "Check", new Color(0.35f, 0.85f, 0.45f), new Vector2(0f, 0.5f), new Vector2(29f, 0f), new Vector2(16f, 16f));
             check.enabled = false;
-            OverlayUi.Label(rt, "Title", TextFormatter.Format(o.Title), 26, new Vector2(0f, 0.5f),
+            var title = OverlayUi.Label(rt, "Title", TextFormatter.Format(o.Title), 26, new Vector2(0f, 0.5f),
                 new Vector2(70f, 0f), new Vector2(370f, rowHeight), TextAlignmentOptions.Left);
+            // Длинное задание («Check the documents in room 201.») вылезало за правый край карточки и экрана:
+            // одна строка, шрифт уменьшается, пока текст не влезет в ширину строки.
+            title.textWrappingMode = TextWrappingModes.NoWrap;
+            title.enableAutoSizing = true;
+            title.fontSizeMin = 16f;
+            title.fontSizeMax = 26f;
             return new Row { Objective = o, Root = rt, Check = check };
         }
 
