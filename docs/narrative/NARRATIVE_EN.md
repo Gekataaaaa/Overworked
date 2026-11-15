@@ -235,7 +235,7 @@ A short green beep sounds.
 
 The player walks up to the stairs.
 
-Hint: **E — Go down to the second floor.**
+Hint: **E — Go down.**
 
 The screen slowly fades to black.
 
@@ -402,7 +402,7 @@ Danny stops for a moment.
 
 The player heads to the stairs.
 
-Hint: **E — Go down to the first floor.**
+Hint: **E — Go down.**
 
 The screen fades to black.
 

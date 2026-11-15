@@ -178,7 +178,7 @@ namespace Overworked.EditorTools
         }
 
         /// <summary>
-        /// Лестница-заглушка: серый прямоугольник + триггер + StairInteractable + подсказка «[E] Go downstairs».
+        /// Лестница-заглушка: серый прямоугольник + триггер + StairInteractable + подсказка «[E] Go down».
         /// Старый префаб без подсказки пересобирается (путь тот же — GUID и ссылки в сценах сохраняются).
         /// </summary>
         internal static GameObject EnsureStairsPrefab(Sprite square)
@@ -202,7 +202,7 @@ namespace Overworked.EditorTools
             var tmp = label.AddComponent<TextMeshPro>();
             var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/_Project/Fonts/PTSans SDF.asset");
             if (font != null) tmp.font = font;
-            tmp.text = "[E] Go downstairs";
+            tmp.text = "[E] Go down";
             tmp.fontSize = 3f;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = new Color(0.92f, 0.92f, 0.86f);

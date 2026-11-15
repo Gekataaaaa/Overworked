@@ -197,19 +197,25 @@ namespace Overworked
                 yield break;
             }
 
-            yield return Fade(1f);
-            while (queue.Count > 0)
+            do
             {
-                var r = queue.Dequeue();
-                currentManual = r.Manual;
-                foreach (var line in r.Data.Lines)
-                    yield return ShowLine(line, r.Manual);
-                // done может сразу добавить новый Play — он попадёт в эту же очередь.
-                r.Done?.Invoke();
-            }
-            currentManual = false;
-            yield return Fade(0f);
-            text.text = "";
+                yield return Fade(1f);
+                while (queue.Count > 0)
+                {
+                    var r = queue.Dequeue();
+                    currentManual = r.Manual;
+                    foreach (var line in r.Data.Lines)
+                        yield return ShowLine(line, r.Manual);
+                    // done может сразу добавить новый Play — он попадёт в эту же очередь.
+                    r.Done?.Invoke();
+                }
+                currentManual = false;
+                yield return Fade(0f);
+                text.text = "";
+                // Play мог прийти во время затухания (сценарий ждёт колбэк через WaitCallback и зовёт следующий
+                // DialogueStep только кадром позже): routine ещё не null, новый Run не стартовал — подхватываем сами,
+                // иначе реплика навсегда остаётся в очереди, сценарий не доходит до конца и Дэнни остаётся заблокирован.
+            } while (queue.Count > 0);
             routine = null;
         }
 

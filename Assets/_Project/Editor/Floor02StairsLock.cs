@@ -15,7 +15,7 @@ namespace Overworked.EditorTools
     /// (F2_StairsLocked: «I should help Max first...»). Это делает Story/StairsLockedNotice —
     /// запертая «дверь» поверх лестницы (скрипт лестницы P1 не трогаем).
     /// Отпирает лестницу Story/StairsLock (ObjectiveCompletedEvent по Id задания), кто бы задание ни закрыл:
-    /// объяснение убирается, лестница открывается. Подсказка — по нарративу «Go down to the first floor».
+    /// объяснение убирается, лестница открывается. Подсказка — по нарративу «Go down».
     /// Задание F2_CheckDocs201 выдаёт прочитанное сообщение Макса (P3StoryBuilder), дверь в Room_201 открыта сразу.
     /// Меню: Overworked → P2 → Lock Floor_02 Stairs Until Room 201.
     /// </summary>
@@ -27,7 +27,7 @@ namespace Overworked.EditorTools
         // Лестница открывается после второго задания в 201 — компьютера (первое — документы).
         const string ObjectiveId = "F2_CheckComputer201";
         const string NoticeTextPath = "Assets/_Project/Data/Dialogues/F2_StairsLocked.asset";
-        const string Prompt = "Go down to the first floor";
+        const string Prompt = "Go down";
 
         static Floor02StairsLock()
         {

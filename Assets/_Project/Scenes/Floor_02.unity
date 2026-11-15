@@ -2981,7 +2981,7 @@ MonoBehaviour:
   fadeTime: 0.35
   doorLocked: 1
   unlockFlag: 
-  lockedPrompt: Go down to the first floor
+  lockedPrompt: Go down
   lockedMessage: It's locked.
   lockedDialogue: {fileID: 11400000, guid: 306917bba84c13c448d69e551b035232, type: 2}
   onLockedTried:
@@ -6553,7 +6553,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3695571878064545994, guid: 00b2389d10711aa4890c756c80dc7409, type: 3}
       propertyPath: prompt
-      value: Go down to the first floor
+      value: Go down
       objectReference: {fileID: 0}
     - target: {fileID: 3695571878064545994, guid: 00b2389d10711aa4890c756c80dc7409, type: 3}
       propertyPath: startLocked

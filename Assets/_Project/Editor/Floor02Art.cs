@@ -352,7 +352,7 @@ namespace Overworked.EditorTools
                     var so = new SerializedObject(mb);
                     var prompt = so.FindProperty("prompt");
                     if (prompt == null) continue;
-                    prompt.stringValue = "Go down to the first floor";
+                    prompt.stringValue = "Go down";
                     so.ApplyModifiedPropertiesWithoutUndo();
                 }
             }

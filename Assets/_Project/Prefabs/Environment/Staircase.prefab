@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Overworked::Overworked.StairInteractable
   targetFloor: 2
-  prompt: Go downstairs
+  prompt: Go down
   startLocked: 0
   standaloneE: 0
   promptLabel: {fileID: 7735123946319180706}
@@ -576,7 +576,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '[E] Go downstairs'
+  m_text: '[E] Go down'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a65e20a456bc26244a476e6238d1de85, type: 2}
   m_sharedMaterial: {fileID: -9139454840192395666, guid: a65e20a456bc26244a476e6238d1de85, type: 2}

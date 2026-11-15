@@ -124,8 +124,8 @@
 
 | Этаж | Подсказки `[E]` | Тосты / тексты |
 |---|---|---|
-| 3 | Take the note · Pick up the pass · Use your card · Use Max's card · Go down to the second floor | Received: Charles's note. · This doesn't look like the kitchen. (запертые двери) |
-| 2 | Enter room 201 · Check the computer · Open the drawer · Go down to the first floor | Подсказка F: Turn the flashlight on / off |
+| 3 | Take the note · Pick up the pass · Use your card · Use Max's card · Go down | Received: Charles's note. · This doesn't look like the kitchen. (запертые двери) |
+| 2 | Enter room 201 · Check the computer · Open the drawer · Go down | Подсказка F: Turn the flashlight on / off |
 | 1 | Enter room 101 · Interact · Open the drawer · Unlock and enter room 102 · Play | Received: Room 102 key. |
 | Все | — | NEW MESSAGE FROM MAX / NEW MESSAGE FROM THE BOSS — тост телефона, генерируется из `Sender` |
 

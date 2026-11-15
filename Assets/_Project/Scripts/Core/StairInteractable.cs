@@ -14,7 +14,7 @@ namespace Overworked
         [SerializeField] int targetFloor = 2;
 
         [Tooltip("Подсказка после [E]")]
-        [SerializeField] string prompt = "Go downstairs";
+        [SerializeField] string prompt = "Go down";
 
         [Tooltip("Заперта на старте (откроет сценарий через SetLocked(false))")]
         [SerializeField] bool startLocked;

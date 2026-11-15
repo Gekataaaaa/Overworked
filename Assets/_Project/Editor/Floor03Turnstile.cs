@@ -15,7 +15,7 @@ namespace Overworked.EditorTools
     /// - Турникет между кухней и лестницей, через него не пройти (сплошной барьер):
     ///   «[E] Use your card» → ACCESS DENIED (F3_TurnstileDenied); с пропуском — «[E] Use Max's card» →
     ///   мини-игра «Считыватель» → ACCESS GRANTED (F3_TurnstileGranted) → барьер убирается, лестница открывается.
-    /// - Лестница заперта на старте, подсказка «[E] Go down to the second floor».
+    /// - Лестница заперта на старте, подсказка «[E] Go down».
     /// Сообщение Босса и Галлюцинация 1 после отказа — сценарий P3/P4 через onDenied турникета.
     /// Тексты — ассеты Data/ с именами из таблицы P3, строки дословно из NARRATIVE_EN; существующие не трогаются.
     /// Меню: Overworked → P2 → Build Floor_03 Turnstile And Stairs.
@@ -130,7 +130,7 @@ namespace Overworked.EditorTools
             EditorUtility.SetDirty(ts);
 
             // --- Лестница: заперта до турникета, подсказка из нарратива
-            RoomWiring.Set(stairs, ("startLocked", true), ("prompt", "Go down to the second floor"));
+            RoomWiring.Set(stairs, ("startLocked", true), ("prompt", "Go down"));
             PrefabUtility.RecordPrefabInstancePropertyModifications(stairs);
 
             EditorSceneManager.MarkSceneDirty(scene);

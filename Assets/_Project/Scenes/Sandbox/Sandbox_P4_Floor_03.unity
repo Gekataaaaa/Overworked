@@ -4252,7 +4252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3695571878064545994, guid: 00b2389d10711aa4890c756c80dc7409, type: 3}
       propertyPath: prompt
-      value: Go down to the second floor
+      value: Go down
       objectReference: {fileID: 0}
     - target: {fileID: 3695571878064545994, guid: 00b2389d10711aa4890c756c80dc7409, type: 3}
       propertyPath: startLocked
