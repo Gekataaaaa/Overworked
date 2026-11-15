@@ -135,6 +135,20 @@ namespace Overworked
             if (unread.RemoveWhere(m => m.Sender == sender) > 0) OnChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Восстановление из сохранения (SaveSystem): история в порядке прихода и непрочитанные. Без тостов и вибрации;
+        /// колбэков «прочитал» нет — этаж начнётся заново и сам доставит то, что ему нужно.
+        /// </summary>
+        public void Restore(IEnumerable<MessageData> messages, IEnumerable<MessageData> unreadMessages)
+        {
+            history.Clear();
+            unread.Clear();
+            waiting.Clear();
+            foreach (var m in messages) if (m != null) history.Add(m);
+            foreach (var m in unreadMessages) if (m != null && history.Contains(m)) unread.Add(m);
+            OnChanged?.Invoke();
+        }
+
         /// <summary>Стирает историю — новая игра.</summary>
         public void Clear()
         {

@@ -44,7 +44,7 @@
 
 - **Monitor signal tuning (2nd floor):** two sliders — "Frequency" and "Sharpness". The player tunes the image to read a hidden message.
 
-- **Tiny UFO (final mini-game):** launched in the break room (Room 102). Play / Quit menu and a single wave — a copy of Tiny UFO's fourth wave. Winning completes the task. Quit takes the player away from the arcade machine without completing the task.
+- **Tiny UFO (final mini-game):** launched in the break room (Room 102). Play / Quit menu and a single wave — a copy of Tiny UFO's fourth wave. Finishing a run — win or lose — completes the task. Quit takes the player away from the arcade machine without completing the task.
 
 # PROLOGUE. LOGIN
 
@@ -131,7 +131,7 @@ Full-screen text appears:
 
 Notification: **Received: Charles's note.**
 
-The player heads towards the corridor. At the exit, the phone vibrates and Danny stops.
+The player heads towards the corridor. When Danny reaches the wall clock, the phone vibrates and Danny stops. Until this message the kitchen door can't be used.
 
 **NEW MESSAGE FROM MAX**
 
@@ -145,7 +145,7 @@ The player closes the phone.
 
 **DANNY:** Fine. At least someone remembered I'm here.
 
-A task appears in the top right: **Get Max's pass.**
+A task appears in the top right: **Get Max's pass.** The kitchen door opens.
 
 The player explores the corridor. Most doors are closed. Trying to enter the wrong door shows a notification: **"This doesn't look like the kitchen."**
 
@@ -216,6 +216,10 @@ The lamps flash sharply. The image blurs, a ringing starts in the ears. For a fe
 **DANNY:** My ears are ringing…  
 **DANNY:** Damn Boss. Gets to me even from here.
 
+Only after the hallucination, and only if Danny came to the turnstile without Max's pass (didn't go to the kitchen):
+
+**DANNY:** I need Max's card to go further. It should be in the kitchen.
+
 The player goes back to the turnstile.
 
 Hint: **E — Use Max's card.**
@@ -261,20 +265,11 @@ When the player turns the flashlight on, the phone starts vibrating. Without tur
 **MAX:** The documents are in room 201.  
 **MAX:** Please check them. I can't get in there.
 
-A message from the Boss follows.
+When the player reads Max's message and closes the phone, a task appears: **Check the documents in room 201.** The door to room 201 is open from the start.
 
-**NEW MESSAGE FROM THE BOSS**
+If the player tries the stairs before the task is done (the exit is locked):
 
-**BOSS:** You're wasting time on the wrong tasks, Danny.  
-**BOSS:** The archive in 201 is none of your business.  
-**BOSS:** Never mind.  
-**BOSS:** You'll find out what happens to people who can't set priorities.  
-**BOSS:** No bonus for you this month.
-
-A task appears: **Check the documents in room 201.**
-
-**DANNY:** Yeah. Like I was ever getting one.  
-**DANNY:** I'll help Max and finally get out of here.
+**DANNY:** I should help Max first...
 
 ## SCENE 2.1. THE SILHOUETTE HALLUCINATION
 
@@ -317,6 +312,21 @@ The player walks up to the door.
 Hint: **E — Enter room 201.**
 
 The screen fades. Danny is inside an office: metal filing cabinets, a desk with drawers and a dimly glowing computer.
+
+A moment later the phone vibrates — a message from the Boss (it arrives only when Danny first enters room 201).
+
+**NEW MESSAGE FROM THE BOSS**
+
+**BOSS:** You're wasting time on the wrong tasks, Danny.  
+**BOSS:** The archive in 201 is none of your business.  
+**BOSS:** Never mind.  
+**BOSS:** You'll find out what happens to people who can't set priorities.  
+**BOSS:** No bonus for you this month.
+
+After reading:
+
+**DANNY:** Yeah. Like I was ever getting one.  
+**DANNY:** I'll help Max and finally get out of here.
 
 Inspect the drawer — **E**.
 
@@ -416,7 +426,11 @@ Check Room 102 — **E**.
 
 **DESC:** The door is locked. The sign reads: "BREAK ROOM. KEY IS IN ROOM 101."
 
-A task appears: **Find the key in room 101.**
+Two tasks appear at once: **Find the key in room 101.** and **Talk to the man in room 101.** (both are required: room 102 opens only when the key is found and Danny has talked to the man). If the player goes to room 101 without trying door 102, the same two tasks appear in front of door 101, before Danny enters.
+
+If Danny has the key but hasn't talked to the man yet and tries door 102:
+
+**DANNY:** I should talk to the man in 101 first...
 
 After a few steps, the phone starts vibrating non-stop.
 
@@ -483,6 +497,8 @@ Danny stares at the empty spot for a while.
 
 **DANNY:** He wasn't here…
 
+The task "Talk to the man in room 101" is marked as completed.
+
 The player walks up to the cabinet.
 
 Hint: **E — Open the drawer.**
@@ -497,8 +513,6 @@ Inside are a heavy key to room 102 and a cracked plastic badge.
 Notification: **Received: Room 102 key.**
 
 The task "Find the key in room 101" is marked as completed.
-
-A new task appears: **Finish work in room 102.**
 
 The phone vibrates again.
 
@@ -515,6 +529,8 @@ The phone vibrates again.
 **BOSS:** One last task left.  
 **BOSS:** Danny has to finish his shift.  
 **BOSS:** Send him to room 102, the break room. He needs a short break before the work is done.
+
+After the player closes the phone, a new task appears: **Finish work in room 102.**
 
 ## SCENE 3.2. ROOM 102 — BREAK ROOM AND TINY UFO
 
@@ -546,11 +562,10 @@ Tiny UFO opens.
 
 **Mini-game 4 — Tiny UFO.**  
 A menu with Play and Quit buttons appears. Play starts a single wave — a copy of the original game's fourth wave. Danny's controls are locked during the mini-game.
-- Winning the wave completes the mini-game.
-- On defeat, the wave restarts.
+- The mini-game ends after one run, win or lose: winning the wave or losing it ("GAME OVER") both switch the machine off and the story goes on — the result doesn't affect the plot.
 - Quit closes the machine and returns the player to the break room without completing the task.
 
-After the win, the arcade screen goes dark.
+After the run, the arcade screen goes dark.
 
 **DANNY:** That's it?  
 **DANNY:** Weird. I can't even remember the last time I played anything.

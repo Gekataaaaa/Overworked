@@ -38,6 +38,7 @@ namespace Overworked.EditorTools
             var max01After = Load<DialogueData>("Dialogues/F3_Max01_After");
             var h1After = Load<DialogueData>("Dialogues/F3_H1_After");
             var max02After = Load<DialogueData>("Dialogues/F3_Max02_After");
+            var needCard = Load<DialogueData>("Dialogues/F3_NeedMaxCard");
             var charlesDesk = Load<DialogueData>("Inspectables/F3_CharlesDesk");
             var max01 = Load<MessageData>("Messages/F3_Max_01");
             var max02 = Load<MessageData>("Messages/F3_Max_02");
@@ -62,9 +63,9 @@ namespace Overworked.EditorTools
             var inspect = deskZone.AddComponent<Inspectable>();
             Set(inspect, "dialogue", charlesDesk);
 
-            // Порядок этажа (решение команды, отличается от нарратива): кухня заперта →
-            // турникет со своей картой: ACCESS DENIED → Босс → Макс про пропуск (задание) → кухня открывается →
-            // пропуск → выход из кухни: Макс благодарит → турникет с картой Макса → лестница.
+            // Порядок этажа (решение команды): кухня заперта → у часов в коридоре сообщение Макса про пропуск
+            // (задание) → кухня открывается → пропуск → выход из кухни: Макс благодарит → турникет: своя карта →
+            // отказ → Босс и H1 (без пропуска — ещё «I need Max's card…») → карта Макса → лестница.
             var kitchenDoor = FindKitchenDoor();
             if (kitchenDoor != null)
             {
@@ -93,21 +94,27 @@ namespace Overworked.EditorTools
                 new MessageStep { Message = max02, WaitUntilRead = true },
                 new DialogueStep { Dialogue = max02After });
 
-            // Турникет P2: своя карта → ACCESS DENIED → onDenied → Босс, следом Макс про пропуск
-            // (сообщение выдаёт задание F3_TakeMaxPass), ответ Дэнни, кухня открывается.
-            // TODO(P4): Галлюцинация 1 — шаг Hallucination после сообщения Босса.
+            // 1.2 У часов в коридоре: сообщение Макса про пропуск (выдаёт задание F3_TakeMaxPass), ответ Дэнни,
+            // кухня открывается.
             var unlockKitchen = new EventStep { Note = "Unlock kitchen" };
             if (kitchenDoor != null)
                 UnityEditor.Events.UnityEventTools.AddBoolPersistentListener(unlockKitchen.OnRun,
                     new UnityEngine.Events.UnityAction<bool>(kitchenDoor.SetLocked), false);
-            var boss = Sequence(story, "1.3 DeniedBossThenMax", playOnStart: false, lockPlayer: true,
-                new MessageStep { Message = boss01, WaitUntilRead = true },
-                // Нарратив 1.3 (P3): после сообщения Босса — Галлюцинация 1 (P4, H1_Turnstile) и «My ears are ringing…».
-                new HallucinationStep { Hallucination = FindHallucination("H1_Turnstile") },
-                new DialogueStep { Dialogue = h1After },
+            var clock = FindInScene("Wall_Clock");
+            float clockX = clock != null ? clock.transform.position.x : -1.3f;
+            Zone(story, "1.2 MaxAtClock", clockX, 2f, null,
                 new MessageStep { Message = max01, WaitUntilRead = true },
                 new DialogueStep { Dialogue = max01After },
                 unlockKitchen);
+
+            // 1.3 Турникет: своя карта → ACCESS DENIED → onDenied → Босс → H1 → «My ears are ringing…» →
+            // только если пропуска ещё нет (на кухню не заходил) — «I need Max's card to go further…».
+            // Имя содержит «DeniedBoss»: так его находит P2StoryWiring (вставляет H1, если шага нет).
+            var boss = Sequence(story, "1.3 DeniedBossAtTurnstile", playOnStart: false, lockPlayer: true,
+                new MessageStep { Message = boss01, WaitUntilRead = true },
+                new HallucinationStep { Hallucination = FindHallucination("H1_Turnstile") },
+                new DialogueStep { Dialogue = h1After },
+                new DialogueStep { Dialogue = needCard, UnlessFlag = "MaxPass" });
             var turnstile = Object.FindAnyObjectByType<TurnstileInteractable>();
             if (turnstile != null)
             {
@@ -122,12 +129,7 @@ namespace Overworked.EditorTools
                     new UnityEngine.Events.UnityAction(boss.Play));
                 EditorUtility.SetDirty(turnstile);
             }
-            else
-            {
-                // Турникета ещё нет — запасной вариант: зона перед лестницей.
-                Zone(story, "1.3 BossAtTurnstile", 17f, 2f, null,
-                    new MessageStep { Message = boss01, WaitUntilRead = true });
-            }
+            else Debug.LogWarning("[Chain] Floor_03: нет турникета (P2 → Build Floor_03 Turnstile And Stairs) — Босс не сработает");
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
@@ -391,6 +393,7 @@ namespace Overworked.EditorTools
                 "As always. Just me, stuck here till midnight.");
             EnsureDialogue("F3_Max01_After", "Fine. At least someone remembered I'm here.");
             EnsureDialogue("F3_Max02_After", "Yeah. Good luck to both of us.");
+            EnsureDialogue("F3_NeedMaxCard", "I need Max's card to go further. It should be in the kitchen.");
             AssetDatabase.SaveAssets();
         }
 

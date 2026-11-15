@@ -40,7 +40,32 @@ namespace Overworked.EditorTools
         // Спрайты только комнаты — PPU 100, остальные — PPU 153.6.
         static readonly string[] RoomSprites =
             { "Room201_Background", "Room201_ExitDoor", "Archive_Desk", "Archive_Computer", "Archive_Computer_Glow",
-              "Archive_Drawer_Open", "Shift_Folder" };
+              "Archive_Drawer_Open", "Shift_Folder", "Room_Light_Tube_On", "Room_Light_Cone" };
+
+        // Светильники, нарисованные на фоне коридора (центры трубок по X, пиксели Floor02_Corridor.png):
+        // найдены по тёмным полосам у потолка. 4000 — Lamp_03 над диваном из README. Разбитая лампа
+        // над осколками (x ≈ 3200) не горит.
+        static readonly float[] CorridorFixtureX = { 481f, 1340f, 2160f, 4000f, 4841f, 5697f };
+
+        // Этаж 2 почти без света (паспорт, раздел 7): горят 3 из 6 светильников (над диваном — Lamp_03 из README),
+        // вдвое тусклее Floor_03,
+        // и одна из горящих ламп неисправна — мигает. Остальные остаются тёмными, как нарисованы.
+        static readonly bool[] CorridorLampOn = { true, false, true, true, false, false };
+        const int FaultyLamp = 2;
+        // Комната 201 маленькая — свет ещё вдвое слабее коридора, иначе заливает всю комнату.
+        static readonly FloorLamps.Style RoomLight = new FloorLamps.Style
+        {
+            Color = FloorLamps.Office.Color, Intensity = FloorLamps.Office.Intensity * 0.25f,
+            DarkLevel = FloorLamps.Office.DarkLevel, ConeDim = 0.75f,
+        };
+        // Тон предметов, которые ярче фона (как SpriteRenderer Дэнни в префабе Player).
+        static readonly Color PropTint = new Color(0.62f, 0.64f, 0.6f, 1f);
+
+        static readonly FloorLamps.Style DimLight = new FloorLamps.Style
+        {
+            Color = FloorLamps.Office.Color, Intensity = FloorLamps.Office.Intensity * 0.5f,
+            DarkLevel = FloorLamps.Office.DarkLevel, ConeDim = 0.5f,
+        };
 
         // Объекты, которые создаёт этот сборщик (пересоздаются при каждом запуске; остальное в группах — чужое).
         static readonly string[] CorridorProps =
@@ -113,6 +138,10 @@ namespace Overworked.EditorTools
 
         static void ImportSprites()
         {
+            // Лампа и конус нужны в двух масштабах: для комнаты — копии с префиксом Room_ (как в Floor01Art).
+            foreach (var n in new[] { "Light_Tube_On", "Light_Cone" })
+                if (!File.Exists(ArtDir + "Room_" + n + ".png") && File.Exists(ArtDir + n + ".png"))
+                    File.Copy(ArtDir + n + ".png", ArtDir + "Room_" + n + ".png");
             AssetDatabase.Refresh();
             foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { ArtDir.TrimEnd('/') }))
             {
@@ -218,9 +247,17 @@ namespace Overworked.EditorTools
             Inspect(mug, InspectMugPath);
             Inspect(shards, InspectLampPath);
 
-            // Освещения пока нет: группа Lights остаётся пустой. По README горит одна Lamp_03 над диваном
-            // (Light_Tube_On + Light_Cone, пиксели 3850,241 и 3491,272) — добавить, когда дойдём до света.
-            Clear(Child(corridor, "Lights"));
+            // Трубка 302 px по центру светильника (у Lamp_03 из README левый край 3850 → центр 4001),
+            // конус — на 359 px левее, y 272 (как в README).
+            var fixtures = new System.Collections.Generic.List<FloorLamps.Fixture>();
+            for (int i = 0; i < CorridorFixtureX.Length; i++)
+            {
+                if (!CorridorLampOn[i]) continue;
+                float cx = CorridorFixtureX[i];
+                fixtures.Add(new FloorLamps.Fixture(C(cx - 151, 241, 302, 62), C(cx - 151 - 359, 272, 1020, 768), i == FaultyLamp));
+            }
+            FloorLamps.Build(Child(corridor, "Lights"), Spr("Light_Tube_On"), Spr("Light_Cone"), fixtures,
+                DimLight, Child(corridor, "Background"));
         }
 
         // ------------------------------------------------------------ комната 201
@@ -260,10 +297,13 @@ namespace Overworked.EditorTools
 
             var props = Child(room, "Props");
             Remove(props, RoomProps);
-            Place(props, "Archive_Desk", "Archive_Desk", R(960, 821, 600, 179), -7);
-            Place(props, "Archive_Computer", "Archive_Computer", R(1029, 615, 222, 210), -6);
+            Place(props, "Archive_Desk", "Archive_Desk", R(960, 821, 600, 179), -8);
+            // Стол и компьютер — под конусом света лампы (order -6), иначе компьютер поверх дымки конуса ярче стола.
+            var computerArt = Place(props, "Archive_Computer", "Archive_Computer", R(1029, 615, 222, 210), -7);
+            // Бежевый корпус выбивался из тёмной комнаты — тот же приглушённый тон, что у спрайта Дэнни.
+            computerArt.GetComponent<SpriteRenderer>().color = PropTint;
             // Открытый ящик: пустой спрайт на месте тумбы, DrawerInteractable P2 подставит openSprite по E.
-            var drawerOpen = Place(props, "Archive_Drawer_Open", "Archive_Drawer_Open", R(1402, 847, 168, 78), -6);
+            var drawerOpen = Place(props, "Archive_Drawer_Open", "Archive_Drawer_Open", R(1402, 847, 168, 78), -7);
             var drawerSr = drawerOpen.GetComponent<SpriteRenderer>();
             var openSprite = drawerSr.sprite;
             drawerSr.sprite = null;
@@ -288,8 +328,10 @@ namespace Overworked.EditorTools
                 HidePlaceholders(computer);
             }
 
-            // Освещения пока нет: ни лампы (Lamp_Room), ни свечения экрана (Archive_Computer_Glow).
-            Clear(Child(room, "Lights"));
+            // Лампа под светильником на потолке фона (центр ≈ 960, 262). Без BackgroundDimmer — он затемняет
+            // всю сцену и спорил бы с коридором. Свечения экрана (Archive_Computer_Glow) пока нет.
+            FloorLamps.Build(Child(room, "Lights"), Spr("Room_Light_Tube_On"), Spr("Room_Light_Cone"),
+                new[] { new FloorLamps.Fixture(R(809, 231, 302, 62), R(450, 262, 1020, 768)) }, RoomLight, null);
         }
 
         // ------------------------------------------------------------ лестница и старт

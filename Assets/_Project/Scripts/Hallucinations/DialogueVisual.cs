@@ -20,7 +20,8 @@ namespace Overworked
             var dm = DialogueManager.Instance;
             if (lines == null || dm == null) yield break;
             bool done = false;
-            dm.Play(lines, () => done = true);
+            // Реплики галлюцинации сменяются сами (не ждут нажатия): это катсцена, Дэнни заблокирован.
+            dm.Play(lines, () => done = true, false);
             SeenIfNeeded(hallucination);
             HitIfNeeded(hallucination);
             if (!wait) yield break;

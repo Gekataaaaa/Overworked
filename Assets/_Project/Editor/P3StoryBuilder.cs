@@ -32,13 +32,31 @@ namespace Overworked.EditorTools
                 new WaitStep { Seconds = 0.6f },
                 new DialogueStep { Dialogue = Load<DialogueData>("Dialogues/F2_Start") });
 
-            // 2.0 Первое включение фонарика: Макс, следом Босс (задание F2_CheckDocs201 даёт не он, а лестница — P2),
-            // после прочтения — реплика Дэнни.
+            // 2.0 Первое включение фонарика: сообщение Макса. Когда игрок прочитал его и закрыл телефон, выдаётся
+            // задание F2_CheckDocs201 (LinkedObjective сообщения) — дверь в 201 открыта с начала этажа.
+            var maxMessage = Load<MessageData>("Messages/F2_Max_01");
+            var checkDocs = Load<ObjectiveData>("Objectives/F2_CheckDocs201");
+            if (maxMessage != null && checkDocs != null && maxMessage.LinkedObjective != checkDocs)
+            {
+                maxMessage.LinkedObjective = checkDocs;
+                EditorUtility.SetDirty(maxMessage);
+                AssetDatabase.SaveAssets();
+            }
             var flash = Sequence(group, "2.0 FlashlightMessages", playOnStart: false, lockPlayer: true,
-                new MessageStep { Message = Load<MessageData>("Messages/F2_Max_01"), WaitUntilRead = false },
+                new MessageStep { Message = maxMessage, WaitUntilRead = true });
+            flash.gameObject.AddComponent<FlashlightSequenceTrigger>();
+
+            // 2.2 Сообщение Босса — не в начале этажа, а когда Дэнни впервые вошёл в Room_201; после прочтения —
+            // реплика Дэнни. Управление не забираем: игрок читает, когда захочет.
+            var boss = Sequence(group, "2.2 Room201_BossMessage", playOnStart: false, lockPlayer: false,
+                new WaitStep { Seconds = 1.5f },
                 new MessageStep { Message = Load<MessageData>("Messages/F2_Boss_01"), WaitUntilRead = true },
                 new DialogueStep { Dialogue = Load<DialogueData>("Dialogues/F2_Boss01_After") });
-            flash.gameObject.AddComponent<FlashlightSequenceTrigger>();
+            var roomTrigger = boss.gameObject.AddComponent<RoomSequenceTrigger>();
+            var rso = new SerializedObject(roomTrigger);
+            rso.FindProperty("roomName").stringValue = "Room_201";
+            rso.FindProperty("sequence").objectReferenceValue = boss;
+            rso.ApplyModifiedPropertiesWithoutUndo();
 
             // 2.2 Запрет возврата: после компьютера в 201 игрок выходит в коридор; шаг назад (влево от двери 201) —
             // «Do you still want Danny to keep working here?» + «I just want to go home.», его отводит вправо.

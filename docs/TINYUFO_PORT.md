@@ -88,8 +88,10 @@ SpinvGameManager.EndGame → Time.timeScale = 0 → событие GameEnded(boo
 - **Победа** → в `UIManager.ShowEndScreen(true)` вместо `victoryScreen.Show` проиграть
   `QuitEffect.Play(() => exit(1))`. Эффект «POWER OFF, экран сплющивается в точку» совпадает
   с нарративом: «после победы экран автомата гаснет».
-- **Поражение** → вместо окна GAME OVER с MENU/RESTART: короткая пауза (~1.5 с,
-  `WaitForSecondsRealtime`, потому что `timeScale = 0`) → `SpinvGameManager.Restart()`.
+- **Поражение** → вместо окна GAME OVER с MENU/RESTART: надпись «GAME OVER» / «INVADED» (~1.5 с,
+  `WaitForSecondsRealtime`, потому что `timeScale = 0`) → тот же POWER OFF → `exit(2)`
+  (`SpinvMicrogame.FinishLost`). Хост (`TinyUfoMiniGame`) считает 1 и 2 сыгранной партией —
+  исход на сюжет не влияет; только Quit (`exit(0)`) — выход без выполнения.
   Волна начинается заново, как в нарративе.
 - `exit` хранится в `SpinvMicrogame`. Нужен публичный метод, например
   `SpinvMicrogame.Finish(bool won)`, который вызывает `exit(won ? 1 : 0)` один раз.
@@ -151,7 +153,7 @@ public class TinyUfoMiniGame : MonoBehaviour, IMiniGame
             if ((game = root.GetComponentInChildren<IMicrogame>(true)) != null) break;
 
         int? result = null;
-        game.Begin(score => result ??= score);       // 1 = победа, 0 = Quit
+        game.Begin(score => result ??= score);       // 1 = победа, 2 = поражение, 0 = Quit
         while (result == null) yield return null;
 
         yield return SceneManager.UnloadSceneAsync(tiny);
@@ -181,7 +183,7 @@ public class TinyUfoMiniGame : MonoBehaviour, IMiniGame
    путям, удалить `Core/Editor/MicrogameSync.cs` и `SpaceInvadersAndroidBuild.cs`, дождаться импорта,
    запустить `gc26_spinv_Main` как есть. **До Ч5.** Сразу проверить вид на 16:9.
 2. Урезать: `waves = [Wave4]`, меню только PLAY/QUIT, без заставки, Quit → `exit(0)`,
-   победа → POWER OFF → `exit(1)`, поражение → рестарт волны.
+   победа → POWER OFF → `exit(1)`, поражение → POWER OFF → `exit(2)`.
 3. `TinyUfoMiniGame : IMiniGame` (раздел 7) и `ArcadeInteractable` → `MiniGameHost.Open`.
 4. Проверить в `Sandbox_P2`: Quit возвращает без задания, победа закрывает задание, после
    выхода Дэнни ходит, камера, звук и Esc работают, `timeScale = 1`.

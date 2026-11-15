@@ -66,6 +66,11 @@ namespace Overworked
 
         GameObject openWindow;
         float hudAlpha = 1f;
+
+        // Пауза → Main Menu прячет этаж под меню; Continue вернёт его как был — и HUD тоже должен быть как был.
+        Scene snapshotScene;
+        HashSet<HudPart> snapshotHidden;
+        float snapshotAlpha = 1f;
         Action onWindowClosed;
         int openedFrame;
         bool lockedByWindow;
@@ -89,6 +94,23 @@ namespace Overworked
 
         void OnActiveSceneChanged(Scene from, Scene to)
         {
+            // Ушли в меню, а этаж остался в памяти под ним (сцен загружено больше одной) — запоминаем HUD этажа.
+            if (to.name == "MainMenu" && SceneManager.sceneCount > 1)
+            {
+                snapshotScene = from;
+                snapshotHidden = new HashSet<HudPart>(hidden);
+                snapshotAlpha = hudAlpha;
+            }
+            // Continue в тот же этаж: возвращаем ровно то, что было видно до выхода (Start сцены заново не вызовется).
+            else if (snapshotHidden != null && to == snapshotScene)
+            {
+                foreach (HudPart part in Enum.GetValues(typeof(HudPart))) SetHudVisible(part, !snapshotHidden.Contains(part));
+                SetHudAlpha(snapshotAlpha);
+                snapshotHidden = null;
+                return;
+            }
+            else snapshotHidden = null;
+
             // Новая сцена начинается с полного HUD: то, что спрятал онбординг или сценарий прошлой сцены,
             // не должно переехать на следующий этаж (Continue, переход по лестнице). Сцена, которой HUD
             // не нужен целиком (WhiteRoom), или онбординг прячут его заново в своём Start.

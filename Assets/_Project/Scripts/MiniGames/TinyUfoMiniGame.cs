@@ -11,7 +11,8 @@ namespace Overworked
 {
     /// <summary>
     /// Мини-игра 4: Tiny UFO на аркадном автомате Room_102. Грузит сцену gc26_spinv_Main additive
-    /// поверх этажа, ждёт конца (победа — exit(1), QUIT — exit(0)) и выгружает её.
+    /// поверх этажа, ждёт конца (победа — exit(1), поражение — exit(2), QUIT — exit(0)) и выгружает её.
+    /// Победа и поражение для сюжета одинаковы — партия сыграна (onFinish(true)); только QUIT — выход без игры.
     /// На время игры этаж «гаснет»: выключаются камера, рендеры, коллайдеры, 2D-свет и HUD Overworked —
     /// иначе камера автомата (у начала координат) снимает коридор, а пули задевают его коллайдеры.
     /// Код игры — Assets/Microgames/gc26_spinv, разбор — docs/TINYUFO_PORT.md.
@@ -83,7 +84,7 @@ namespace Overworked
             if (floor.IsValid() && floor.isLoaded) SceneManager.SetActiveScene(floor);
             RestoreFloor();
             running = false;
-            onFinish(result == 1);
+            onFinish(result != 0);   // сыграл — неважно, выиграл или проиграл
         }
 
         AsyncOperation LoadScene()

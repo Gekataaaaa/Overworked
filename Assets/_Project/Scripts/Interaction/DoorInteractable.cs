@@ -45,6 +45,12 @@ namespace Overworked
         [Tooltip("Флаг, который отпирает дверь (\"Key102\"). Пусто — ключа нет")]
         [SerializeField] string unlockFlag;
 
+        [Tooltip("Ключа мало: дверь отпирается, только когда выполнено и это задание (Floor_01, 102: поговорить с сидящим в 101). Пусто — хватает ключа")]
+        [SerializeField] ObjectiveData unlockAlsoRequires;
+
+        [Tooltip("Реплика, если ключ есть, а задание unlockAlsoRequires не выполнено")]
+        [SerializeField] DialogueData notReadyDialogue;
+
         [Tooltip("Подсказка у запертой двери")]
         [SerializeField] string lockedPrompt = "Open";
 
@@ -65,7 +71,10 @@ namespace Overworked
         GameObject CameraOn => room == null ? cameraOn : IntoRoom ? room.RoomCamera : room.CorridorCamera;
         GameObject CameraOff => room == null ? cameraOff : IntoRoom ? room.CorridorCamera : room.RoomCamera;
 
-        bool HasUnlockFlag => !string.IsNullOrEmpty(unlockFlag) && HasFlag(unlockFlag);
+        bool HasUnlockFlag => !string.IsNullOrEmpty(unlockFlag) && HasFlag(unlockFlag) && RequirementDone;
+
+        bool RequirementDone => unlockAlsoRequires == null
+                                || (ObjectiveManager.Instance != null && ObjectiveManager.Instance.IsCompleted(unlockAlsoRequires));
 
         /// <inheritdoc/>
         public override string Prompt => IsLocked ? lockedPrompt : prompt;
@@ -77,7 +86,10 @@ namespace Overworked
         {
             if (IsLocked)
             {
-                if (lockedDialogue != null) PlayDialogue(lockedDialogue);
+                // Ключ уже есть, но не сделано обязательное задание — говорим об этом, а не «заперто».
+                bool keyButNotReady = !string.IsNullOrEmpty(unlockFlag) && HasFlag(unlockFlag) && !RequirementDone;
+                if (keyButNotReady && notReadyDialogue != null) PlayDialogue(notReadyDialogue);
+                else if (lockedDialogue != null) PlayDialogue(lockedDialogue);
                 else Toast(lockedMessage);
                 onLockedTried?.Invoke();
                 return;

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,30 +7,31 @@ using UnityEngine.UI;
 namespace Overworked
 {
     /// <summary>
-    /// Карточка задания в правом верхнем углу (под пульсом): заголовок и квадрат-чекбокс.
-    /// При выполнении ставит галочку и через пару секунд прячется. Создаёт себя сам (DontDestroyOnLoad)
-    /// и рисует свою карточку; P3 может отдать ей место в HUD через поля ниже.
+    /// Карточка заданий в правом верхнем углу (под пульсом): список активных заданий, у каждого свой
+    /// квадрат-чекбокс. Выполненное получает галочку и через пару секунд уходит из списка; пустой список —
+    /// карточка прячется. Создаёт себя сам (DontDestroyOnLoad) и рисует карточку из кода.
     /// </summary>
     public class ObjectiveUI : SingletonBehaviour<ObjectiveUI>
     {
-        [Tooltip("Корень карточки. Пусто — карточка строится из кода")]
-        [SerializeField] GameObject card;
-
-        [Tooltip("Текст задания")]
-        [SerializeField] TMP_Text titleText;
-
-        [Tooltip("Галочка внутри квадрата")]
-        [SerializeField] Graphic checkMark;
-
-        [Tooltip("Сколько секунд видна выполненная карточка")]
+        [Tooltip("Сколько секунд видна выполненная строка с галочкой")]
         [SerializeField] float hideAfter = 2.5f;
 
-        [Tooltip("Если сразу пришло новое задание — сколько секунд ещё видна галочка прошлого")]
-        [SerializeField] float checkVisibleTime = 1.2f;
+        [Tooltip("Высота строки задания, px")]
+        [SerializeField] float rowHeight = 52f;
 
+        const float Width = 460f;
+        const float HeaderHeight = 34f;
+
+        class Row
+        {
+            public ObjectiveData Objective;
+            public RectTransform Root;
+            public Graphic Check;
+        }
+
+        readonly List<Row> rows = new List<Row>();
+        RectTransform card;
         bool visible = true;
-        bool hasCard;
-        ObjectiveData shown;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Spawn()
@@ -44,8 +46,8 @@ namespace Overworked
         {
             base.Awake();
             if (Instance != this) return;
-            if (card == null) BuildCard();
-            card.SetActive(false);
+            BuildCard();
+            Refresh();
         }
 
         void Start()
@@ -54,7 +56,7 @@ namespace Overworked
             if (ObjectiveManager.Instance == null) return;
             ObjectiveManager.Instance.OnStarted += Show;
             ObjectiveManager.Instance.OnCompleted += Check;
-            if (ObjectiveManager.Instance.Current != null) Show(ObjectiveManager.Instance.Current);
+            foreach (var o in ObjectiveManager.Instance.Active) Show(o);
         }
 
         protected override void OnDestroy()
@@ -71,66 +73,75 @@ namespace Overworked
         public void SetVisible(bool value)
         {
             visible = value;
-            card.SetActive(visible && hasCard);
+            Refresh();
         }
 
         void Show(ObjectiveData o)
         {
-            StopAllCoroutines();
-            // На карточке ещё галочка прошлого задания — даём её увидеть, новое покажем чуть позже.
-            if (hasCard && checkMark.enabled)
-            {
-                StartCoroutine(ShowAfterCheck(o));
-                return;
-            }
-            ShowNow(o);
-        }
-
-        IEnumerator ShowAfterCheck(ObjectiveData o)
-        {
-            yield return new WaitForSeconds(checkVisibleTime);
-            ShowNow(o);
-        }
-
-        void ShowNow(ObjectiveData o)
-        {
-            shown = o;
-            titleText.text = TextFormatter.Format(o.Title);
-            checkMark.enabled = false;
-            hasCard = true;
-            card.SetActive(visible);
+            if (o == null || rows.Exists(r => ObjectiveManager.Same(r.Objective, o))) return;
+            rows.Add(BuildRow(o));
+            Refresh();
         }
 
         void Check(ObjectiveData o)
         {
-            // Закрыли не то задание, что на карточке (шаг сделан заранее) — карточку не трогаем.
-            if (!hasCard || !ObjectiveManager.Same(o, shown)) return;
-            checkMark.enabled = true;
-            StopAllCoroutines();
-            StartCoroutine(HideLater());
+            // Закрыли задание, которого нет в списке (шаг сделан заранее), — список не трогаем.
+            var row = rows.Find(r => ObjectiveManager.Same(r.Objective, o));
+            if (row == null || row.Check.enabled) return;
+            row.Check.enabled = true;
+            StartCoroutine(RemoveLater(row));
         }
 
-        IEnumerator HideLater()
+        IEnumerator RemoveLater(Row row)
         {
             yield return new WaitForSeconds(hideAfter);
-            hasCard = false;
-            card.SetActive(false);
+            rows.Remove(row);
+            if (row.Root != null) Destroy(row.Root.gameObject);
+            Refresh();
+        }
+
+        // Строки — одна под другой под заголовком; высота карточки — по числу строк.
+        void Refresh()
+        {
+            for (int i = 0; i < rows.Count; i++)
+                rows[i].Root.anchoredPosition = new Vector2(0f, -HeaderHeight - i * rowHeight);
+            card.sizeDelta = new Vector2(Width, HeaderHeight + rows.Count * rowHeight + 6f);
+            card.gameObject.SetActive(ShouldShow);
+        }
+
+        // Карточка — только на этаже (есть Дэнни): не висит над главным меню после паузы и при Continue из сохранения.
+        bool ShouldShow => visible && rows.Count > 0 && PlayerController.Instance != null;
+
+        void LateUpdate()
+        {
+            if (card != null && card.gameObject.activeSelf != ShouldShow) card.gameObject.SetActive(ShouldShow);
+        }
+
+        Row BuildRow(ObjectiveData o)
+        {
+            var go = new GameObject("Row_" + o.Id, typeof(RectTransform));
+            go.transform.SetParent(card, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 1f);
+            rt.sizeDelta = new Vector2(Width, rowHeight);
+            // Чекбокс: светлая рамка, тёмная середина, зелёная галочка-квадрат внутри.
+            OverlayUi.Box(rt, "Box", new Color(0.85f, 0.85f, 0.8f), new Vector2(0f, 0.5f), new Vector2(22f, 0f), new Vector2(30f, 30f));
+            OverlayUi.Box(rt, "BoxInner", new Color(0.08f, 0.08f, 0.08f), new Vector2(0f, 0.5f), new Vector2(25f, 0f), new Vector2(24f, 24f));
+            var check = OverlayUi.Box(rt, "Check", new Color(0.35f, 0.85f, 0.45f), new Vector2(0f, 0.5f), new Vector2(29f, 0f), new Vector2(16f, 16f));
+            check.enabled = false;
+            OverlayUi.Label(rt, "Title", TextFormatter.Format(o.Title), 26, new Vector2(0f, 0.5f),
+                new Vector2(70f, 0f), new Vector2(370f, rowHeight), TextAlignmentOptions.Left);
+            return new Row { Objective = o, Root = rt, Check = check };
         }
 
         void BuildCard()
         {
             var canvas = OverlayUi.CreateCanvas(transform, "ObjectiveCanvas", 40);
             var bg = OverlayUi.Box(canvas.transform, "ObjectivePanel", new Color(0f, 0f, 0f, 0.55f),
-                new Vector2(1f, 1f), new Vector2(-30f, -130f), new Vector2(460f, 90f));
-            card = bg.gameObject;
-            OverlayUi.Label(card.transform, "Header", "OBJECTIVE", 18, new Vector2(0f, 1f),
+                new Vector2(1f, 1f), new Vector2(-30f, -130f), new Vector2(Width, 90f));
+            card = bg.rectTransform;
+            OverlayUi.Label(card, "Header", "OBJECTIVE", 18, new Vector2(0f, 1f),
                 new Vector2(70f, -8f), new Vector2(370f, 24f), TextAlignmentOptions.Left).color = new Color(0.6f, 0.65f, 0.6f);
-            titleText = OverlayUi.Label(card.transform, "Title", "", 26, new Vector2(0f, 1f),
-                new Vector2(70f, -34f), new Vector2(370f, 50f), TextAlignmentOptions.TopLeft);
-            // Чекбокс: светлая рамка, тёмная середина, зелёная галочка-квадрат внутри.
-            OverlayUi.Box(card.transform, "Box", new Color(0.85f, 0.85f, 0.8f), new Vector2(0f, 0.5f), new Vector2(22f, 0f), new Vector2(30f, 30f));
-            OverlayUi.Box(card.transform, "BoxInner", new Color(0.08f, 0.08f, 0.08f), new Vector2(0f, 0.5f), new Vector2(25f, 0f), new Vector2(24f, 24f));
-            checkMark = OverlayUi.Box(card.transform, "Check", new Color(0.35f, 0.85f, 0.45f), new Vector2(0f, 0.5f), new Vector2(29f, 0f), new Vector2(16f, 16f));
         }
     }
 }

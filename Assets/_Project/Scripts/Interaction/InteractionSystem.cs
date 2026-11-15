@@ -48,8 +48,14 @@ namespace Overworked
                 OnFocusChanged?.Invoke(best);
             }
 
-            if (best != null && GameInput.Interact != null && GameInput.Interact.WasPressedThisFrame())
+            // Пока реплика после взаимодействия ждёт нажатия, E листает её, а не взаимодействует снова.
+            var dm = DialogueManager.Instance;
+            if (best != null && GameInput.Interact != null && GameInput.Interact.WasPressedThisFrame()
+                && (dm == null || !dm.HoldsInteract))
+            {
+                DialogueManager.NoteInteraction();
                 best.Interact();
+            }
         }
 
         IInteractable FindBest()

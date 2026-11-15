@@ -65,7 +65,18 @@ namespace Overworked
             if (label == null) return;
             // Пробелы вместо стрелки — пункты не прыгают по горизонтали (моноширинный шрифт).
             label.text = (selected ? "> " : "  ") + text;
-            label.color = selected ? selectedColor : normalColor;
+            var c = selected ? selectedColor : normalColor;
+            // Недоступный пункт (Main Menu в паузе, пока идёт сценарий) — тусклый.
+            if (button != null && !button.interactable) c.a *= 0.3f;
+            label.color = c;
+        }
+
+        /// <summary>Сделать пункт доступным/недоступным (недоступный тусклый и пропускается стрелками).</summary>
+        public void SetInteractable(bool value)
+        {
+            if (button == null) button = GetComponent<Button>();
+            button.interactable = value;
+            Show(EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject);
         }
     }
 }

@@ -16,6 +16,12 @@ namespace Overworked
         [Tooltip("Спрайт Дэнни: отражается по X при смене направления. Пусто — ищется в детях")]
         [SerializeField] SpriteRenderer sprite;
 
+        [Tooltip("Диалоги, где Дэнни обращается к игроку: на его репликах из них он останавливается и смотрит в экран")]
+        [SerializeField] DialogueData[] lookAtScreenDialogues;
+
+        [Tooltip("Сколько секунд взгляд в экран нельзя прервать движением — чтобы игрок успел поймать взгляд и реплику")]
+        [SerializeField] float lookMinSeconds = 1.2f;
+
         /// <summary>Текущий режим управления.</summary>
         public PlayerState State { get; private set; } = PlayerState.Normal;
 
@@ -31,9 +37,22 @@ namespace Overworked
         float driftUntil;
         int lastDir = 1;
 
+        Coroutine lookRoutine;
+
         // Этаж спрятан под главным меню (пауза → Main Menu) — игрока «нет», пока не вернёмся по Continue.
-        void OnEnable() => ReleaseInstanceWhileDisabled(true);
-        void OnDisable() => ReleaseInstanceWhileDisabled(false);
+        void OnEnable()
+        {
+            ReleaseInstanceWhileDisabled(true);
+            if (DialogueManager.Instance != null) DialogueManager.Instance.OnLineShown += OnDialogueLine;
+        }
+
+        void OnDisable()
+        {
+            ReleaseInstanceWhileDisabled(false);
+            if (DialogueManager.Instance != null) DialogueManager.Instance.OnLineShown -= OnDialogueLine;
+            if (anim != null) anim.SetLookAtScreen(false);
+            lookRoutine = null;
+        }
 
         protected override void Awake()
         {
@@ -113,11 +132,73 @@ namespace Overworked
             }
         }
 
+        /// <summary>Загрузка сохранения: в какую сторону смотрел Дэнни.</summary>
+        public void RestoreFacing(int facing)
+        {
+            Facing = facing < 0 ? -1 : 1;
+            lastDir = Facing;
+            if (sprite != null) sprite.flipX = Facing < 0;
+        }
+
         /// <summary>Анимация по имени: "LookAtScreen", "Fall", "LieDown", "StandUp".</summary>
         public void PlayAnim(string animName)
         {
             Debug.Log($"[Player] PlayAnim({animName})");
+            if (animName == "LookAtScreen") { LookAtScreen(); return; }
             if (anim != null) anim.Play(animName);
+        }
+
+        /// <summary>
+        /// Дэнни останавливается и смотрит в экран (кадр Idle — лицом к зрителю), пока идут его реплики.
+        /// Сбой ввода сбрасывается. Управление возвращается само после диалога (если его не забрал кто-то ещё).
+        /// </summary>
+        public void LookAtScreen()
+        {
+            if (!isActiveAndEnabled || lookRoutine != null) return;
+            if (anim != null && anim.IsLyingDown) return;   // в кровати к игроку не поворачивается
+            lookRoutine = StartCoroutine(LookRoutine());
+        }
+
+        System.Collections.IEnumerator LookRoutine()
+        {
+            if (State == PlayerState.Normal) State = PlayerState.Cutscene;
+            driftUntil = 0f;
+            body.linearVelocity = Vector2.zero;
+            IsMoving = false;
+            if (anim != null) anim.SetLookAtScreen(true);   // фронтальный кадр — лицом к игроку
+
+            // Первые lookMinSeconds взгляд не прерывается: даже если сценарий или диалог вернули управление,
+            // Дэнни стоит — игрок успевает увидеть, что на него смотрят, и прочитать реплику.
+            for (float t = 0f; t < lookMinSeconds; t += Time.deltaTime)
+            {
+                if (State == PlayerState.Normal) State = PlayerState.Cutscene;
+                yield return null;
+            }
+
+            // Дальше — пока идут реплики (могут начаться чуть позже: шаг «анимация» стоит перед шагом «реплика»).
+            // Если за это время управление вернул кто-то другой (лист документа, мини-игра, сценарий) и Дэнни
+            // пошёл — взгляд заканчивается сразу: иначе он ехал бы по полу во фронтальном кадре (баг в Room_101).
+            var dm = DialogueManager.Instance;
+            for (float t = 0f; t < 1f && dm != null && !dm.IsPlaying && !IsMoving; t += Time.deltaTime) yield return null;
+            while (dm != null && dm.IsPlaying && !IsMoving) yield return null;
+
+            // Вернуть, только если за это время никто другой не поменял режим (телефон, сценарий). Если до взгляда
+            // ввод был заблокирован, а за время паузы его разблокировали — тоже отпускаем (мы держали вместо них).
+            if (State == PlayerState.Cutscene) State = PlayerState.Normal;
+            if (anim != null) anim.SetLookAtScreen(false);
+            lookRoutine = null;
+        }
+
+        // Реплика Дэнни из диалога «к игроку» — смотрим в экран. Сравниваем с текстом после подстановки {name}.
+        void OnDialogueLine(Speaker speaker, string text)
+        {
+            if (speaker != Speaker.Danny || lookAtScreenDialogues == null || lookRoutine != null) return;
+            foreach (var d in lookAtScreenDialogues)
+            {
+                if (d == null || d.Lines == null) continue;
+                foreach (var line in d.Lines)
+                    if (line.Speaker == Speaker.Danny && TextFormatter.Format(line.Text) == text) { LookAtScreen(); return; }
+            }
         }
     }
 }

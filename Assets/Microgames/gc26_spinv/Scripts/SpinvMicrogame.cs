@@ -35,6 +35,7 @@ namespace GC26.Spinv
         }
 
         // Overworked: конец мини-игры. won = true - волна пройдена (exit(1)), false - QUIT в меню (exit(0)).
+        // Поражение - FinishLost() (exit(2)): для сюжета это тоже конец партии, как победа.
         // Без хозяина (сцена запущена сама по себе) просто возвращаемся в меню автомата
         public void Finish(bool won)
         {
@@ -47,6 +48,20 @@ namespace GC26.Spinv
             }
             finished = true;
             exit(won ? 1 : 0);
+        }
+
+        /// <summary>Overworked: партия проиграна - автомат выключается и выходит к хозяину (exit(2)).</summary>
+        public void FinishLost()
+        {
+            if (finished) return;
+            if (exit == null)
+            {
+                Debug.Log("[TinyUFO] FinishLost() без хозяина - назад в меню");
+                ToMenu();
+                return;
+            }
+            finished = true;
+            exit(2);
         }
 
         void Awake()

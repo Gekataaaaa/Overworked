@@ -28,6 +28,7 @@
 | `IsFullscreenOpen` | открыто окно — телефон не открывается, субтитры не пропускаются |
 | `SetHudVisible(HudPart, bool)` | показать/спрятать часть: `Sanity`, `Heartbeat`, `Phone` (и выключить телефон), `Objective` (карточка P2 через `ObjectiveUI.SetVisible`) |
 | `SetHudVisible(bool)` | весь HUD разом (WhiteRoom, скример) |
+| `SetHudAlpha(float)` | прозрачность рассудка, пульса и кнопки телефона: в WhiteRoom HUD гаснет вместе с белым слоем смерти (`HudFadeWithOverlay`; слой — ссылка или `WhiteRoomUI/WhiteOverlay` по имени) |
 | `IsHudVisible(HudPart)` | разрешена ли часть сценарием |
 
 **Правила:**

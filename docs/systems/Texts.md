@@ -39,7 +39,7 @@
 | 3 | `F3_CharlesDesk` | I | DESC ×3 «Of all the desks…» | 1.1 | Подход к столу Чарльза |
 | 4 | `F3_CharlesNote` | S | SYSTEM «THE BOSS DOESN'T LIKE IT WHEN I LEAVE BEFORE HIM!!!» | 1.1 | E — записка на весь экран (`ShowFullscreenText`) |
 | 5 | `F3_CharlesNote_After` | D | DANNY ×3 «That's for sure…» | 1.1 | После закрытия записки, затем тост «Received: Charles's note.» |
-| 6 | `F3_Max_01` | M | MAX ×5 «Helloooo, Danny.» | 1.1 | Зона выхода в коридор; `LinkedObjective` = `F3_TakeMaxPass` |
+| 6 | `F3_Max_01` | M | MAX ×5 «Helloooo, Danny.» | 1.1 | Зона у настенных часов в коридоре (`1.2 MaxAtClock`); `LinkedObjective` = `F3_TakeMaxPass`; после — кухня открывается |
 | 7 | `F3_Max01_After` | D | DANNY «Fine. At least someone remembered I'm here.» | 1.1 | После закрытия `F3_Max_01` |
 | 8 | `F3_TakeMaxPass` | O | «Get Max's pass.» | 1.1 | Выдаётся `F3_Max_01`; закрывается подбором пропуска |
 | 9 | `F3_Clock` | I | DESC + DANNY «Battery's dead.» | 1.1 | Необязательный |
@@ -49,8 +49,9 @@
 | 13 | `F3_Max_02` | M | MAX ×4 «Thanks, buddy!!!» | 1.3 | Зона выхода из кухни (после задания) |
 | 14 | `F3_Max02_After` | D | DANNY «Yeah. Good luck to both of us.» | 1.3 | После закрытия `F3_Max_02` |
 | 15 | `F3_TurnstileDenied` | D | DESC «ACCESS DENIED.» + DANNY «What?..» | 1.3 | Турникет со своей картой → `F3_Boss_01` |
-| 16 | `F3_Boss_01` | M | BOSS ×5 «Danny, have you finished the report?» | 1.3 | После закрытия → **Галлюцинация 1** (P4) |
+| 16 | `F3_Boss_01` | M | BOSS ×5 «Danny, have you finished the report?» | 1.3 | Отказ турникета (своя карта, `onDenied` → `1.3 DeniedBossAtTurnstile`); после закрытия → **Галлюцинация 1** (P4) |
 | 17 | `F3_H1_After` | D | DANNY ×2 «My ears are ringing…» | 1.3 | После H1 |
+| 17a | `F3_NeedMaxCard` | D | DANNY «I need Max's card to go further. It should be in the kitchen.» | 1.3 | После `F3_H1_After`, только если нет флага `MaxPass` (`DialogueStep.UnlessFlag`) |
 | 18 | `F3_TurnstileGranted` | D | DESC «ACCESS GRANTED.» + DANNY «It worked. Sorry, Max.» | 1.3 | Победа в мини-игре 2 → лестница доступна |
 
 ## Floor_02 (Акт 2) — рассудок 90 → 50
@@ -59,9 +60,9 @@
 |---|---|---|---|---|---|
 | 1 | `F2_Start` | D | DANNY ×2 «So dark…» | 2.0 | Старт этажа, затем подсказка F |
 | 2 | `F2_Max_01` | M | MAX ×6 «Danny, wait.» | 2.0 | Первое включение фонарика (`FlashlightController.OnToggled`) |
-| 3 | `F2_Boss_01` | M | BOSS ×5 «You're wasting time on the wrong tasks, Danny.» | 2.0 | Цепочка после `F2_Max_01` (на первом включении фонарика). Задание не выдаёт — его выдаёт лестница (решение команды) |
-| 4 | `F2_CheckDocs201` | O | «Check the documents in room 201.» | 2.0 | Выдаётся при попытке спуститься по лестнице (P2, `StairsLockedNotice`); закрывается ящиком в 201 |
-| 5 | `F2_Boss01_After` | D | DANNY ×2 «Yeah. Like I was ever getting one.» | 2.0 | После закрытия `F2_Boss_01` |
+| 3 | `F2_Boss_01` | M | BOSS ×5 «You're wasting time on the wrong tasks, Danny.» | 2.2 | Первый вход Дэнни в Room_201 (`Story/…/2.2 Room201_BossMessage`, `RoomSequenceTrigger`) |
+| 4 | `F2_CheckDocs201` | O | «Check the documents in room 201.» | 2.0 | Выдаётся, когда прочитано `F2_Max_01` и закрыт телефон (`LinkedObjective` сообщения); закрывается ящиком в 201 |
+| 5 | `F2_Boss01_After` | D | DANNY ×2 «Yeah. Like I was ever getting one.» | 2.2 | После закрытия `F2_Boss_01` |
 | 6 | `F2_BrokenLamp` | I | DESC + DANNY | 2.1 | Необязательный |
 | 7 | `F2_Mug` | I | DESC + DANNY | 2.1 | Необязательный |
 | 8 | `F2_Silhouette` | D | DANNY ×2 «What was that?..» | 2.1 | После **Галлюцинации 2** (P4) |
@@ -82,7 +83,9 @@
 |---|---|---|---|---|---|
 | 1 | `F1_MainExit` | I | DESC + DANNY «There's nothing out there…» | 3.0 | E на главном выходе |
 | 2 | `F1_Door102Locked` | D | DESC «The door is locked…» | 3.0 | E на двери 102 (пока нет ключа) → выдать `F1_FindKey101` |
-| 3 | `F1_FindKey101` | O | «Find the key in room 101.» | 3.0 | Выдаётся сценой после `F1_Door102Locked`; закрывается ящиком в 101 |
+| 3 | `F1_FindKey101` | O | «Find the key in room 101.» | 3.0 | Выдаётся табличкой двери 102 (`F1_Door102Locked`) или зоной перед дверью 101 (P1 `Floor01TalkToMan`) — до входа в 101; закрывается ключом в 101 |
+| 3a | `F1_TalkToMan` | O | «Talk to the man in room 101.» | 3.0–3.1 | Выдаётся вместе с `F1_FindKey101` (`ObjectiveLink`, P1 `Floor01TalkToMan`); закрывается разговором с сидящим. Без него дверь 102 не открыть |
+| 3b | `F1_Door102TalkFirst` | D | DANNY «I should talk to the man in 101 first...» | 3.1 | Дверь 102: ключ есть, разговора не было |
 | 4 | `F1_Max_01` | M | MAX ×4 (глитч) | 3.0 | Зона через несколько шагов |
 | 5 | `F1_Boss_01` | M | BOSS ×7, `{name}` «Look at him, {name}.» | 3.0 | Цепочка после `F1_Max_01` |
 | 6 | `F1_DannyToPlayer` | D | DANNY ×4, `{name}` «Did you hear him, {name}?» | 3.0 | После закрытия `F1_Boss_01`, Дэнни смотрит в экран |

@@ -22,3 +22,5 @@
 | AudioManager, Audio Mixer, сборщик Sandbox_P4 | P4 | [AudioManager.md](AudioManager.md) |
 | WhiteRoomSequence, WhiteRoomTrigger, сборщик сцены WhiteRoom | P4 | [WhiteRoomSequence.md](WhiteRoomSequence.md) |
 | Галлюцинации, силуэты, скример (заглушки-квадраты) | P4 | [Hallucinations.md](Hallucinations.md) |
+| GlitchVanish — «лагающее» исчезновение фигуры (Room_101) | P1 | [GlitchVanish.md](GlitchVanish.md) |
+| SaveSystem — сохранение на диск (чекпоинт этажа), Continue после перезапуска | P1 | [SaveSystem.md](SaveSystem.md) |

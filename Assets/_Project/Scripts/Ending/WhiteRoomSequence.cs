@@ -64,6 +64,8 @@ namespace Overworked
 
         AudioSource flatline;
         bool beeping;
+        // Вступление уже прозвучало (сохраняется SaveSystem) — после загрузки сохранения не повторяем.
+        bool introDone;
 
         void Awake()
         {
@@ -108,7 +110,11 @@ namespace Overworked
             if (Time.timeScale <= 0f) Debug.LogWarning("[WhiteRoom] Time.timeScale = 0 — игра на паузе, Дэнни не пойдёт");
 
             yield return new WaitForSeconds(introDelay);
-            if (!InBed) Say(introLines);
+            if (!InBed && !introDone)
+            {
+                introDone = true;
+                Say(introLines);
+            }
         }
 
         /// <summary>Показать реплики субтитрами (DialogueManager, P3).</summary>

@@ -60,6 +60,17 @@ namespace Overworked
             if (Current == this) Current = null;
         }
 
+        /// <summary>
+        /// Загрузка сохранения: Дэнни уже в этой комнате — текущая комната и камеры как внутри, без onEnter/OnRoomChanged
+        /// (сценарии входа уже отыграны).
+        /// </summary>
+        public void RestoreInside()
+        {
+            Current = this;
+            if (corridorCamera != null) corridorCamera.SetActive(false);
+            if (roomCamera != null) roomCamera.SetActive(true);
+        }
+
         /// <summary>Отмечает, что Дэнни вошёл (вызывает дверь под затемнением).</summary>
         public void MarkEntered()
         {

@@ -27,7 +27,7 @@ namespace Overworked.EditorTools
         const string CrtMaterialPath = "Assets/_Project/Materials/TerminalCRT.mat";
 
         const string LogoPath = "Assets/_Project/Art/UI/Logo/Logo.png";
-        static readonly Color MenuBackground = new Color(0.86f, 0.85f, 0.81f);
+        internal static readonly Color MenuBackground = new Color(0.86f, 0.85f, 0.81f);
         static readonly Color TerminalGreen = new Color(0.36f, 0.85f, 0.45f);
         static readonly Color PromptColor = new Color(0.6f, 1f, 0.68f);
         const float FontSize = 30;
@@ -268,7 +268,7 @@ namespace Overworked.EditorTools
         }
 
         /// <summary>Пункт меню-консоли: Button без видимого фона (прозрачный Image ловит мышь) + ConsoleMenuItem.</summary>
-        static Button ConsoleItem(string name, RectTransform parent, TMP_FontAsset font, string text)
+        internal static Button ConsoleItem(string name, RectTransform parent, TMP_FontAsset font, string text)
         {
             var rt = UI(name, parent);
             rt.gameObject.AddComponent<LayoutElement>().preferredHeight = 60;

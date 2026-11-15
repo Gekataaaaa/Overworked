@@ -22,6 +22,14 @@ namespace Overworked.EditorTools
         const string PixelTtfPath = "Assets/_Project/Fonts/PressStart2P-Regular.ttf";
         const string PixelFontPath = "Assets/_Project/Fonts/PressStart2P SDF.asset";
         const string ScenePath = "Assets/_Project/Scenes/Sandbox/Sandbox_P3.unity";
+        // Арт телефона NALIPHONE: скрытый (кнопка в углу) и открытый (корпус с белым экраном).
+        const string PhoneClosedPath = "Assets/_Project/Art/UI/Phone/naliphone_small.png";
+        const string PhoneOpenPath = "Assets/_Project/Art/UI/Phone/naliphone.png";
+        // Белый экран на naliphone.png (1570 × 2834): x 88..1485, y 397..2447 (сверху) — сюда встаёт интерфейс.
+        static readonly Vector2 OpenArtSize = new Vector2(1570, 2834);
+        static readonly Rect OpenArtScreen = Rect.MinMaxRect(88, 397, 1485, 2447);
+        const float PanelHeight = 880f;
+        const float ButtonHeight = 150f;
         static readonly string[] TestMessages =
         {
             "Assets/_Project/Data/Messages/F3_Max_01.asset",
@@ -75,6 +83,7 @@ namespace Overworked.EditorTools
                 var toast = BuildToast(hud, P3Fonts.Dialogue(), out var toastText); // всплывающее окно — Hardpixel
                 // Весь телефон — пиксельный Press Start 2P (тост остаётся на PT Sans: он не часть телефона).
                 var pixel = EnsurePixelFont(font);
+                EnsurePhoneSprites();
                 var button = BuildPhoneButton(hud, pixel, out var buttonDot);
                 BuildPhonePanel(hud, pixel, pixel, phoneUi, button, buttonDot);
 
@@ -139,6 +148,30 @@ namespace Overworked.EditorTools
             return fa;
         }
 
+        /// <summary>Картинки телефона — одиночные спрайты для UI, без сжатия (крупный корпус не должен мылиться).</summary>
+        static void EnsurePhoneSprites()
+        {
+            foreach (var path in new[] { PhoneClosedPath, PhoneOpenPath })
+            {
+                if (!(AssetImporter.GetAtPath(path) is TextureImporter ti))
+                {
+                    Debug.LogWarning($"[Setup] нет {path} — телефон останется без арта");
+                    continue;
+                }
+                if (ti.textureType == TextureImporterType.Sprite && ti.spriteImportMode == SpriteImportMode.Single
+                    && ti.maxTextureSize >= 4096 && ti.textureCompression == TextureImporterCompression.Uncompressed) continue;
+                ti.textureType = TextureImporterType.Sprite;
+                ti.spriteImportMode = SpriteImportMode.Single;
+                ti.alphaIsTransparency = true;
+                ti.mipmapEnabled = false;
+                ti.maxTextureSize = 4096;   // открытый телефон 1570 × 2834 — иначе Unity ужмёт до 2048
+                ti.textureCompression = TextureImporterCompression.Uncompressed;
+                ti.SaveAndReimport();
+            }
+        }
+
+        static Sprite PhoneSprite(string path) => AssetDatabase.LoadAssetAtPath<Sprite>(path);
+
         // ------------------------------------------------------------ тост
 
         static CanvasGroup BuildToast(RectTransform hud, TMP_FontAsset font, out TextMeshProUGUI text)
@@ -167,29 +200,39 @@ namespace Overworked.EditorTools
             var rt = UI("PhoneButton", hud);
             rt.anchorMin = rt.anchorMax = new Vector2(1f, 0f);
             rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = new Vector2(-100, 110);
-            rt.sizeDelta = new Vector2(96, 150);
+            rt.anchoredPosition = new Vector2(-100, 120);
             var img = rt.gameObject.AddComponent<Image>();
-            img.sprite = RoundSprite();
-            img.type = Image.Type.Sliced;
+            var art = PhoneSprite(PhoneClosedPath);
+            if (art != null)
+            {
+                // Скрытый телефон — картинка NALIPHONE целиком (свой экран с лимоном нарисован).
+                img.sprite = art;
+                img.type = Image.Type.Simple;
+                img.preserveAspect = true;
+                rt.sizeDelta = new Vector2(ButtonHeight * art.rect.width / art.rect.height, ButtonHeight);
+            }
+            else
+            {
+                img.sprite = RoundSprite();
+                img.type = Image.Type.Sliced;
+                rt.sizeDelta = new Vector2(96, ButtonHeight);
+            }
             img.color = Color.white;
             var btn = rt.gameObject.AddComponent<Button>();
             var colors = btn.colors;
-            colors.normalColor = Body;
-            colors.highlightedColor = colors.selectedColor = Header;
-            colors.pressedColor = Row;
+            // Подсветка — лёгкое затемнение картинки, а не перекраска корпуса.
+            colors.normalColor = Color.white;
+            colors.highlightedColor = colors.selectedColor = new Color(0.82f, 0.82f, 0.82f);
+            colors.pressedColor = new Color(0.65f, 0.65f, 0.65f);
             btn.colors = colors;
 
-            // «Экран» внутри корпуса.
-            var screen = UI("Screen", rt);
-            Stretch(screen, 10);
-            screen.offsetMax = new Vector2(-10, -22);
-            screen.offsetMin = new Vector2(10, 22);
-            var simg = screen.gameObject.AddComponent<Image>();
-            simg.color = Screen;
-            simg.raycastTarget = false;
-            var label = Tmp("Label", screen, font, "Tab", 16, TextDim, TextAlignmentOptions.Center);
-            Stretch(label.rectTransform);
+            // Подсказка клавиши — под телефоном.
+            var label = Tmp("Label", rt, font, "Tab", 14, TextDim, TextAlignmentOptions.Center);
+            label.rectTransform.anchorMin = new Vector2(0, 0);
+            label.rectTransform.anchorMax = new Vector2(1, 0);
+            label.rectTransform.pivot = new Vector2(0.5f, 1f);
+            label.rectTransform.sizeDelta = new Vector2(40, 24);
+            label.rectTransform.anchoredPosition = new Vector2(0, -4);
 
             dot = Dot("UnreadDot", rt, 30);
             var drt = (RectTransform)dot.transform;
@@ -206,16 +249,32 @@ namespace Overworked.EditorTools
             var panel = UI("PhonePanel", hud);
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(1f, 0f);
             panel.anchoredPosition = new Vector2(-170, 40);
-            panel.sizeDelta = new Vector2(520, 860);
             var body = panel.gameObject.AddComponent<Image>();
-            body.sprite = RoundSprite();
-            body.type = Image.Type.Sliced;
-            body.color = Body;
-
             var screen = UI("Screen", panel);
             Stretch(screen);
-            screen.offsetMin = new Vector2(18, 60);
-            screen.offsetMax = new Vector2(-18, -40);
+            var art = PhoneSprite(PhoneOpenPath);
+            if (art != null)
+            {
+                // Открытый телефон — корпус NALIPHONE; интерфейс ровно в белом экране картинки.
+                float width = PanelHeight * OpenArtSize.x / OpenArtSize.y;
+                panel.sizeDelta = new Vector2(width, PanelHeight);
+                body.sprite = art;
+                body.type = Image.Type.Simple;
+                body.preserveAspect = true;
+                body.color = Color.white;
+                float k = PanelHeight / OpenArtSize.y;
+                screen.offsetMin = new Vector2(OpenArtScreen.xMin * k, (OpenArtSize.y - OpenArtScreen.yMax) * k);
+                screen.offsetMax = new Vector2(-(OpenArtSize.x - OpenArtScreen.xMax) * k, -OpenArtScreen.yMin * k);
+            }
+            else
+            {
+                panel.sizeDelta = new Vector2(520, 860);
+                body.sprite = RoundSprite();
+                body.type = Image.Type.Sliced;
+                body.color = Body;
+                screen.offsetMin = new Vector2(18, 60);
+                screen.offsetMax = new Vector2(-18, -40);
+            }
             screen.gameObject.AddComponent<Image>().color = Screen;
 
             // Шапка: «назад» + заголовок.
@@ -294,13 +353,13 @@ namespace Overworked.EditorTools
             btext.lineSpacing = 18;
             bubble.gameObject.SetActive(false);
 
-            // Подсказка управления под экраном.
+            // Подсказка управления — под телефоном: на нижней рамке NALIPHONE нарисованы кнопки.
             var hint = Tmp("Hint", panel, font, "A/D chat   Wheel scroll   Tab/Esc close", 12, TextDim, TextAlignmentOptions.Center);
             hint.rectTransform.anchorMin = new Vector2(0, 0);
             hint.rectTransform.anchorMax = new Vector2(1, 0);
-            hint.rectTransform.pivot = new Vector2(0.5f, 0);
-            hint.rectTransform.sizeDelta = new Vector2(0, 50);
-            hint.rectTransform.anchoredPosition = new Vector2(0, 6);
+            hint.rectTransform.pivot = new Vector2(0.5f, 1f);
+            hint.rectTransform.sizeDelta = new Vector2(0, 34);
+            hint.rectTransform.anchoredPosition = new Vector2(0, -2);
 
             chat.gameObject.SetActive(false);
             panel.gameObject.SetActive(false);

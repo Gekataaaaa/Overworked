@@ -33,7 +33,8 @@
 Уже собранный этаж (есть объекты в `Environment/Corridor/Background`) пропускается.
 
 **Отладка (только редактор и dev-билд):** F1 — MainMenu, F2/F3/F4 — Floor_03/02/01,
-F5 — WhiteRoom, F6 — fade туда-обратно, F7 — панель состояния (`Scripts/Core/DebugHotkeys.cs`).
+F5 — WhiteRoom, F6 — fade туда-обратно, F7 — панель состояния, F8 — по кругу коридор → комнаты этажа → коридор
+(без запуска сценариев комнат; `Scripts/Core/DebugHotkeys.cs`).
 
 **Зависит от:** GameManager, PlayerController (блок ввода на время fade out).
 

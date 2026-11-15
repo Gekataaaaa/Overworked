@@ -192,11 +192,11 @@ namespace GC26.Spinv
             if (victory)
                 StartCoroutine(PowerOffAfterWin());
             else
-                StartCoroutine(RestartAfterLoss());
+                StartCoroutine(PowerOffAfterLoss());
         }
 
         [Header("Overworked")]
-        [Tooltip("Сколько секунд висит надпись перед выключением автомата / рестартом волны")]
+        [Tooltip("Сколько секунд висит надпись перед выключением автомата (и после победы, и после поражения)")]
         public float endBannerTime = 1.5f;
 
         // Победа: надпись, затем выключение автомата (POWER OFF) и выход к хозяину
@@ -213,13 +213,19 @@ namespace GC26.Spinv
                 flow.Finish(true);
         }
 
-        // Поражение: надпись и та же волна заново
-        IEnumerator RestartAfterLoss()
+        // Overworked: поражение тоже заканчивает партию - надпись, выключение автомата и выход к хозяину.
+        // Победа или поражение на сюжет не влияют: Дэнни просто отходит от автомата.
+        IEnumerator PowerOffAfterLoss()
         {
-            bannerText.text = gm.Invaded ? "INVADED\nTRY AGAIN" : "GAME OVER\nTRY AGAIN";
+            bannerText.text = gm.Invaded ? "INVADED" : "GAME OVER";
             bannerText.gameObject.SetActive(true);
             yield return new WaitForSecondsRealtime(endBannerTime);
-            gm.Restart();
+            bannerText.gameObject.SetActive(false);
+            var flow = FindAnyObjectByType<SpinvMicrogame>();
+            if (victoryScreen.quitEffect != null)
+                victoryScreen.quitEffect.Play(() => flow.FinishLost());
+            else
+                flow.FinishLost();
         }
     }
 }

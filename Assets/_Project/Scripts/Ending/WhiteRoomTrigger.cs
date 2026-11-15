@@ -29,8 +29,13 @@ namespace Overworked
         void Awake()
         {
             if (sequence == null) sequence = FindAnyObjectByType<WhiteRoomSequence>();
+        }
+
+        // В Start, а не в Awake: после загрузки сохранения fired уже выставлен — проявленное не прячем снова.
+        void Start()
+        {
             // Предмет «появляется» — до этой точки его нет.
-            foreach (var sr in reveal) SetAlpha(sr, 0f);
+            if (!fired) foreach (var sr in reveal) SetAlpha(sr, 0f);
         }
 
         void OnTriggerEnter2D(Collider2D other)

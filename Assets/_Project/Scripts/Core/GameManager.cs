@@ -23,6 +23,9 @@ namespace Overworked
         /// </summary>
         public bool CanContinue => hiddenFloor.IsValid() && hiddenFloor.isLoaded && hiddenRoots != null;
 
+        /// <summary>Есть что продолжить: этаж в памяти под меню или чекпоинт на диске (SaveSystem).</summary>
+        public bool CanContinueAny => CanContinue || SaveSystem.HasSave;
+
         /// <summary>Загружает сцену этажа: 3, 2, 1; 0 = WhiteRoom. Спрятанный под меню этаж при этом выгружается.</summary>
         public void LoadFloor(int floor)
         {
@@ -39,6 +42,8 @@ namespace Overworked
         public void LoadMainMenu()
         {
             Debug.Log("[Core] LoadMainMenu");
+            // Из Белой комнаты в меню — игра пройдена (титры): чекпоинт больше не нужен.
+            if (State.CurrentFloor == 0) SaveSystem.Delete();
             ForgetHiddenFloor();
             SceneTransitionManager.Instance.Load("MainMenu");
         }
@@ -50,6 +55,8 @@ namespace Overworked
         public void LeaveToMainMenu()
         {
             if (SceneTransitionManager.Instance.IsLoading) return;
+            // Этаж уходит под меню — на диск место остановки (если игру закроют из меню, Continue вернёт сюда).
+            SaveSystem.SaveNow();
             Debug.Log("[Core] LeaveToMainMenu: этаж спрятан под меню");
             SceneTransitionManager.Instance.LoadOver("MainMenu", (scene, roots) =>
             {
@@ -65,6 +72,24 @@ namespace Overworked
             Debug.Log($"[Core] Continue → {hiddenFloor.name}");
             var menu = SceneManager.GetActiveScene();
             SceneTransitionManager.Instance.RestoreHidden(menu, hiddenFloor, hiddenRoots, ForgetHiddenFloor);
+        }
+
+        /// <summary>
+        /// Continue после перезапуска игры: состояние из чекпоинта на диске и загрузка того этажа с начала.
+        /// Если этаж ещё в памяти под меню (пауза → Main Menu в этой сессии) — он свежее, берётся он (ContinueGame).
+        /// </summary>
+        public void ContinueFromSave()
+        {
+            if (CanContinue) { ContinueGame(); return; }
+            if (SceneTransitionManager.Instance.IsLoading) return;
+            ResetState();
+            int floor = SaveSystem.Load();
+            if (floor < 0)
+            {
+                Debug.LogWarning("[Core] Continue: сохранение не читается — начните новую игру");
+                return;
+            }
+            LoadFloor(floor);
         }
 
         /// <summary>Новое прохождение (из главного меню): имя спросят заново, Continue пропадает, задания и телефон сбрасываются.</summary>

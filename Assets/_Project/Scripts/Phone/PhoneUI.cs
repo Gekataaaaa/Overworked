@@ -72,7 +72,7 @@ namespace Overworked
 
         [Header("Печать")]
         [Tooltip("Скорость печати новых сообщений, символов в секунду (0 — сразу)")]
-        [SerializeField] float charsPerSecond = 25f;
+        [SerializeField] float charsPerSecond = 16f;
 
         [Header("Вибрация")]
         [Tooltip("Сколько секунд трясётся кнопка при новом сообщении")]
@@ -89,7 +89,6 @@ namespace Overworked
         Coroutine typingRoutine;
         // Непрочитанные сообщения открытого чата: их пузыри печатаются по буквам, история — сразу.
         readonly HashSet<MessageData> toType = new HashSet<MessageData>();
-        bool typingSkip;
         bool subscribed;
         // Кнопку разрешил HUD (онбординг Floor_03 может её спрятать). Видна она ещё и только при игроке.
         bool shownByHud = true;
@@ -137,7 +136,6 @@ namespace Overworked
         void Update()
         {
             UpdateButtonVisibility();
-            if (panel.activeSelf && typingRoutine != null && SkipPressed()) typingSkip = true;
             if (!panel.activeSelf || GameInput.Move == null) return;
             // Клавиатура: A/D (стрелки) переключают чат Max ↔ Boss. Игрок в это время стоит.
             if (!GameInput.Move.WasPressedThisFrame()) return;
@@ -165,15 +163,6 @@ namespace Overworked
             typingRoutine = null;
             UiSounds.TypingStop();
             panel.SetActive(false);
-        }
-
-        static bool SkipPressed()
-        {
-            var kb = Keyboard.current;
-            var mouse = Mouse.current;
-            return (GameInput.Interact != null && GameInput.Interact.WasPressedThisFrame())
-                   || (kb != null && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
-                   || (mouse != null && mouse.leftButton.wasPressedThisFrame);
         }
 
         /// <summary>Кнопка телефона на экране (для прозрачности HUD).</summary>
@@ -270,7 +259,6 @@ namespace Overworked
 
         IEnumerator TypeBubbles(List<GameObject> typed)
         {
-            typingSkip = false;
             // Ждём, пока прокрутка встанет вниз под уже показанную историю.
             yield return null;
             foreach (var bubble in typed)
@@ -281,7 +269,8 @@ namespace Overworked
                 text.maxVisibleCharacters = 0;
                 LayoutRebuilder.ForceRebuildLayoutImmediate(chatContent);
                 chatScroll.verticalNormalizedPosition = 0f;
-                yield return Typewriter.Type(text, charsPerSecond, () => typingSkip);
+                // Сообщения печатаются своей скоростью до конца — пропустить печать нельзя.
+                yield return Typewriter.Type(text, charsPerSecond);
             }
             foreach (var bubble in typed)
                 if (bubble != null)

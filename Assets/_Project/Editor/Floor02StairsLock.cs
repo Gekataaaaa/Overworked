@@ -11,13 +11,12 @@ namespace Overworked.EditorTools
     /// Floor_02: лестница на первый этаж заперта, пока не выполнено задание F2_CheckDocs201
     /// («Check the documents in room 201.»). По нарративу (сцена 2.0) Макс пишет: «система не закроет смену
     /// без сверки архива, документы в 201-й» — пока сверка не сделана, уйти с этажа нельзя.
-    /// Как дверь 102 на Floor_01: у запертой лестницы есть подсказка, по E — объяснение (F2_StairsLocked,
-    /// строки из сообщения Макса и реплика Дэнни из сцены 2.0). Это делает Story/StairsLockedNotice —
+    /// Как дверь 102 на Floor_01: у запертой лестницы есть подсказка, по E — короткая реплика Дэнни
+    /// (F2_StairsLocked: «I should help Max first...»). Это делает Story/StairsLockedNotice —
     /// запертая «дверь» поверх лестницы (скрипт лестницы P1 не трогаем).
     /// Отпирает лестницу Story/StairsLock (ObjectiveCompletedEvent по Id задания), кто бы задание ни закрыл:
     /// объяснение убирается, лестница открывается. Подсказка — по нарративу «Go down to the first floor».
-    /// Дверь в Room_201 недоступна, пока Дэнни не нажал E у лестницы; после этого она открывается
-    /// и выдаётся задание F2_CheckDocs201.
+    /// Задание F2_CheckDocs201 выдаёт прочитанное сообщение Макса (P3StoryBuilder), дверь в Room_201 открыта сразу.
     /// Меню: Overworked → P2 → Lock Floor_02 Stairs Until Room 201.
     /// </summary>
     [InitializeOnLoad]
@@ -85,9 +84,8 @@ namespace Overworked.EditorTools
                 noticeText = ScriptableObject.CreateInstance<DialogueData>();
                 noticeText.Lines = new[]
                 {
-                    new DialogueLine { Speaker = Speaker.Description, Text = "The exit downstairs is locked." },
-                    new DialogueLine { Speaker = Speaker.Description, Text = "The system won't close the shift without an archive check." },
-                    new DialogueLine { Speaker = Speaker.Danny, Text = "I'll help Max and finally get out of here." },
+                    // Коротко, как у других запертых мест: подробности уже были в сообщении Макса (сцена 2.0).
+                    new DialogueLine { Speaker = Speaker.Danny, Text = "I should help Max first..." },
                 };
                 AssetDatabase.CreateAsset(noticeText, NoticeTextPath);
             }
@@ -116,25 +114,15 @@ namespace Overworked.EditorTools
             // Жёлтый контур и подсказка — на самой лестнице, а не на невидимой заглушке.
             notice.AddComponent<HighlightTarget>().target = stairs.gameObject;
 
-            // Дверь в 201 недоступна (без E и контура), пока Дэнни не попробовал спуститься: у лестницы он
-            // узнаёт, что выход закрыт без сверки архива, — тогда дверь открывается и выдаётся задание.
+            // Задание F2_CheckDocs201 выдаёт сообщение Макса (LinkedObjective, P3StoryBuilder), не лестница;
+            // дверь в 201 открыта и подсвечивается с начала этажа.
             var door201 = FindDoorInto(scene, "Room_201");
-            var noticeDoor = notice.GetComponent<DoorInteractable>();
             if (door201 != null)
             {
-                RoomWiring.Set(door201, ("startLocked", true));
-                UnityEventTools.AddBoolPersistentListener(noticeDoor.onLockedTried, door201.SetLocked, false);
+                RoomWiring.Set(door201, ("startLocked", false));
                 EditorUtility.SetDirty(door201);
             }
             else Debug.LogWarning("[Setup] Floor_02: не найдена дверь в Room_201");
-            var checkDocs = AssetDatabase.LoadAssetAtPath<ObjectiveData>("Assets/_Project/Data/Objectives/F2_CheckDocs201.asset");
-            if (checkDocs != null)
-            {
-                var giver = notice.AddComponent<ObjectiveGiver>();
-                RoomWiring.Set(giver, ("objective", checkDocs));
-                UnityEventTools.AddPersistentListener(noticeDoor.onLockedTried, giver.Give);
-            }
-            EditorUtility.SetDirty(noticeDoor);
 
             // Замок: задание выполнено → объяснение убрать, лестницу открыть.
             var lockGo = new GameObject("StairsLock");

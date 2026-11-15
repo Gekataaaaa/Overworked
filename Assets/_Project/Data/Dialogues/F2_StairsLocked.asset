@@ -13,9 +13,5 @@ MonoBehaviour:
   m_Name: F2_StairsLocked
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
-  - Speaker: 1
-    Text: The exit downstairs is locked.
-  - Speaker: 1
-    Text: The system won't close the shift without an archive check.
   - Speaker: 0
-    Text: I'll help Max and finally get out of here.
+    Text: I should help Max first...

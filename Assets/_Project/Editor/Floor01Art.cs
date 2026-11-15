@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Events;
@@ -13,7 +14,7 @@ namespace Overworked.EditorTools
     /// фон коридора 7680×1736 с PPU 153.6 (50 × 11.3 юнита, стены на ±25.5), отдельные спрайты дверей и
     /// предметов (order -7), комнаты 101 и 102 — фоны 1920×1080 с PPU 100. Координаты — пиксели превью
     /// художника (Preview_Floor01_*), найдены сопоставлением спрайтов атласа с превью.
-    /// Варианты коридора (CorridorVariants): V1 — старт; после Room_101 без ключа — V2 (галлюцинации),
+    /// Варианты коридора (CorridorVariants): V1 — старт; после Room_101 без ключа — V2 (галлюцинации, без фигуры),
     /// с ключом — V3 (появляется дверь CHILL ZONE 102). Пока двери 102 нет, задание «Find the key in room 101»
     /// выдаёт главный выход (раньше — запертая дверь 102).
     /// Освещения и затемнения пока нет: группы Lights пустые, свечения аркады нет, общий свет — 1.
@@ -43,7 +44,7 @@ namespace Overworked.EditorTools
         static readonly string[] RoomSprites =
             { "Room101_Background", "Room102_Background", "Room101_ExitDoor", "Room102_ExitDoor", "Room101_Tumba",
               "Room101_Drawer_Open", "Mumbling_Figure", "Worker_BlueSuit", "Vending_Machine", "Arcade_Machine",
-              "Arcade_Screen_Glow", "Silhouette_ChairMan", "Room_Light_Tube_On", "Room_Light_Cone" };
+              "Arcade_Screen_Glow", "Silhouette_ChairMan", "Room_Light_Tube_On", "Room_Light_Cone", "Key_102", "Locker_Tall" };
 
 
         static Floor01Art()
@@ -117,9 +118,11 @@ namespace Overworked.EditorTools
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var ti = AssetImporter.GetAtPath(path) as TextureImporter;
-                if (ti == null) continue;
+                // backgrn/ — справочные превью и листы художника, в игру не идут: их импорт не трогаем.
+                if (ti == null || path.Contains("/backgrn/")) continue;
                 string name = Path.GetFileNameWithoutExtension(path);
-                float ppu = System.Array.IndexOf(RoomSprites, name) >= 0 ? RoomPpu : CorridorPpu;
+                bool roomSprite = System.Array.IndexOf(RoomSprites, name) >= 0 || name.StartsWith("ChairMan_LookBack_");
+                float ppu = roomSprite ? RoomPpu : CorridorPpu;
                 bool wide = name == "Floor01_Corridor";
                 if (ti.textureType == TextureImporterType.Sprite && ti.spriteImportMode == SpriteImportMode.Single
                     && Mathf.Approximately(ti.spritePixelsPerUnit, ppu) && ti.textureCompression == TextureImporterCompression.Uncompressed
@@ -176,7 +179,9 @@ namespace Overworked.EditorTools
                 Object.DestroyImmediate(d.gameObject);
             }
             var door101Pos = C(2391, 440, 249, 560);
-            var door102Pos = C(4161, 340, 688, 660);
+            // CHILL ZONE 102 — на месте тёмной фигуры из V2 (Anomaly_Figure_Ahead, x 4880–5140):
+            // правым краем к цветку (x 5220), левым — сразу за висящей лампочкой (x ≈ 4510).
+            var door102Pos = C(4517, 340, 688, 660);
             var door101 = Dress(doors.Find("Door_Room_101"), "Door_101", door101Pos, -7, 0f);
             // Дверь 102 — стеклянная стена комнаты отдыха; подсказка E — только у самой двери, не по всей ширине.
             var door102 = Dress(doors.Find("Door_Room_102"), "Door_102_ChillZone", door102Pos, -7, 2.4f);
@@ -211,10 +216,26 @@ namespace Overworked.EditorTools
 
             BuildVariants(corridor, room101, door102);
 
-            // Освещения пока нет: группа Lights пустая. Горящие лампы с превью — Light_Tube_On + Light_Cone
-            // с левым краем трубки x = 350, 2110, 3870, 5630 (y 241; конус: x − 359, y 272) — добавить, когда дойдём до света.
-            Clear(Child(corridor, "Lights"));
+            // Горящие лампы с превью — Light_Tube_On + Light_Cone с левым краем трубки x = 350, 2110, 3870, 5630
+            // (y 241; конус: x − 359, y 272). Этаж 1: лампы «постоянно мигают» (паспорт, раздел 8) — LightFlicker.
+            var fixtures = new List<FloorLamps.Fixture>();
+            foreach (var x in new[] { 350f, 2110f, 3870f, 5630f })
+                fixtures.Add(new FloorLamps.Fixture(C(x, 241, 302, 62), C(x - 359, 272, 1020, 768)));
+            FloorLamps.Build(Child(corridor, "Lights"), Spr("Light_Tube_On"), Spr("Light_Cone"), fixtures,
+                SickLight, Child(corridor, "Background"));
         }
+
+        /// <summary>Свет этажа 1: желтоватый, тусклее, мерцает на низком рассудке.</summary>
+        static readonly FloorLamps.Style SickLight = new FloorLamps.Style
+        {
+            Color = new Color(0.95f, 0.9f, 0.7f), Intensity = 0.28f, Flicker = true, DarkLevel = 0.4f, ConeDim = 0.5f,
+        };
+
+        /// <summary>Лампы комнат 101/102: ещё вдвое слабее коридора (комната маленькая, свет заливал её целиком).</summary>
+        static readonly FloorLamps.Style RoomSickLight = new FloorLamps.Style
+        {
+            Color = SickLight.Color, Intensity = 0.14f, Flicker = true, DarkLevel = 0.4f, ConeDim = 0.75f,
+        };
 
         // Главный выход — стеклянные двери справа (Exit_Door_Glass), заглушку прячем, замок и текст остаются.
         static void BuildMainExit(Transform corridor)
@@ -261,7 +282,8 @@ namespace Overworked.EditorTools
             Place(noKey, "Door_Archive_Open", "Door_Archive_Open", C(829, 400, 302, 600), -6);
             Place(noKey, "Painting_Keyhole_Upside", "Painting_Keyhole_Upside", C(1708, 420, 194, 300), -6);
             Place(noKey, "Anomaly_Eyes", "Anomaly_Eyes", C(18, 503, 142, 487), -6);
-            Place(noKey, "Anomaly_Figure_Ahead", "Anomaly_Figure_Ahead", C(4880, 560, 260, 440), -5);
+            // Фигуры впереди (Anomaly_Figure_Ahead с превью V2) в этом варианте нет — решение команды;
+            // её место с ключом занимает дверь CHILL ZONE 102.
 
             after.gameObject.SetActive(false);
             noKey.gameObject.SetActive(false);
@@ -293,15 +315,18 @@ namespace Overworked.EditorTools
             var tumbaPos = R(1008, 720, 245, 280);
             var cabinet = props.Find("Cabinet");
             for (int i = props.childCount - 1; i >= 0; i--)
-                if (props.GetChild(i) != cabinet) Object.DestroyImmediate(props.GetChild(i).gameObject);
-            var drawerOpen = Place(props, "Room101_Drawer_Open", "Room101_Drawer_Open", R(1018, 728, 225, 105), -5);
+                // Ключ-карту 102 (Pickup P2, флаг Key102) не трогаем: без неё дверь 102 не открыть.
+                if (props.GetChild(i) != cabinet && props.GetChild(i).name != "Key102") Object.DestroyImmediate(props.GetChild(i).gameObject);
+            // Тумба, ящик и бормочущий — под конусом света лампы (order -6), как стол с компьютером в Room_201:
+            // поверх дымки конуса они выбивались из фона.
+            var drawerOpen = Place(props, "Room101_Drawer_Open", "Room101_Drawer_Open", R(1018, 728, 225, 105), -7);
             drawerOpen.SetActive(false);
             if (cabinet != null)
             {
                 cabinet.localPosition = tumbaPos;
                 var placeholder = cabinet.Find("Sprite");
                 if (placeholder != null) placeholder.gameObject.SetActive(false);
-                var art = Place(cabinet, "Art", "Room101_Tumba", Vector3.zero, -6);
+                var art = Place(cabinet, "Art", "Room101_Tumba", Vector3.zero, -8);
                 if (cabinet.TryGetComponent(out BoxCollider2D col)) { col.size = art.GetComponent<SpriteRenderer>().sprite.bounds.size; col.offset = Vector2.zero; }
                 // Ящик открыт — показать выдвинутый ящик (подписка без дублей при пересборке).
                 if (cabinet.TryGetComponent(out DrawerInteractable drawer))
@@ -313,16 +338,69 @@ namespace Overworked.EditorTools
             }
             else Debug.LogWarning("[Setup] Floor_01: нет Room_101/Props/Cabinet — сначала Overworked → P2 → Build Floor_01 Room 101 Drawer");
 
-            // Бормочущий на стуле (сцена 3.1): по E сжимается в точку → «He wasn't here…».
-            var person = Place(props, "Mumbling_Figure", "Mumbling_Figure", R(1415, 595, 210, 405), -6);
+            // Ключ-карта лежит на столе (нарисован на фоне) рядом с листками — видна сразу, подбирается по E.
+            // Pickup ставит P2 (Floor01Room101); если его нет — создаём такой же, иначе дверь 102 не открыть.
+            var key = props.Find("Key102");
+            if (key == null) key = CreateKeyPickup(props);
+            key.gameObject.SetActive(true);
+            key.localPosition = R(590, 750, 103, 47);
+            var keyPlaceholder = key.Find("Sprite");
+            if (keyPlaceholder != null) keyPlaceholder.gameObject.SetActive(false);
+            Place(key, "Art", "Key_102", Vector3.zero, -7);
+            if (key.TryGetComponent(out BoxCollider2D keyCol)) { keyCol.size = new Vector2(1.2f, 0.8f); keyCol.offset = Vector2.zero; }
+
+            // Сидящий человек (сцена 3.1) — слева от фигуры в костюме, кадры ChairMan_LookBack (спиной, оборачивается).
+            // До E — первый кадр. По E кадры проигрываются один раз под сильный глитч (GlitchVanish), потом он
+            // просто пропадает: сжатие PersonInteractable направлено на пустую заглушку, сама фигура не уменьшается.
+            var frames = new Sprite[8];
+            for (int i = 0; i < frames.Length; i++) frames[i] = Spr($"ChairMan/ChairMan_LookBack_{i}");
+            var person = Place(props, "Mumbling_Figure", "ChairMan/ChairMan_LookBack_0", R(1440, 555, 239, 440), -7);
             var pcol = person.AddComponent<BoxCollider2D>();
             pcol.isTrigger = true;
             pcol.size = new Vector2(1.6f, 3f);
             pcol.offset = new Vector2(0f, RoomEntryY - person.transform.localPosition.y);
-            RoomWiring.Set(person.AddComponent<PersonInteractable>(), ("prompt", "Interact"),
-                ("afterDialogue", AssetDatabase.LoadAssetAtPath<DialogueData>(PersonGonePath)));
+            var dummy = new GameObject("ShrinkDummy").transform;
+            dummy.SetParent(person.transform, false);
+            var glitch = person.AddComponent<GlitchVanish>();
+            RoomWiring.Set(glitch, ("watch", dummy), ("fps", 8f), ("jumpDistance", 0.5f), ("dropChance", 0.35f));
+            var so = new SerializedObject(glitch);
+            var list = so.FindProperty("frames");
+            list.arraySize = frames.Length;
+            for (int i = 0; i < frames.Length; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = frames[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
+            // 8 кадров при 8 fps = 1 с анимации + 0.3 с глитча на последнем кадре, затем исчезает.
+            // Разговор с ним — обязательное задание F1_TalkToMan (P1, Floor01TalkToMan); ассета нет — просто без задания.
+            RoomWiring.Set(person.AddComponent<PersonInteractable>(), ("prompt", "Interact"), ("visual", dummy),
+                ("shrinkTime", 1.3f), ("afterDialogue", AssetDatabase.LoadAssetAtPath<DialogueData>(PersonGonePath)),
+                ("completesObjective", AssetDatabase.LoadAssetAtPath<ObjectiveData>(Floor01TalkToMan.TalkPath)));
 
             RoomLamp(room);
+            // Фон 101 — самый тёмный из всех (средняя яркость ~15/255): картинку не трогаем, а подсвечиваем
+            // комнату ровным рассеянным светом, чтобы надписи и мебель на стенах читались.
+            FloorLamps.AddAmbient(Child(room, "Lights"), 0.9f, SickLight.Color);
+        }
+
+        /// <summary>
+        /// Ключ-карта 102 — так же, как её ставит P2 (Floor01Room101): подбор по E, тост, флаг Key102,
+        /// задание «Find the key in room 101» выполнено. «Finish work in room 102» — после сообщения Босса (P2StoryWiring).
+        /// </summary>
+        static Transform CreateKeyPickup(Transform props)
+        {
+            var key = new GameObject("Key102");
+            key.transform.SetParent(props, false);
+            var col = key.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
+            var pickup = key.AddComponent<PickupInteractable>();
+            RoomWiring.Set(pickup,
+                ("prompt", "Pick up the key"),
+                ("receivedToast", "Received: Room 102 key."),
+                ("setsFlag", "Key102"),
+                ("completesObjective", AssetDatabase.LoadAssetAtPath<ObjectiveData>(FindKeyPath)));
+            // «Finish work in room 102» выдаёт не ключ, а цепочка 3.1 AfterKey после сообщения Босса
+            // (Overworked → P2 → Wire Story And Hallucinations).
+            EditorUtility.SetDirty(pickup);
+            Debug.Log("[Setup] Floor_01: ключ-карта Key102 создана");
+            return key.transform;
         }
 
         static void BuildRoom102(Transform room)
@@ -334,7 +412,8 @@ namespace Overworked.EditorTools
             var arcade = props.Find("Arcade");
             for (int i = props.childCount - 1; i >= 0; i--)
                 if (props.GetChild(i) != arcade) Object.DestroyImmediate(props.GetChild(i).gameObject);
-            Place(props, "Silhouette_ChairMan", "Silhouette_ChairMan", R(647, 560, 226, 440), -6);
+            // Тёмный шкаф слева (превью Preview_Floor01_Room102). Стол со стулом за ним стёрт с фона Room102_Background.
+            Place(props, "Locker_Tall", "Locker_Tall", R(643, 440, 237, 560), -7);
             Place(props, "Vending_Machine", "Vending_Machine", R(1060, 431, 250, 569), -7);
             // Свечения экрана аркады пока нет (Arcade_Screen_Glow: R(1320, 462, 300, 300), гаснет после победы).
             if (arcade != null)
@@ -375,9 +454,11 @@ namespace Overworked.EditorTools
             if (entry != null) entry.localPosition = new Vector3(entryX, RoomEntryY, 0f);
         }
 
-        // Освещения пока нет: Lights пустая. Лампа комнаты — Room_Light_Tube_On R(810, 241, 302, 62)
-        // и Room_Light_Cone R(451, 272, 1020, 768).
-        static void RoomLamp(Transform room) => Clear(Child(room, "Lights"));
+        // Лампа комнаты — Room_Light_Tube_On R(810, 241, 302, 62) и Room_Light_Cone R(451, 272, 1020, 768).
+        // Без BackgroundDimmer: он затемняет всю сцену и спорил бы с затемнением коридора.
+        static void RoomLamp(Transform room) =>
+            FloorLamps.Build(Child(room, "Lights"), Spr("Room_Light_Tube_On"), Spr("Room_Light_Cone"),
+                new[] { new FloorLamps.Fixture(R(810, 241, 302, 62), R(451, 272, 1020, 768)) }, RoomSickLight, null);
 
         // ------------------------------------------------------------ старт
 

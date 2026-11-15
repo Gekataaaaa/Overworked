@@ -6,9 +6,9 @@ namespace Overworked
 {
     /// <summary>
     /// Главное меню (сцена MainMenu): Continue / New Game / Quit.
-    /// Continue — только после выхода в меню через паузу (GameManager.CanContinue): возвращает в то же место,
-    /// без пролога и ввода имени. При первом запуске игры его нет.
-    /// New Game — затемнение → пролог-терминал с вводом имени; точка Continue сбрасывается.
+    /// Continue — если этаж спрятан под меню (пауза → Main Menu: возвращает в то же место) или есть чекпоинт
+    /// на диске (SaveSystem: этаж с начала в сохранённом состоянии), без пролога и ввода имени. При первом запуске его нет.
+    /// New Game — затемнение → пролог-терминал с вводом имени; точка Continue и сохранение на диске стираются.
     /// Лежит на MainMenu Canvas, собирается меню Overworked → P1 → Build Main Menu.
     /// </summary>
     public class MainMenuUI : MonoBehaviour
@@ -36,7 +36,7 @@ namespace Overworked
 
         void Start()
         {
-            bool canContinue = GameManager.Instance.CanContinue && continueButton != null;
+            bool canContinue = GameManager.Instance.CanContinueAny && continueButton != null;
             if (continueButton != null)
             {
                 continueButton.gameObject.SetActive(canContinue);
@@ -57,7 +57,7 @@ namespace Overworked
             if (starting) return;
             starting = true;
             Debug.Log("[UI] Continue");
-            GameManager.Instance.ContinueGame();
+            GameManager.Instance.ContinueFromSave();
         }
 
         void OnNewGame()
@@ -65,6 +65,7 @@ namespace Overworked
             if (starting) return;
             starting = true;
             GameManager.Instance.ResetState();
+            SaveSystem.Delete();
             FadeController.Instance.FadeOut(fadeTime, () =>
             {
                 menuPanel.SetActive(false);

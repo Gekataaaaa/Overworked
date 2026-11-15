@@ -170,12 +170,25 @@ namespace Overworked.EditorTools
             var room101 = Find<Room>(scene, "Environment/Rooms/Room_101");
             if (room101 != null) Hook(room101.onEnter, h4Seq, room101);
 
-            // 3.1 Ключ взят: телефон — Макс (глитч), следом Босс.
+            // 3.1 Ключ взят: телефон — Макс (глитч), следом Босс («Send him to room 102, the break room»),
+            // и только после его прочтения — задание «Finish work in room 102».
             var afterKey = Sequence(group, "3.1 AfterKey", true,
                 new MessageStep { Message = Load<MessageData>("Messages/F1_Max_02"), WaitUntilRead = true },
-                new MessageStep { Message = Load<MessageData>("Messages/F1_Boss_02"), WaitUntilRead = true });
+                new MessageStep { Message = Load<MessageData>("Messages/F1_Boss_02"), WaitUntilRead = true },
+                new ObjectiveStep { Objective = Load<ObjectiveData>("Objectives/F1_FinishWork") });
             var key = Find<PickupInteractable>(scene, "Environment/Rooms/Room_101/Props/Key102");
-            if (key != null) Hook(key.onDone, afterKey, key);
+            if (key != null)
+            {
+                // Ключ сам больше не выдаёт задание (ObjectiveGiver от Floor01Room101): его выдаёт цепочка выше.
+                if (key.TryGetComponent(out ObjectiveGiver giver))
+                {
+                    for (int i = key.onDone.GetPersistentEventCount() - 1; i >= 0; i--)
+                        if (key.onDone.GetPersistentTarget(i) == giver) UnityEventTools.RemovePersistentListener(key.onDone, i);
+                    Object.DestroyImmediate(giver);
+                }
+                Hook(key.onDone, afterKey, key);
+            }
+            else Debug.LogWarning("[Setup] Floor_01: нет Room_101/Props/Key102 — сначала Overworked → P4 → Build Floor_01 Art");
 
             // 3.2 Подход к двери 102 с ключом: «The break room? Now?»
             var approach = Sequence(group, "3.2 Door102Approach", false,

@@ -25,6 +25,9 @@ namespace Overworked
         bool open;
         float openedAt;
 
+        /// <summary>Лист сейчас открыт (субтитры ждут, пока его закроют).</summary>
+        public static bool IsOpen => instance != null && instance.open;
+
         /// <summary>Показать лист с текстом; closed — после того как игрок его закрыл.</summary>
         public static void Show(string text, Action closed)
         {

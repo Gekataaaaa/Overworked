@@ -9,12 +9,15 @@ namespace Overworked
     /// что собрал Build HUD: Frame (рамка с тёмной подложкой), Trail (след потери) и Fill (заполнение).
     /// При падении рассудка: заполнение плавно стекает, за ним тянется красный след потерянной части,
     /// полоса вздрагивает; на низком рассудке слегка дрожит и краснеет.
+    /// Слева от полосы — иконка рассудка (голова со спиралью, Resources/SanityIcon): её белая заливка всегда
+    /// того же цвета, что заполнение полосы. Иконка — в одной колонке с сердцем пульса (тот же размер и левый край).
     /// </summary>
     public class SanityBarUI : MonoBehaviour
     {
         // Спрайты лежат в Art/UI/Sanity/Resources: Build HUD пересоздаёт SanityBar, и ссылки в инспекторе слетают.
         const string FrameResource = "SanityBar_Frame";
         const string FillResource = "SanityBar_Fill";
+        const string IconResource = "SanityIcon";
 
         [Header("Вид")]
         [Tooltip("Рамка с пустой подложкой. Пусто — Resources/SanityBar_Frame")]
@@ -34,6 +37,15 @@ namespace Overworked
 
         [Tooltip("Размер шкалы, px (если applyLayout); держите пропорцию ≈ 8.2 : 1")]
         [SerializeField] Vector2 size = new Vector2(300f, 37f);
+
+        [Tooltip("Иконка рассудка: контур чёрный, заливка белая и красится цветом заполнения. Пусто — Resources/SanityIcon")]
+        [SerializeField] Sprite iconSprite;
+
+        [Tooltip("Размер иконки, px — как у сердца пульса (34), чтобы они стояли одной колонкой")]
+        [SerializeField] Vector2 iconSize = new Vector2(34f, 34f);
+
+        [Tooltip("Зазор между иконкой и полосой, px. 14 — левый край полосы совпадает с текстом BPM под ней")]
+        [SerializeField] float iconGap = 14f;
 
         [Tooltip("Где в картинке начинается и кончается светлая часть (доля ширины): 0 % и 100 % рассудка")]
         [SerializeField] Vector2 fillRange = new Vector2(0.0145f, 0.9855f);
@@ -76,6 +88,7 @@ namespace Overworked
 
         RectTransform rect;
         Image trail;
+        Image icon;
         Vector2 basePosition;
 
         bool subscribed;
@@ -92,6 +105,7 @@ namespace Overworked
             rect = (RectTransform)transform;
             if (frameSprite == null) frameSprite = Resources.Load<Sprite>(FrameResource);
             if (fillSprite == null) fillSprite = Resources.Load<Sprite>(FillResource);
+            if (iconSprite == null) iconSprite = LoadSprite(IconResource);
             if (fill == null)
             {
                 var child = transform.Find("Fill");
@@ -101,7 +115,9 @@ namespace Overworked
             if (applyLayout)
             {
                 rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0f, 1f);
-                rect.anchoredPosition = position;
+                // position — левый край всей группы: сначала иконка, правее — полоса.
+                float shift = iconSprite != null ? iconSize.x + iconGap : 0f;
+                rect.anchoredPosition = position + new Vector2(shift, 0f);
                 rect.sizeDelta = size;
             }
             basePosition = rect.anchoredPosition;
@@ -122,6 +138,41 @@ namespace Overworked
             trail = Layer("Trail", fillSprite);
             ConfigureFilled(trail);
             trail.transform.SetSiblingIndex(fill.transform.GetSiblingIndex());
+
+            BuildIcon();
+        }
+
+        // Иконка — дочерний объект полосы (трясётся и вздрагивает вместе с ней), левее её края на iconGap.
+        void BuildIcon()
+        {
+            if (iconSprite == null) return;
+            var t = transform.Find("Icon");
+            icon = t != null ? t.GetComponent<Image>() : null;
+            if (icon == null)
+            {
+                var go = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+                go.transform.SetParent(transform, false);
+                icon = go.GetComponent<Image>();
+            }
+            var rt = icon.rectTransform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 0.5f);
+            rt.pivot = new Vector2(1f, 0.5f);
+            rt.anchoredPosition = new Vector2(-iconGap, 0f);
+            rt.sizeDelta = iconSize;
+            rt.localScale = Vector3.one;
+            icon.sprite = iconSprite;
+            icon.type = Image.Type.Simple;
+            icon.preserveAspect = true;
+            icon.raycastTarget = false;
+        }
+
+        // Спрайт из Resources; если картинка импортирована не как спрайт — собираем спрайт из текстуры.
+        static Sprite LoadSprite(string name)
+        {
+            var sprite = Resources.Load<Sprite>(name);
+            if (sprite != null) return sprite;
+            var tex = Resources.Load<Texture2D>(name);
+            return tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)) : null;
         }
 
         Image Layer(string name, Sprite sprite)
@@ -236,6 +287,7 @@ namespace Overworked
 
             float low = lowThreshold > 0f ? Mathf.Clamp01(1f - value / lowThreshold) : 0f;
             fill.color = Color.Lerp(fillColor, lowColor, low);
+            if (icon != null) icon.color = fill.color;   // заливка иконки — всегда цвета заполнения
 
             // След чуть пульсирует, пока виден, — глаз цепляется за потерянный кусок.
             var tc = trailColor;

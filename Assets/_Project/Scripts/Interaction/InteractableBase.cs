@@ -48,7 +48,7 @@ namespace Overworked
 
         /// <summary>Выполнены условия задания и флага.</summary>
         protected bool ConditionsMet =>
-            (requiresObjective == null || (ObjectiveManager.Instance != null && ObjectiveManager.Same(ObjectiveManager.Instance.Current, requiresObjective)))
+            (requiresObjective == null || (ObjectiveManager.Instance != null && ObjectiveManager.Instance.IsActive(requiresObjective)))
             && (string.IsNullOrEmpty(requiresFlag) || HasFlag(requiresFlag));
 
         protected virtual void Awake() => locked = startLocked;

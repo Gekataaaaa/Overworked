@@ -24,7 +24,6 @@ namespace Overworked.EditorTools
         public const string H1 = "H1_Turnstile", H2 = "H2_Silhouette", H3 = "H3_Room201", H4 = "H4_Room101", H5 = "H5_FinalScreamer";
 
         static readonly Color SilhouetteColor = new Color(0.02f, 0.02f, 0.03f);
-        static readonly Color Distortion = new Color(0.35f, 0.05f, 0.08f, 0.35f);
 
         [MenuItem("Overworked/P4/Build Hallucinations")]
         public static void Run()
@@ -56,7 +55,7 @@ namespace Overworked.EditorTools
                 Event(go, sanity: 70f, spike: 45f);
                 Silhouette(go, square, new Vector2(0.9f, 1.9f), hit: true, offset: new Vector2(8.5f, 0.05f),
                     approach: 2.5f, flashlight: 6f, maxWait: 20f, speed: 0f, vanish: 0.35f);
-                Flash(go, "Distortion", Distortion, 4, 0.08f, 0.06f);
+                // Красное мерцание «Distortion» убрано из игры (P1, Remove Red Flicker).
             });
             // H3: дверь с грохотом захлопывается, свет бешено мигает — резко; сквозь помехи на миг «DD».
             var h3 = Ensure(H3, go =>
@@ -80,7 +79,7 @@ namespace Overworked.EditorTools
                 Set(beat, "hitOnFirst", false);
                 Silhouette(go, square, new Vector2(0.9f, 1.9f), hit: true, offset: new Vector2(5f, 0.05f),
                     approach: 2.5f, flashlight: 4f, maxWait: 20f, speed: 0f, vanish: 0.35f, withPrevious: true);
-                Flash(go, "Distortion", Distortion, 6, 0.08f, 0.05f);
+                // Красное мерцание «Distortion» убрано из игры (P1, Remove Red Flicker).
             });
             // H5: фигура идёт навстречу, Дэнни замирает — «No…», силуэт резко бросается (скример):
             // рассудок 25 → 0, испуг пульса, управление заблокировано; дальше FinalCollapse → WhiteRoom.

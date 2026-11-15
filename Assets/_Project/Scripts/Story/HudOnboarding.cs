@@ -27,18 +27,21 @@ namespace Overworked
         /// <summary>Онбординг сейчас идёт.</summary>
         public bool IsPlaying { get; private set; }
 
+        // Онбординг уже пройден (сохраняется SaveSystem): после загрузки сохранения HUD в Start не прячем.
+        bool onboarded;
+
         // Части, которые прячутся до онбординга. Карточка задания не входит: её показывает ObjectiveUI,
         // когда задание выдано, а первое задание появляется уже после онбординга.
         static readonly HudPart[] Parts = { HudPart.Sanity, HudPart.Heartbeat, HudPart.Phone };
 
         IEnumerator Start()
         {
-            if (!hideOnStart) yield break;
+            if (!hideOnStart || onboarded) yield break;
             // При смене сцены UIManager сбрасывает видимость HUD (activeSceneChanged). Прячем в Start
             // и ещё раз кадром позже — так порядок событий загрузки сцены не важен.
             HideAll();
             yield return null;
-            if (!IsPlaying) HideAll();
+            if (!IsPlaying && !onboarded) HideAll();
         }
 
         /// <summary>Мгновенно прячет рассудок, пульс и телефон.</summary>
@@ -84,6 +87,7 @@ namespace Overworked
 
             if (locked && PlayerController.Instance != null) PlayerController.Instance.SetInputLocked(false);
             IsPlaying = false;
+            onboarded = true;
             done?.Invoke();
         }
 

@@ -6,8 +6,9 @@ namespace Overworked
     /// <summary>
     /// Запуск финального скримера (NARRATIVE, сцены 3.2–3.3): Дэнни выиграл Tiny UFO в Room_102 и вышел
     /// в коридор — как только экран после двери проявился, начинается H5_FinalScreamer (дальше FinalCollapse → WhiteRoom).
-    /// Без победы выход из комнаты ничего не запускает. Победу ловит по onDone аркадного автомата
-    /// (MiniGameInteractable вызывает его только при выигрыше), выход — по Room.onExit комнаты 102.
+    /// Без сыгранной партии выход из комнаты ничего не запускает. Партию ловит по onDone аркадного автомата
+    /// (MiniGameInteractable вызывает его, когда партия сыграна — победа или поражение, неважно; QUIT — нет),
+    /// выход — по Room.onExit комнаты 102.
     /// </summary>
     public class FinalScreamerStarter : MonoBehaviour
     {
