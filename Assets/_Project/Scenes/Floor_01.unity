@@ -7900,6 +7900,10 @@ MonoBehaviour:
   receivedToast: 
   drawerSprite: {fileID: 0}
   openSprite: {fileID: 0}
+  openSound: {fileID: 8300000, guid: a6cfbf28ad6f4ee696f3eebfadc7647d, type: 3}
+  closeSound: {fileID: 8300000, guid: 3550960966ae4bdf8831e63cf847eb2b, type: 3}
+  soundVolume: 0.8
+  closeWhenDone: 0
 --- !u!61 &1519999315
 BoxCollider2D:
   m_ObjectHideFlags: 0

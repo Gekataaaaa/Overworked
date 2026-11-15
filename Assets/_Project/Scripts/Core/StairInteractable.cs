@@ -33,11 +33,9 @@ namespace Overworked
         [Tooltip("Громкость звука спуска 0..1")]
         [Range(0f, 1f)] [SerializeField] float descendVolume = 1f;
 
-        [Tooltip("Сколько секунд звук играет в полную громкость (переход между этажами — около 2 с)")]
-        [SerializeField] float descendHold = 2.5f;
-
-        [Tooltip("За сколько секунд звук затухает после этого")]
-        [SerializeField] float descendFade = 1.5f;
+        [Tooltip("За сколько секунд звук гаснет, когда новый этаж начинает проявляться (0 — обрывается сразу; " +
+                 "немного больше нуля — без щелчка)")]
+        [SerializeField] float descendFade = 0.15f;
 
         bool locked;
         bool used;
@@ -88,10 +86,28 @@ namespace Overworked
             used = true;
             ShowPrompt(false);
             Debug.Log($"[Core] Stairs → floor {targetFloor}");
-            // Клип длиннее перехода: играет поверх затемнения и затухает уже на новом этаже, а не обрывается.
-            if (descendSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySfxFading(descendSound, descendVolume, descendHold, descendFade);
+            PlayDescendSound();
             GameManager.Instance.LoadFloor(targetFloor);
+        }
+
+        // Шаги звучат только на чёрном экране: начинаются вместе с уходом в чёрное (LoadFloor ниже сразу
+        // запускает затемнение) и гаснут, как только новый этаж начинает проявляться. Клип (8 с) длиннее перехода,
+        // поэтому сам он не закончится. Лестница выгружается со старой сценой — подписка живёт в замыкании
+        // на SceneTransitionManager (_Systems) и снимается при первом срабатывании.
+        void PlayDescendSound()
+        {
+            var audio = AudioManager.Instance;
+            var transition = SceneTransitionManager.Instance;
+            if (descendSound == null || audio == null) return;
+            var src = audio.PlaySfxHeld(descendSound, descendVolume);
+            if (src == null || transition == null) return;
+            float fade = descendFade;
+            void Stop()
+            {
+                transition.FadeInStarted -= Stop;
+                if (AudioManager.Instance != null) AudioManager.Instance.StopSfx(src, fade);
+            }
+            transition.FadeInStarted += Stop;
         }
 
         void ShowPrompt(bool visible)

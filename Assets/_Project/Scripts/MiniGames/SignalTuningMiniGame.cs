@@ -38,6 +38,12 @@ namespace Overworked
         [Tooltip("Сколько секунд видно проявившееся сообщение перед закрытием")]
         [SerializeField] float messageTime = 2.5f;
 
+        [Header("Звук")]
+        [Tooltip("Шипение помех (Audio/Horror/SFX_StaticNoise — шум заставки Tiny UFO). Пусто — без звука")]
+        [SerializeField] AudioClip noiseSound;
+        [Tooltip("Громкость шипения при самых сильных помехах 0..1; тише по мере настройки, на победе — тишина")]
+        [Range(0f, 1f)] [SerializeField] float noiseVolume = 0.3f;
+
         [Header("Тексты интерфейса (английский)")]
         [SerializeField] string frequencyLabel = "Frequency";
         [SerializeField] string sharpnessLabel = "Sharpness";
@@ -61,6 +67,7 @@ namespace Overworked
         readonly float[] target = new float[2];
         int selected;
         int dragging = -1;
+        AudioSource hiss;
         float clearFor;
         bool done;
 
@@ -82,6 +89,7 @@ namespace Overworked
             done = false;
             message.text = ScreenText();
             canvas.gameObject.SetActive(true);
+            if (AudioManager.Instance != null) hiss = AudioManager.Instance.PlaySfxHeld(noiseSound, 0f, true);
             Refresh();
         }
 
@@ -160,6 +168,8 @@ namespace Overworked
 
         void DrawNoise(float amount)
         {
+            // Шипение — той же силы, что помехи на экране: подстроил ползунок — стало тише.
+            if (AudioManager.Instance != null) AudioManager.Instance.SetSfxVolume(hiss, noiseVolume * amount / 0.85f);
             byte level = (byte)(amount * 255f);
             for (int i = 0; i < pixels.Length; i++)
             {
@@ -192,6 +202,8 @@ namespace Overworked
         void End(bool win)
         {
             StopAllCoroutines();
+            if (AudioManager.Instance != null) AudioManager.Instance.StopSfx(hiss, 0.1f);
+            hiss = null;
             canvas.gameObject.SetActive(false);
             var cb = onFinish;
             onFinish = null;

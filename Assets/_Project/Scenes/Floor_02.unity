@@ -549,6 +549,8 @@ MonoBehaviour:
   frequencyLabel: Frequency
   sharpnessLabel: Sharpness
   hint: '[W/S] select   [A/D] adjust   [Esc] step back'
+  noiseSound: {fileID: 8300000, guid: aee86af07f104ae08fa614d566cb2a38, type: 3}
+  noiseVolume: 0.3
 --- !u!61 &123156727
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1734,6 +1736,8 @@ MonoBehaviour:
   receivedToast: 
   afterDialogue: {fileID: 11400000, guid: a60dea6182d40e843b5bc0723c7fe469, type: 2}
   hideOnPickup: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: 3c0472ff0d704e0d85e1bb01ce227729, type: 3}
+  pickupVolume: 0.8
 --- !u!61 &440327858
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4113,6 +4117,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1142170375}
   - component: {fileID: 1142170376}
+  - component: {fileID: 675499581636017995}
   m_Layer: 0
   m_Name: Archive_Computer
   m_TagString: Untagged
@@ -4120,6 +4125,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &675499581636017995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142170374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b19d6b74134a28b07607514f01d2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Overworked::Overworked.ComputerHum
+  working: 1
 --- !u!4 &1142170375
 Transform:
   m_ObjectHideFlags: 0
@@ -7435,6 +7453,11 @@ MonoBehaviour:
   receivedToast: 
   drawerSprite: {fileID: 630726361}
   openSprite: {fileID: 21300000, guid: 2af22f19a037891499385dbb5ff13e06, type: 3}
+  openSound: {fileID: 8300000, guid: a6cfbf28ad6f4ee696f3eebfadc7647d, type: 3}
+  closeSound: {fileID: 8300000, guid: 3550960966ae4bdf8831e63cf847eb2b, type: 3}
+  paperSound: {fileID: 8300000, guid: 01af41aa9ef8423e886abc79000d02ce, type: 3}
+  soundVolume: 0.8
+  closeWhenDone: 1
 --- !u!61 &1903791071
 BoxCollider2D:
   m_ObjectHideFlags: 0

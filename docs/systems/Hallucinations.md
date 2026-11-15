@@ -88,7 +88,9 @@ WhiteRoom — настоящая. Копии пересоздаются сбор
 Визуалы (`HallucinationVisual`: `WithPrevious`, `Delay`, `TriggersHit`, `SanityOnSeen`, `Cleanup()`):
 `SilhouetteBehaviour`, `ScreamerVisual`, `ScreenFlashVisual` (вспышки, в т. ч. в такт пульсу; только тёмные —
 красное мерцание «Distortion» из H2/H4 убрано, меню Overworked → P1 → Remove Red Flicker),
-`StaticNoiseVisual` (помехи + надпись), `DialogueVisual` (реплики). Полноэкранные — на своём Canvas
+`StaticNoiseVisual` (помехи + надпись), `DialogueVisual` (реплики). Помехи H3 и шум скримера H5 шипят звуком
+заставки Tiny UFO (`noiseSound` = `Audio/Horror/SFX_StaticNoise`, тот же клип, что `IntroBoot.noiseSound`):
+H3 — 0.3 всё время помех, H5 — 0.45 на пике и уходит вместе со «снегом». Полноэкранные — на своём Canvas
 поверх HUD (sortingOrder 900).
 
 **Отладка:** `Sandbox_P4` и копии этажей: Shift+1…5 — H1–H5 сцены, U — вернуть управление

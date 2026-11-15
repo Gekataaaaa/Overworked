@@ -27,6 +27,9 @@ namespace Overworked
         /// <summary>Сцена загружена (экран ещё чёрный, сразу после этого начинается fade in).</summary>
         public event Action<string> OnSceneLoaded;
 
+        /// <summary>Экран начинает проявляться (конец затемнения любого перехода): тут гаснет звук лестницы.</summary>
+        public event Action FadeInStarted;
+
         /// <summary>Загружает сцену по имени (fade out → load → fade in). Повторный вызов во время перехода игнорируется.</summary>
         public void Load(string sceneName)
         {
@@ -126,8 +129,9 @@ namespace Overworked
             IsLoading = false;
         }
 
-        static IEnumerator Fade(bool toBlack, float sec)
+        IEnumerator Fade(bool toBlack, float sec)
         {
+            if (!toBlack) FadeInStarted?.Invoke();
             var fade = FadeController.Instance;
             if (fade == null) yield break;
             bool done = false;

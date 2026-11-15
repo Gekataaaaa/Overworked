@@ -55,6 +55,8 @@ MonoBehaviour:
   label: DD
   labelAt: 0.7
   labelTime: 0.15
+  noiseSound: {fileID: 8300000, guid: aee86af07f104ae08fa614d566cb2a38, type: 3}
+  noiseVolume: 0.3
 --- !u!1 &5672225691007576351
 GameObject:
   m_ObjectHideFlags: 0

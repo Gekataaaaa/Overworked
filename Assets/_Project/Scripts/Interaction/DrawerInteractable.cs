@@ -32,14 +32,41 @@ namespace Overworked
         [Tooltip("Картинка открытого ящика")]
         [SerializeField] Sprite openSprite;
 
+        [Header("Звук")]
+        [Tooltip("Звук открытия ящика (Audio/SFX/SFX_DrawerOpen). Пусто — без звука")]
+        [SerializeField] AudioClip openSound;
+
+        [Tooltip("Звук закрытия ящика (Audio/SFX/SFX_DrawerClose). Пусто — без звука")]
+        [SerializeField] AudioClip closeSound;
+
+        [Tooltip("Шорох бумаги, когда из ящика достают документ (documentSheet; Audio/SFX/SFX_Paper). Пусто — без звука")]
+        [SerializeField] AudioClip paperSound;
+
+        [Tooltip("Громкость звуков ящика 0..1")]
+        [Range(0f, 1f)] [SerializeField] float soundVolume = 0.8f;
+
+        [Tooltip("Закрыть ящик, когда содержимое осмотрено: звук закрытия и спрайт обратно в закрытый")]
+        [SerializeField] bool closeWhenDone = true;
+
+        Sprite closedSprite;
+
         /// <inheritdoc/>
         public override bool CanInteract => base.CanInteract && !used;
 
         protected override void OnInteract()
         {
             busy = true;
-            if (drawerSprite != null && openSprite != null) drawerSprite.sprite = openSprite;
-            if (documentSheet != null) DocumentSheet.Show(SheetText(), PlayContents);
+            PlaySound(openSound);
+            if (drawerSprite != null && openSprite != null)
+            {
+                closedSprite = drawerSprite.sprite;
+                drawerSprite.sprite = openSprite;
+            }
+            if (documentSheet != null)
+            {
+                PlaySound(paperSound);
+                DocumentSheet.Show(SheetText(), PlayContents);
+            }
             else PlayContents();
         }
 
@@ -68,8 +95,19 @@ namespace Overworked
 
         void Done()
         {
+            // Дэнни посмотрел, что внутри, — ящик задвигается обратно.
+            if (closeWhenDone)
+            {
+                PlaySound(closeSound);
+                if (drawerSprite != null && closedSprite != null) drawerSprite.sprite = closedSprite;
+            }
             Toast(receivedToast);
             Finish();
+        }
+
+        void PlaySound(AudioClip clip)
+        {
+            if (clip != null && AudioManager.Instance != null) AudioManager.Instance.PlaySfx(clip, soundVolume);
         }
     }
 }

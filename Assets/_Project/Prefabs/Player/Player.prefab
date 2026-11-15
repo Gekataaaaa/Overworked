@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 5173442508607569003}
   - component: {fileID: 5434539214862218207}
   - component: {fileID: 8271664874671334794}
+  - component: {fileID: 7316224059187241901}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -758,3 +759,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &7316224059187241901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5671645596282160801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77fe7eb008c4a6e84487cdb2bc55b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Overworked::Overworked.Footsteps
+  stepsRecording: {fileID: 8300000, guid: e0db59982abb418fa698f7c663b4132d, type: 3}
+  footfallFrames:
+  - {fileID: 21300000, guid: db72df29a78343b9961acb5c43fecb5d, type: 3}
+  - {fileID: 21300000, guid: 5fd0be18d02d4d309cc2019fa975fab9, type: 3}
+  body: {fileID: 8869979295154265487}
+  volume: 0.35
+  pitchJitter: 0.04
+  maxSteps: 12
+  stepLength: 0.35
+  minGap: 0.3
+  threshold: 0.3
+  stepPeak: 0.9

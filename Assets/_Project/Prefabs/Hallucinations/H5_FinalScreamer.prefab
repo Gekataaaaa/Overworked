@@ -377,3 +377,10 @@ MonoBehaviour:
   holdTime: 0.8
   shake: 0.03
   fadeOut: 0.1
+  noise: 1
+  noiseHold: 0.45
+  noiseFade: 0.55
+  noiseAlpha: 0.75
+  noiseFps: 30
+  noiseSound: {fileID: 8300000, guid: aee86af07f104ae08fa614d566cb2a38, type: 3}
+  noiseVolume: 0.45

@@ -17,6 +17,7 @@
 | `SceneTransitionManager.Instance.Load(string)` | любая сцена по имени; во время перехода вызов игнорируется |
 | `SceneTransitionManager.Instance.IsLoading` | идёт переход |
 | `event OnSceneLoaded(string)` | сцена загружена, экран ещё чёрный |
+| `event FadeInStarted` | экран начинает проявляться (конец затемнения любого перехода) |
 | `FadeController.Instance.FadeOut(sec, done)` / `FadeIn(sec, done)` | затемнение/проявление (unscaled time, работает на паузе) |
 | `FadeController.Instance.SetBlack(bool)` | мгновенно чёрный / прозрачный экран |
 | `FadeController.Instance.IsBlack` | экран полностью чёрный |
@@ -27,9 +28,9 @@
 `targetFloor` — куда ведёт, `SetLocked(bool)` — запереть/открыть из сценария, `Prompt` — текст
 подсказки. E и подсказку обрабатывает `InteractionSystem` (P2). Галочка **`standaloneE`** (выключена)
 нужна только в тестовых сценах без InteractionSystem: тогда лестница сама ловит E.
-По E играет звук спуска `descendSound` (в префабе — `Audio/SFX/SFX_StairsDown`): через
-`AudioManager.PlaySfxFading` он идёт поверх затемнения, `descendHold` (2.5 с) в полную громкость и
-затухает за `descendFade` (1.5 с) уже на новом этаже.
+По E играет звук спуска `descendSound` (в префабе — `Audio/SFX/SFX_StairsDown`) — только на чёрном экране:
+начинается вместе с уходом в чёрное и гаснет за `descendFade` (0.15 с), как только новый этаж начинает
+проявляться (событие `SceneTransitionManager.FadeInStarted`).
 
 **Каркасы этажей** — меню **Overworked → P1 → Build Floor Skeletons**: коридор, двери с подписями,
 комнаты под коридором (EntryPoint, ExitDoor, выключенная камера комнаты), игрок, камера, лестница.

@@ -3557,7 +3557,7 @@ MonoBehaviour:
   credits: {fileID: 913849663}
   creditsText: {fileID: 1511097451}
   creditsLines: {fileID: 11400000, guid: 5761368972145d841b054e8e2384cd7e, type: 2}
-  creditsTime: 12
+  creditsTime: 20
   monitorBeep: {fileID: 0}
   ventilatorLoop: {fileID: 0}
   flatlineLoop: {fileID: 0}

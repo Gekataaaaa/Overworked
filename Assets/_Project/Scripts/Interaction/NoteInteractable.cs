@@ -18,12 +18,19 @@ namespace Overworked
         [Tooltip("Реплики Дэнни после записки")]
         [SerializeField] DialogueData afterDialogue;
 
+        [Tooltip("Шорох бумаги, когда Дэнни берёт записку (Audio/SFX/SFX_Paper). Пусто — без звука")]
+        [SerializeField] AudioClip paperSound;
+
+        [Tooltip("Громкость шороха 0..1")]
+        [Range(0f, 1f)] [SerializeField] float paperVolume = 0.8f;
+
         /// <inheritdoc/>
         public override bool CanInteract => base.CanInteract && !used;
 
         protected override void OnInteract()
         {
             busy = true;
+            if (paperSound != null && AudioManager.Instance != null) AudioManager.Instance.PlaySfx(paperSound, paperVolume);
             LockPlayer(true);
             if (UIManager.Instance != null)
                 UIManager.Instance.ShowFullscreenText(TextFormatter.Format(noteText), Closed);

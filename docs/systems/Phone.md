@@ -52,7 +52,9 @@ UI собирается меню **Overworked → P3 → Build Phone UI** (пе�
 - Во время мини-игр (`MiniGameHost.IsOpen`) телефон не открывается.
 - Кнопка телефона видна только когда в сцене есть игрок (`PlayerController.Instance`): в меню и прологе её нет.
   В WhiteRoom HUD скрыт — сцена должна вызвать `UIManager.SetHudVisible(HudPart.Phone, false)`.
-- Звук вибрации — `Audio/UI/Resources/UI_PhoneVibrate.wav` (сгенерирован: два «бзз» с дребезгом, 0.8 с),
-  играет через `AudioManager.PlaySfx`; свой клип можно поставить в поле `vibrateClip` на `MessageManager`.
+- Звук вибрации — `Audio/UI/Resources/UI_PhoneVibrate.mp3`: три коротких вибрации телефона (бзз — бзз — бзззз,
+  1.7 с), вырезаны из записи soundreality «phone vibration» (3.22–4.94 с, по кадрам mp3, без перекодирования).
+  Играет через `AudioManager.PlaySfx` на громкости `vibrateVolume` = 1; свой клип можно поставить в поле
+  `vibrateClip` на `MessageManager`.
 - Глитч-сообщения Max (`▓▒░`, зачёркивание) берут символы из запасного PT Sans — проверить, все ли есть.
 - `PhoneTester` — только для `Sandbox_P3`.

@@ -15,9 +15,9 @@
 | Компонент | Что делает | Главные поля |
 |---|---|---|
 | `Inspectable` | описание («ДО») и реплики Дэнни **при подходе**, без E | `dialogue`, `once` |
-| `NoteInteractable` | текст на весь экран → тост → реплики | `noteText`, `receivedToast`, `afterDialogue` |
-| `PickupInteractable` | предмет исчезает, флаг, тост | `setsFlag` ("MaxPass"), `receivedToast` |
-| `DrawerInteractable` | содержимое (описание) → пауза и вторые реплики (по желанию) → флаг, тост | `contentsDialogue`, `afterPauseDialogue`, `setsFlag` |
+| `NoteInteractable` | шорох бумаги → текст на весь экран → тост → реплики | `noteText`, `receivedToast`, `afterDialogue`, `paperSound` (`SFX_Paper`) |
+| `PickupInteractable` | предмет исчезает, флаг, тост, звук подбора | `setsFlag` ("MaxPass"), `receivedToast`, `pickupSound` (`SFX_Pickup` — пластиковый щелчок с хвостом, 1 с: пропуск Макса — громкость 1, фонарик — 0.8; не для ключа 102 и бумаг) |
+| `DrawerInteractable` | звук открытия → (документ листом A4 с шорохом бумаги) → содержимое (описание) → пауза и вторые реплики (по желанию) → ящик закрывается со звуком (`closeWhenDone`) → флаг, тост | `contentsDialogue`, `afterPauseDialogue`, `setsFlag`, `openSound` / `closeSound` (`SFX_DrawerOpen` / `SFX_DrawerClose`), `paperSound`, `closeWhenDone` (Room_101 — выкл.: тумба остаётся открытой, `Room101_Drawer_Open`) |
 | `DoorInteractable` | вход/выход из комнаты (fade → телепорт → смена камеры → fade) или запертая дверь | `target`, `cameraOn`, `cameraOff`, `doorLocked`, `unlockFlag`, `lockedMessage`, `onLockedTried` |
 | `PersonInteractable` | сжимается в точку и исчезает | `visual`, `shrinkTime`, `afterDialogue` |
 | `TurnstileInteractable` | своя карта → отказ + `onDenied`; с `passFlag` → считыватель | `cardReader`, `passFlag`, `deniedDialogue` |

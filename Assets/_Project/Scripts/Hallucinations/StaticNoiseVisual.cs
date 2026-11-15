@@ -20,6 +20,12 @@ namespace Overworked
         [Tooltip("Смена кадра помех, раз в секунду")]
         [SerializeField] float fps = 20f;
 
+        [Header("Звук")]
+        [Tooltip("Шипение помех (Audio/Horror/SFX_StaticNoise — шум заставки Tiny UFO). Пусто — без звука")]
+        [SerializeField] AudioClip noiseSound;
+        [Tooltip("Громкость шипения 0..1 (в Tiny UFO — 0.3)")]
+        [Range(0f, 1f)] [SerializeField] float noiseVolume = 0.3f;
+
         [Header("Надпись сквозь помехи")]
         [Tooltip("Текст, который на миг проступает (пусто — без надписи)")]
         [SerializeField] string label = "";
@@ -62,6 +68,8 @@ namespace Overworked
 
             SeenIfNeeded(hallucination);
             HitIfNeeded(hallucination);
+            var audio = AudioManager.Instance;
+            var hiss = audio != null ? audio.PlaySfxHeld(noiseSound, noiseVolume, true) : null;
             float nextFrame = 0f;
             for (float t = 0f; t < duration; t += Time.deltaTime)
             {
@@ -77,6 +85,8 @@ namespace Overworked
                 if (text != null) text.enabled = t >= labelAt && t < labelAt + labelTime;
                 yield return null;
             }
+            // Короткий хвост, а не обрыв — без щелчка.
+            if (audio != null) audio.StopSfx(hiss, 0.08f);
             Destroy(root.gameObject);
         }
     }

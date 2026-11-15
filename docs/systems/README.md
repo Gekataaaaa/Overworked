@@ -24,3 +24,6 @@
 | Галлюцинации, силуэты, скример (заглушки-квадраты) | P4 | [Hallucinations.md](Hallucinations.md) |
 | GlitchVanish — «лагающее» исчезновение фигуры (Room_101) | P1 | [GlitchVanish.md](GlitchVanish.md) |
 | SaveSystem — сохранение на диск (чекпоинт этажа), Continue после перезапуска | P1 | [SaveSystem.md](SaveSystem.md) |
+| Footsteps — шаги Дэнни в такт анимации ходьбы | P1 | [Footsteps.md](Footsteps.md) |
+| LampHum — звуки ламп в кадре: гул и треск мигания | P1 | [LampHum.md](LampHum.md) |
+| ComputerHum — гул работающих компьютеров в кадре | P1 | [ComputerHum.md](ComputerHum.md) |

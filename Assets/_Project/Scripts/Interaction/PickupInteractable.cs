@@ -17,11 +17,19 @@ namespace Overworked
         [Tooltip("Что спрятать после подбора. Пусто — весь объект")]
         [SerializeField] GameObject hideOnPickup;
 
+        [Tooltip("Звук подбора (Audio/SFX/SFX_Pickup — пластиковый щелчок: карта, фонарик). Пусто — без звука; " +
+                 "металлическому ключу и бумагам этот звук не ставить")]
+        [SerializeField] AudioClip pickupSound;
+
+        [Tooltip("Громкость звука подбора 0..1")]
+        [Range(0f, 1f)] [SerializeField] float pickupVolume = 0.8f;
+
         /// <inheritdoc/>
         public override bool CanInteract => base.CanInteract && !used;
 
         protected override void OnInteract()
         {
+            if (pickupSound != null && AudioManager.Instance != null) AudioManager.Instance.PlaySfx(pickupSound, pickupVolume);
             Toast(receivedToast);
             // Finish до выключения объекта: onDone должен дойти до сценария, пока объект ещё жив.
             Finish();

@@ -7,10 +7,10 @@ using UnityEngine.UI;
 namespace Overworked
 {
     /// <summary>
-    /// Сцена WhiteRoom целиком (паспорт, раздел 10): белое пространство, HUD скрыт, слышен только пульс,
-    /// Дэнни идёт только вправо и говорит с игроком (реплики — на WhiteRoomTrigger по пути).
-    /// У кровати: Дэнни ложится, пульс равномерно гаснет до нуля, под него — писк кардиомонитора и ИВЛ,
-    /// затем непрерывный сигнал, экран растворяется в белом → титры → MainMenu.
+    /// Сцена WhiteRoom целиком (паспорт, раздел 10): белое пространство, HUD скрыт, полная тишина — слышны только
+    /// шаги Дэнни (удары сердца и звук печати субтитров заглушены), Дэнни идёт только вправо и говорит с игроком
+    /// (реплики — на WhiteRoomTrigger по пути). У кровати: Дэнни ложится, пульс (неслышно) равномерно гаснет до нуля,
+    /// под него — писк кардиомонитора на каждый удар, затем непрерывный сигнал, экран растворяется в белом → титры → MainMenu.
     /// Лежит на объекте WhiteRoom в сцене; собирается меню Overworked → P4 → Build White Room.
     /// </summary>
     public class WhiteRoomSequence : MonoBehaviour
@@ -45,7 +45,9 @@ namespace Overworked
         [Tooltip("Строки титров (ассет в Data/Dialogues): каждая строка — с новой строки")]
         [SerializeField] DialogueData creditsLines;
         [Tooltip("Сколько секунд титры на экране; любая клавиша после половины времени — сразу в меню")]
-        [SerializeField] float creditsTime = 12f;
+        [SerializeField] float creditsTime = 20f;
+        [Tooltip("Минимальный размер шрифта титров: длинные титры уменьшаются до него, чтобы влезть в экран целиком")]
+        [SerializeField] float creditsMinFontSize = 14f;
 
         [Header("Звуки (пусто — простые сгенерированные заглушки)")]
         [Tooltip("Один писк кардиомонитора — звучит на каждый удар сердца")]
@@ -87,6 +89,10 @@ namespace Overworked
             // Со скримера могли остаться фон и музыка — здесь слышен только пульс.
             if (AudioManager.Instance != null) AudioManager.Instance.StopAll();
             if (HeartbeatManager.Instance != null) HeartbeatManager.Instance.EnterWhiteRoom();
+            // Полная тишина: только шаги, писк монитора в конце. Сердце считается дальше (по нему пищит монитор),
+            // но его удары не слышны; субтитры печатаются беззвучно.
+            SetHeartbeatSoundMuted(true);
+            UiSounds.MuteTyping = true;
             if (UIManager.Instance != null)
                 foreach (HudPart part in Enum.GetValues(typeof(HudPart)))
                 {
@@ -144,8 +150,6 @@ namespace Overworked
 
             var heart = HeartbeatManager.Instance;
             if (heart != null) heart.FadeBpm(0f, heartFadeTime);
-            // На кровати слышен только аппарат: удары сердца глушим, пульс считается дальше (писк монитора по OnBeat).
-            SetHeartbeatSoundMuted(true);
             float heartStopsAt = Time.time + heartFadeTime;
 
             yield return new WaitForSeconds(hospitalSoundsDelay);
@@ -181,18 +185,26 @@ namespace Overworked
                 creditsText.text = sb.ToString();
             }
 
-            for (float t = 0f; t < 2f; t += Time.deltaTime)
-            {
-                credits.alpha = t / 2f;
-                yield return null;
-            }
-            credits.alpha = 1f;
+            credits.alpha = 0f;
 
-            float start = Time.time;
-            while (Time.time - start < creditsTime)
+            // Все титры — на одном экране: шрифт сам уменьшается, пока строки не влезут в рамку (без прокрутки).
+            if (creditsText != null)
             {
+                // Максимум — размер из сцены (34): короткие титры остаются крупными.
+                if (!creditsText.enableAutoSizing) creditsText.fontSizeMax = creditsText.fontSize;
+                creditsText.enableAutoSizing = true;
+                creditsText.fontSizeMin = creditsMinFontSize;
+                creditsText.ForceMeshUpdate();
+            }
+            float duration = creditsTime;
+
+            // Титры проявляются за 2 с.
+            float start = Time.time;
+            while (Time.time - start < duration)
+            {
+                credits.alpha = Mathf.Clamp01((Time.time - start) / 2f);
                 // Пропуск — только после половины: случайно зажатая клавиша не обрывает титры сразу.
-                if (Time.time - start > creditsTime / 2f && AnyKeyPressed()) break;
+                if (Time.time - start > duration / 2f && AnyKeyPressed()) break;
                 yield return null;
             }
 
@@ -246,6 +258,7 @@ namespace Overworked
             if (SanityManager.Instance != null) SanityManager.Instance.SetSanityInstant(100f);
             if (PlayerController.Instance != null) PlayerController.Instance.SetOnlyRight(false);
             SetHeartbeatSoundMuted(false);
+            UiSounds.MuteTyping = false;
         }
 
         /// <summary>

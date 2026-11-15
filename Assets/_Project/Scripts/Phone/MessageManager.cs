@@ -17,7 +17,7 @@ namespace Overworked
 
         [Range(0f, 1f)]
         [Tooltip("Громкость вибрации 0..1")]
-        [SerializeField] float vibrateVolume = 0.4f;
+        [SerializeField] float vibrateVolume = 1f;
 
         [Tooltip("Тост о новом сообщении от Макса")]
         [SerializeField] string toastMax = "New message from Max";

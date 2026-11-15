@@ -144,7 +144,7 @@ namespace Overworked
             if (key || click)
             {
                 skipPressed = true;
-                UiSounds.Click();
+                if (!UiSounds.MuteTyping) UiSounds.Click();
             }
         }
 

@@ -2608,7 +2608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Overworked::Overworked.MessageManager
   vibrateClip: {fileID: 0}
-  vibrateVolume: 0.4
+  vibrateVolume: 1
   toastMax: New message from Max
   toastBoss: New message from the Boss
 --- !u!114 &1890418120186771636

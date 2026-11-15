@@ -14,28 +14,60 @@ MonoBehaviour:
   m_EditorClassIdentifier: Overworked::Overworked.DialogueData
   Lines:
   - Speaker: 2
-    Text: <size=150%>OVERWORKED</size>
+    Text: "<size=150%>OVERWORKED</size>"
   - Speaker: 2
     Text: 
   - Speaker: 2
-    Text: Programming
+    Text: "<color=#76787c>Game Director</color> \u2014 Artur Shramchenko"
   - Speaker: 2
-    Text: "Programmer 1 \u2014 Core / Player"
+    Text: "<color=#76787c>Game Designer</color> \u2014 Ilona Kostiuk, Anastasiia Koloda"
   - Speaker: 2
-    Text: "Programmer 2 \u2014 Interaction / Mini-games"
+    Text: "<color=#76787c>Narrative Director</color> \u2014 Ilona Kostiuk"
   - Speaker: 2
-    Text: "Programmer 3 \u2014 Phone / Dialogue / Story"
+    Text: "<color=#76787c>Writer</color> \u2014 Ilona Kostiuk"
   - Speaker: 2
-    Text: "Programmer 4 \u2014 Horror / Sound"
+    Text: "<color=#76787c>Level Designer</color> \u2014 Artur Shramchenko, Nazar Nedilko, Fedor Mukhin, Danil Startsev"
+  - Speaker: 2
+    Text: "<color=#76787c>Mini-game Designer</color> \u2014 Danil Startsev, Artur Shramchenko"
+  - Speaker: 2
+    Text: "<color=#76787c>Lead Programmer</color> \u2014 Artur Shramchenko"
+  - Speaker: 2
+    Text: "<color=#76787c>Gameplay Programmer</color> \u2014 Danil Startsev"
+  - Speaker: 2
+    Text: "<color=#76787c>Systems Programmer</color> \u2014 Artur Shramchenko"
+  - Speaker: 2
+    Text: "<color=#76787c>UI Programmer</color> \u2014 Nazar Nedilko"
+  - Speaker: 2
+    Text: "<color=#76787c>Narrative Programmer</color> \u2014 Nazar Nedilko"
+  - Speaker: 2
+    Text: "<color=#76787c>Horror Systems Programmer</color> \u2014 Fedor Mukhin, Artur Shramchenko"
+  - Speaker: 2
+    Text: "<color=#76787c>Tools Programmer</color> \u2014 Danil Startsev"
+  - Speaker: 2
+    Text: "<color=#76787c>Art Director</color> \u2014 Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>Character Artist</color> \u2014 Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>Concept Artist</color> \u2014 Anastasiia Koloda, Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>Animator</color> \u2014 Ilona Kostiuk, Fedor Mukhin"
+  - Speaker: 2
+    Text: "<color=#76787c>Environment Artist</color> \u2014 Anastasiia Koloda, Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>Prop Artist</color> \u2014 Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>Lighting & VFX Artist</color> \u2014 Artur Shramchenko, Fedor Mukhin, Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>UI/UX Designer</color> \u2014 Anastasiia Koloda, Fedor Mukhin"
+  - Speaker: 2
+    Text: "<color=#76787c>UI Artist</color> \u2014 Anastasiia Koloda"
+  - Speaker: 2
+    Text: "<color=#76787c>Sound Designer</color> \u2014 Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>Audio Implementation</color> \u2014 Ilona Kostiuk"
+  - Speaker: 2
+    Text: "<color=#76787c>AI Artist</color> \u2014 Ilona Kostiuk"
   - Speaker: 2
     Text: 
   - Speaker: 2
-    Text: Art
-  - Speaker: 2
-    Text: "Artist 1 \u2014 Characters"
-  - Speaker: 2
-    Text: "Artist 2 \u2014 Environment"
-  - Speaker: 2
-    Text: 
-  - Speaker: 2
-    Text: Thank you for playing, {name}.
+    Text: "Thank you for playing, {name}."

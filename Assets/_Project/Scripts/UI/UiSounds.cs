@@ -98,11 +98,21 @@ namespace Overworked
 
         // ------------------------------------------------------------ API
 
+        /// <summary>
+        /// Заглушить звук печати субтитров и клик пропуска реплики (Белая комната: полная тишина, кроме шагов
+        /// и писка монитора). Клики меню не трогает. Ставит и снимает WhiteRoomSequence.
+        /// </summary>
+        public static bool MuteTyping { get; set; }
+
+        // Enter Play Mode без перезагрузки домена: тишина Белой комнаты не должна перейти в следующий запуск.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetMute() => MuteTyping = false;
+
         /// <summary>Напечатана новая буква — звук печати играет, пока буквы идут (зовут каждый кадр печати).</summary>
         public static void TypingTick()
         {
             var s = Instance;
-            if (s == null || s.typing == null) return;
+            if (s == null || s.typing == null || MuteTyping) return;
             s.lastTypeTick = Time.unscaledTime;
             if (!s.typingSource.isPlaying) s.typingSource.Play();
         }

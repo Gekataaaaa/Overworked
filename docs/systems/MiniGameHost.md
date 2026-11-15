@@ -24,6 +24,8 @@ public class MyGame : MonoBehaviour, IMiniGame
 под ними сообщение `screenText` (F2_Monitor201), всегда чуть видное. Ползунок «Sharpness» убирает помехи,
 «Frequency» — дрожание текста; каждый работает, когда подведён к своему скрытому значению
 (в пределах `revealWindow`), и у цели становится зелёным. Текст проявился на `winClarity` — победа.
+Помехи шипят (`noiseSound` — `Audio/Horror/SFX_StaticNoise`, шум заставки Tiny UFO): громкость следует силе
+помех (`noiseVolume` 0.3 при самых сильных), на победе — тишина, при выходе шипение гаснет.
 Легче/сложнее: `revealWindow` больше / `winClarity` меньше. W/S — выбор, A/D — значение, мышь — тянуть; Esc — выход.
 
 **Мини-игра 4 — `TinyUfoMiniGame`:** грузит `gc26_spinv_Main` additive, на время игры выключает

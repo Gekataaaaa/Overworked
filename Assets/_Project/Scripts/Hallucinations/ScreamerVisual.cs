@@ -43,6 +43,10 @@ namespace Overworked
         [Range(0f, 1f)] [SerializeField] float noiseAlpha = 0.75f;
         [Tooltip("Смена кадров шума в секунду")]
         [SerializeField] float noiseFps = 30f;
+        [Tooltip("Шипение шума (Audio/Horror/SFX_StaticNoise — шум заставки Tiny UFO). Пусто — без звука")]
+        [SerializeField] AudioClip noiseSound;
+        [Tooltip("Громкость шипения на пике 0..1; уходит вместе с картинкой шума")]
+        [Range(0f, 1f)] [SerializeField] float noiseVolume = 0.45f;
 
         // Несколько готовых кадров шума на всю игру: генерировать каждый кадр — дорого.
         const int NoiseW = 320, NoiseH = 180, NoiseVariants = 4;
@@ -118,10 +122,13 @@ namespace Overworked
             Stretch(rect);
             rect.SetAsLastSibling();   // поверх кадров броска
 
+            // Шипение идёт вместе с картинкой шума: та же сила, тот же спад.
+            var audio = AudioManager.Instance;
+            var hiss = audio != null ? audio.PlaySfxHeld(noiseSound, noiseVolume, true) : null;
             float frame = 1f / Mathf.Max(1f, noiseFps), next = 0f;
             for (float t = 0f; t < noiseHold + noiseFade; t += Time.deltaTime)
             {
-                if (noiseImage == null) yield break;
+                if (noiseImage == null) break;
                 if (t >= next)
                 {
                     next = t + frame;
@@ -133,8 +140,10 @@ namespace Overworked
                 float k = t < noiseHold ? 1f : 1f - Mathf.SmoothStep(0f, 1f, (t - noiseHold) / noiseFade);
                 float a = noiseAlpha * k * (t < noiseHold ? Random.Range(0.85f, 1f) : 1f);
                 noiseImage.color = new Color(1f, 1f, 1f, a);
+                if (audio != null) audio.SetSfxVolume(hiss, noiseVolume * k);
                 yield return null;
             }
+            if (audio != null) audio.StopSfx(hiss, 0.05f);
             if (noiseImage != null) Destroy(noiseImage.gameObject);
         }
 

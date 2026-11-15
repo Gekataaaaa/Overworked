@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 namespace Overworked
 {
@@ -35,6 +37,10 @@ namespace Overworked
         [SerializeField] float ambientFade = 1f;
 
         AudioSource music, ambient, sfx, heartbeat;
+        // Отдельный источник для звуков со своей высотой тона (шаги): pitch общего sfx исказил бы остальные звуки.
+        AudioSource pitched;
+        // Источники PlaySfxHeld, которые ещё звучат.
+        readonly List<AudioSource> held = new List<AudioSource>();
         Coroutine ambientRoutine;
 
         protected override void Awake()
@@ -45,6 +51,21 @@ namespace Overworked
             ambient = CreateSource("Ambient", ambientGroup, true);
             sfx = CreateSource("SFX", sfxGroup, false);
             heartbeat = CreateSource("Heartbeat", heartbeatGroup, false);
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
+        }
+
+        protected override void OnDestroy()
+        {
+            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+            base.OnDestroy();
+        }
+
+        // Зацикленный звук (шипение помех) принадлежит сцене: если её сменили посреди эффекта, его некому
+        // остановить — гасим сами. Незацикленные (шаги по лестнице) нарочно переживают смену сцены.
+        void OnActiveSceneChanged(Scene from, Scene to)
+        {
+            foreach (var src in new List<AudioSource>(held))
+                if (src != null && src.loop) StopSfx(src, 0f);
         }
 
         AudioSource CreateSource(string channel, AudioMixerGroup group, bool loop)
@@ -70,29 +91,64 @@ namespace Overworked
         }
 
         /// <summary>
-        /// Звук на канале SFX на своём источнике: holdSeconds в полную громкость, затем затухает за fadeSeconds
-        /// и источник удаляется. Источник живёт в _Systems, поэтому переживает смену сцены (шаги по лестнице).
+        /// Короткий звук на канале SFX с высотой тона pitch (1 — как есть). Для частых одинаковых звуков (шаги):
+        /// небольшой разброс тона убирает «механичность». Звуки с разным pitch не должны перекрываться.
         /// </summary>
-        public void PlaySfxFading(AudioClip c, float volume, float holdSeconds, float fadeSeconds)
+        public void PlaySfxPitched(AudioClip c, float volume, float pitch)
         {
             if (c == null) return;
-            var src = CreateSource("SFX_Fading", sfxGroup, false);
+            if (pitched == null) pitched = CreateSource("SFX_Pitched", sfxGroup, false);
+            pitched.pitch = pitch;
+            pitched.PlayOneShot(c, volume * sfxVolume);
+        }
+
+        /// <summary>
+        /// Звук на канале SFX на своём источнике, пока его не остановят <see cref="StopSfx"/>; доиграл сам —
+        /// источник удаляется. Источник живёт в _Systems, поэтому переживает смену сцены (шаги по лестнице).
+        /// loop — крутить по кругу до StopSfx (шипение помех). Громкость меняется через <see cref="SetSfxVolume"/>.
+        /// </summary>
+        public AudioSource PlaySfxHeld(AudioClip c, float volume, bool loop = false)
+        {
+            if (c == null) return null;
+            var src = CreateSource("SFX_Held", sfxGroup, loop);
             src.clip = c;
             src.volume = volume * sfxVolume;
             src.Play();
-            StartCoroutine(FadeOutAndRemove(src, holdSeconds, fadeSeconds));
+            held.Add(src);
+            StartCoroutine(RemoveWhenFinished(src));
+            return src;
         }
 
-        // Время unscaled: таймер идёт и при timeScale = 0 (переход между этажами не зависит от игрового времени).
-        IEnumerator FadeOutAndRemove(AudioSource src, float hold, float fade)
+        /// <summary>Громкость звука из <see cref="PlaySfxHeld"/> на ходу (0..1, умножается на канал SFX).</summary>
+        public void SetSfxVolume(AudioSource src, float volume)
         {
-            for (float t = 0f; t < hold && Alive(src); t += Time.unscaledDeltaTime) yield return null;
+            if (src != null) src.volume = volume * sfxVolume;
+        }
+
+        /// <summary>Гасит звук из <see cref="PlaySfxHeld"/> за fadeSeconds (0 — сразу) и удаляет источник.</summary>
+        public void StopSfx(AudioSource src, float fadeSeconds)
+        {
+            if (src == null) return;
+            StartCoroutine(FadeOutAndRemove(src, fadeSeconds));
+        }
+
+        IEnumerator RemoveWhenFinished(AudioSource src)
+        {
+            while (Alive(src)) yield return null;
+            held.Remove(src);
+            if (src != null) Destroy(src.gameObject);
+        }
+
+        // Время unscaled: затухание идёт и при timeScale = 0.
+        IEnumerator FadeOutAndRemove(AudioSource src, float fade)
+        {
             float start = src != null ? src.volume : 0f;
             for (float t = 0f; t < fade && Alive(src); t += Time.unscaledDeltaTime)
             {
                 src.volume = start * (1f - t / fade);
                 yield return null;
             }
+            held.Remove(src);
             if (src != null) Destroy(src.gameObject);
         }
 
@@ -164,6 +220,8 @@ namespace Overworked
             ambient.clip = null;
             sfx.Stop();
             heartbeat.Stop();
+            foreach (var src in held) if (src != null) Destroy(src.gameObject);
+            held.Clear();
             Debug.Log("[Audio] StopAll");
         }
     }

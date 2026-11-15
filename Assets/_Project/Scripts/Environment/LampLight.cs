@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -21,14 +22,31 @@ namespace Overworked
         [Tooltip("Яркость трубки, когда свет полностью погас (доля обычной)")]
         [Range(0f, 1f)] [SerializeField] float tubeDarkLevel = 0.25f;
 
+        [Tooltip("Скачок яркости за кадр (доля обычной), который считается миганием, — лёгкое дрожание LightFlicker меньше")]
+        [Range(0.05f, 1f)] [SerializeField] float flickerJump = 0.3f;
+
+        [Tooltip("Сколько секунд после скачка лампа ещё считается мигающей (звук не рвётся между вспышками)")]
+        [SerializeField] float flickerHold = 0.3f;
+
         /// <summary>Трубка лампы (её яркостью управляет сама лампа).</summary>
         public SpriteRenderer Tube => tube;
 
         /// <summary>Конус света лампы.</summary>
         public SpriteRenderer Cone => cone;
 
+        /// <summary>Включённые лампы сцены (по ним LampHum решает, гудят ли лампы в кадре).</summary>
+        public static readonly List<LampLight> Active = new List<LampLight>();
+
+        // Enter Play Mode без перезагрузки домена: список не должен тянуть лампы прошлого запуска.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetActive() => Active.Clear();
+
+        /// <summary>Лампа сейчас мигает (были резкие скачки яркости за последние flickerHold секунд) — LampHum трещит.</summary>
+        public bool IsFlickering => Time.time < flickerUntil;
+
         Light2D lamp;
         float baseIntensity;
+        float lastLevel = -1f, flickerUntil;
         Color tubeColor, coneColor;
 
         /// <summary>
@@ -52,10 +70,17 @@ namespace Overworked
             if (cone != null) coneColor = cone.color;
         }
 
+        void OnEnable() => Active.Add(this);
+        void OnDisable() => Active.Remove(this);
+
         // В LateUpdate: мерцание P4 меняет intensity в Update/корутине этого же кадра.
         void LateUpdate()
         {
             float k = lamp.enabled ? lamp.intensity / baseIntensity : 0f;
+            // Мигание узнаём по самой лампе: кто бы ни дёргал свет (LightFlicker, галлюцинация, сценарий).
+            float level = Mathf.Clamp01(k);
+            if (lastLevel >= 0f && Mathf.Abs(level - lastLevel) >= flickerJump) flickerUntil = Time.time + flickerHold;
+            lastLevel = level;
             if (tube != null)
             {
                 float t = Mathf.Lerp(tubeDarkLevel, 1f, Mathf.Clamp01(k));
