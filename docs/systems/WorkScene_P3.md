@@ -10,6 +10,7 @@ Ctrl+Z, повторный запуск пересоздаёт только св
 |---|---|
 | Work: Kitchen Table For Max's Pass | `Kitchen/~KitchenTable` — стол под пропуском Макса (верх — по низу карточки, низ — по полу). Цвет и материал — как стол Чарльза в `GrayboxTool` |
 | Work: Build Staff Canteen | Столовая для персонала: комната `Rooms/Canteen` под кухней (y −20 от неё), дверь `Kitchen/Door_Canteen` у правой стены кухни («[E] Enter the staff canteen», копия двери выхода кухни — тот же размер и высота), точка `Kitchen/CanteenReturn`, камера `Cameras/CM Canteen`, дверь обратно «Back to the kitchen» |
+| Work: Widen Kitchen And Canteen To 3 Screens | Кухня и столовая шириной 3 экрана (57.6 юнита по границе камеры): правая стена, `CameraBounds`, `~GrayBackdrop` и всё у правой стены (дверь в столовую, `CanteenReturn`) уезжают вправо; лампы кухни повторяются по длине (`Kitchen/~LightsRepeat`). Цель по ширине — повторный запуск ничего не меняет. Граница камеры по высоте поднимается до ±5.65 (если равна кадру 10.8, Confiner2D прибивает камеру к центру), кэш Confiner2D сбрасывается |
 
 **Столовая — вложенная комната.** Для неё «коридор» — кухня: `returnPoint` и `corridorCamera` указывают на кухню.
 `Room` рассчитан на «коридор ↔ комната», поэтому при выходе из столовой `onExit` вызывает `Kitchen.RestoreInside()` —
