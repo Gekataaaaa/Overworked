@@ -60,6 +60,16 @@ namespace Overworked
         /// <summary>Включён ли бег на этом игроке.</summary>
         public bool AllowRun => allowRun;
 
+        /// <summary>
+        /// Отладка (F9, DebugHotkeys): бесконечная стамина и бег вдвое быстрее обычного бега.
+        /// Статическое — держится между сценами до повторного F9.
+        /// </summary>
+        public static bool DebugFastRun;
+
+        // Сброс при каждом входе в Play: при выключенном Domain Reload статика пережила бы прошлый запуск.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetDebugFastRun() => DebugFastRun = false;
+
         /// <summary>Стамина 0..1 (для полоски под Дэнни).</summary>
         public float Stamina01 => staminaMax > 0f ? stamina / staminaMax : 1f;
 
@@ -118,7 +128,8 @@ namespace Overworked
             float dir = State == PlayerState.Normal ? ReadInput() : 0f;
             IsMoving = Mathf.Abs(dir) > 0.01f;
             IsRunning = UpdateStamina(Time.fixedDeltaTime);
-            body.linearVelocity = new Vector2(dir * speed * (IsRunning ? runMultiplier : 1f), 0f);
+            float run = IsRunning ? runMultiplier * (DebugFastRun ? 2f : 1f) : 1f;
+            body.linearVelocity = new Vector2(dir * speed * run, 0f);
             if (IsMoving)
             {
                 Facing = dir > 0 ? 1 : -1;
@@ -139,7 +150,7 @@ namespace Overworked
             bool running = wantsRun && !Exhausted && stamina > 0f;
             if (running)
             {
-                stamina = Mathf.Max(0f, stamina - dt);
+                if (!DebugFastRun) stamina = Mathf.Max(0f, stamina - dt);   // F9 — стамина не тратится
                 lastRunTime = Time.time;
                 if (stamina <= 0f) Exhausted = true;
             }

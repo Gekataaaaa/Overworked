@@ -47,6 +47,247 @@ namespace Overworked.EditorTools
             if (count == 0) Debug.Log($"[Graybox] {scene.name}: сценариев на старте нет");
         }
 
+        /// <summary>
+        /// Удлиняет коридор этажа в 3 раза вперёд (вправо): правая стена и граница камеры уезжают, а всё, что стояло
+        /// в конце коридора (турникет, лестница, лампы у них), переносится в новый конец. Начало коридора, кухня и
+        /// объекты в середине остаются на месте. Серый фон пересобирается под новую длину. Отмена — Ctrl+Z.
+        /// </summary>
+        [MenuItem("Overworked/P1/Extend Corridor x3 In Open Scene")]
+        public static void ExtendCorridor()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            var corridor = GameObject.Find("Environment/Corridor");
+            var bounds = corridor != null ? corridor.transform.Find("CameraBounds")?.GetComponent<PolygonCollider2D>() : null;
+            var walls = corridor != null ? corridor.transform.Find("Walls") : null;
+            Transform left = null, right = null;
+            if (walls != null)
+                foreach (Transform w in walls)
+                {
+                    if (w.name.Contains("Left")) left = w;
+                    if (w.name.Contains("Right")) right = w;
+                }
+            if (bounds == null || left == null || right == null)
+            {
+                Debug.LogWarning($"[Graybox] {scene.name}: нет Environment/Corridor с CameraBounds и Walls/WallLeft, WallRight");
+                return;
+            }
+
+            Undo.SetCurrentGroupName("Extend Corridor");
+            int group = Undo.GetCurrentGroup();
+
+            float length = right.position.x - left.position.x;
+            float delta = length * 2f;                 // было L, станет 3L
+            float endZone = right.position.x - 8f;     // всё, что правее, — «конец коридора»
+
+            // 1. Правая стена и граница камеры.
+            Undo.RecordObject(right, "Extend Corridor");
+            right.position += Vector3.right * delta;
+            Undo.RecordObject(bounds, "Extend Corridor");
+            float maxLocal = float.MinValue;
+            foreach (var p in bounds.points) maxLocal = Mathf.Max(maxLocal, p.x);
+            var pts = bounds.points;
+            for (int i = 0; i < pts.Length; i++)
+                if (pts[i].x >= maxLocal - 0.01f) pts[i].x += delta / bounds.transform.lossyScale.x;
+            bounds.points = pts;
+
+            // 2. Конец коридора — в новый конец: турникет, лестница, лампы и прочее справа, кроме стен и фона.
+            int moved = 0;
+            var toMove = new List<Transform>();
+            foreach (var mb in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
+                if ((mb is TurnstileInteractable || mb is StairInteractable) && mb.gameObject.scene == scene)
+                    toMove.Add(mb.transform);
+            var lights = corridor.transform.Find("Lights");
+            if (lights != null)
+                foreach (Transform l in lights)
+                    if (l.position.x > endZone) toMove.Add(l);
+            foreach (var t in toMove)
+            {
+                Undo.RecordObject(t, "Extend Corridor");
+                t.position += Vector3.right * delta;
+                moved++;
+            }
+
+            // 3. Серый фон под новую длину.
+            BuildBackdrops(SB.EnsureSquareSprite());
+
+            Undo.CollapseUndoOperations(group);
+            EditorSceneManager.MarkSceneDirty(scene);
+            Debug.Log($"[Graybox] {scene.name}: коридор удлинён ×3 (+{delta:0.#} юнитов вправо), перенесено в конец: {moved}");
+        }
+
+        const string SideName = "Corridor_B";
+        static readonly Color PassageColor = new Color(0.06f, 0.06f, 0.07f);
+
+        /// <summary>
+        /// Второй коридор: проход шириной в две двери (тёмный прямоугольник) в центре основного коридора ведёт
+        /// в пустой коридор длиной 2/3 основного, который стоит в сцене над этажом. Обратно — такой же проход
+        /// в начале нового коридора (у левой стены), Дэнни появляется перед ним. Работает на механике комнат P2 (Room + DoorInteractable): затемнение,
+        /// телепорт, своя камера с границами. Повторный запуск пересоздаёт второй коридор. Отмена — Ctrl+Z.
+        /// </summary>
+        [MenuItem("Overworked/P1/Add Side Corridor In Open Scene")]
+        public static void AddSideCorridor()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            var corridor = GameObject.Find("Environment/Corridor");
+            var rooms = GameObject.Find("Environment/Rooms");
+            var cameras = GameObject.Find("Cameras");
+            var corridorCam = cameras != null ? cameras.transform.Find("CM Corridor") : null;
+            var mainBounds = corridor != null ? corridor.transform.Find("CameraBounds")?.GetComponent<PolygonCollider2D>() : null;
+            var walls = corridor != null ? corridor.transform.Find("Walls") : null;
+            Transform left = null, right = null;
+            if (walls != null)
+                foreach (Transform w in walls)
+                {
+                    if (w.name.Contains("Left")) left = w;
+                    if (w.name.Contains("Right")) right = w;
+                }
+            if (corridor == null || rooms == null || corridorCam == null || mainBounds == null || left == null || right == null)
+            {
+                Debug.LogWarning($"[Graybox] {scene.name}: нужен каркас этажа (Environment/Corridor, Rooms, Cameras/CM Corridor, стены)");
+                return;
+            }
+
+            Undo.SetCurrentGroupName("Add Side Corridor");
+            int group = Undo.GetCurrentGroup();
+            var square = SB.EnsureSquareSprite();
+            var unlit = AssetDatabase.LoadAssetAtPath<Material>(UnlitPath);
+
+            // Старый второй коридор, его камеру, проход и точку возврата — убираем (пересборка).
+            foreach (var old in new[] { rooms.transform.Find(SideName), cameras.transform.Find("CM " + SideName),
+                         corridor.transform.Find("Doors/Door_" + SideName), corridor.transform.Find("ReturnPoints/" + SideName) })
+                if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+
+            float mainLength = right.position.x - left.position.x;
+            float centerX = (left.position.x + right.position.x) / 2f;
+            float halfB = mainLength / 3f;                       // длина 2/3 основного → половина 1/3
+            float bottom = float.MaxValue, top = float.MinValue;
+            foreach (var p in mainBounds.points) { bottom = Mathf.Min(bottom, p.y); top = Mathf.Max(top, p.y); }
+            float originY = corridor.transform.position.y + (top - bottom) + 10f;   // над этажом, с запасом
+
+            // 1. Сам коридор: корень-«комната», стены, границы камеры, точка появления.
+            var root = new GameObject(SideName);
+            Undo.RegisterCreatedObjectUndo(root, "Add Side Corridor");
+            root.transform.SetParent(rooms.transform, false);
+            root.transform.position = new Vector3(centerX, originY, 0f);
+
+            var wallsB = new GameObject("Walls");
+            wallsB.transform.SetParent(root.transform, false);
+            foreach (var (name, x) in new[] { ("WallLeft", -halfB - 0.5f), ("WallRight", halfB + 0.5f) })
+            {
+                var w = new GameObject(name);
+                w.transform.SetParent(wallsB.transform, false);
+                w.transform.localPosition = new Vector3(x, 0f, 0f);
+                w.AddComponent<BoxCollider2D>().size = new Vector2(1f, top - bottom);
+            }
+
+            var boundsGo = new GameObject("CameraBounds");
+            boundsGo.transform.SetParent(root.transform, false);
+            var bounds = boundsGo.AddComponent<PolygonCollider2D>();
+            bounds.isTrigger = true;
+            float bx = halfB + 1f;
+            bounds.points = new[] { new Vector2(-bx, bottom), new Vector2(bx, bottom), new Vector2(bx, top), new Vector2(-bx, top) };
+
+            // Вход и обратный проход — в начале нового коридора (у левой стены): Дэнни появляется перед проходом.
+            float startX = -halfB + 2.5f;
+            var entry = new GameObject("EntryPoint").transform;
+            entry.SetParent(root.transform, false);
+            entry.localPosition = new Vector3(startX, FloorY + 0.9f, 0f);
+
+            // 2. Камера коридора B — как у комнат: префаб камеры игрока, свои границы, выключена до входа.
+            var camPrefab = SB.EnsureCameraPrefab();
+            var cam = (GameObject)PrefabUtility.InstantiatePrefab(camPrefab, scene);
+            Undo.RegisterCreatedObjectUndo(cam, "Add Side Corridor");
+            cam.name = "CM " + SideName;
+            cam.transform.SetParent(cameras.transform, false);
+            cam.transform.position = new Vector3(centerX, originY, cam.transform.position.z);
+            cam.GetComponent<Unity.Cinemachine.CinemachineConfiner2D>().BoundingShape2D = bounds;
+            cam.SetActive(false);
+
+            // 3. Room + точка возврата в основном коридоре.
+            var back = new GameObject(SideName).transform;
+            var returnParent = corridor.transform.Find("ReturnPoints");
+            if (returnParent == null)
+            {
+                returnParent = new GameObject("ReturnPoints").transform;
+                returnParent.SetParent(corridor.transform, false);
+            }
+            back.SetParent(returnParent, false);
+            back.position = new Vector3(centerX, corridor.transform.position.y + FloorY + 0.9f, 0f);
+            Undo.RegisterCreatedObjectUndo(back.gameObject, "Add Side Corridor");
+
+            var room = root.AddComponent<Room>();
+            RoomWiring.Set(room, ("entryPoint", entry), ("returnPoint", back), ("roomCamera", cam), ("corridorCamera", corridorCam.gameObject));
+
+            // 4. Проходы: туда — в центре основного коридора, обратно — в начале нового.
+            // Размер — по двери в кухню: та же высота, ширина в две такие двери.
+            var size = KitchenDoorSize();
+            var passageSize = new Vector2(size.x * 2f, size.y);
+            var doorsParent = corridor.transform.Find("Doors");
+            Passage(doorsParent != null ? doorsParent : corridor.transform, "Door_" + SideName,
+                new Vector3(centerX, corridor.transform.position.y + FloorY, 0f), room,
+                DoorInteractable.Direction.IntoRoom, "Go through", passageSize, square, unlit);
+            Passage(root.transform, "ExitPassage", new Vector3(centerX + startX, originY + FloorY, 0f), room,
+                DoorInteractable.Direction.OutToCorridor, "Go back", passageSize, square, unlit);
+
+            // 5. Серый фон — и в новом коридоре.
+            BuildBackdrops(square);
+
+            Undo.CollapseUndoOperations(group);
+            EditorSceneManager.MarkSceneDirty(scene);
+            Debug.Log($"[Graybox] {scene.name}: второй коридор {SideName} ({halfB * 2f:0.#} юнитов) над этажом, проход в центре (x={centerX:0.#})");
+        }
+
+        /// <summary>
+        /// Размер двери в кухню по её спрайтам (в серой коробке — по квадрату). Нет кухни — дверь каркаса 1.4 × 2.5.
+        /// Высота — от пола (FloorY) до верха двери: проход тоже стоит на полу.
+        /// </summary>
+        static Vector2 KitchenDoorSize()
+        {
+            foreach (var door in Object.FindObjectsByType<DoorInteractable>(FindObjectsInactive.Include))
+            {
+                var so = new SerializedObject(door);
+                var room = so.FindProperty("room").objectReferenceValue as Component;
+                if (room == null || !room.name.Contains("Kitchen") ||
+                    so.FindProperty("direction").enumValueIndex != (int)DoorInteractable.Direction.IntoRoom) continue;
+                bool any = false;
+                var b = new Bounds();
+                foreach (var sr in door.GetComponentsInChildren<SpriteRenderer>(true))
+                {
+                    if (sr.sprite == null) continue;
+                    if (!any) { b = sr.bounds; any = true; } else b.Encapsulate(sr.bounds);
+                }
+                if (any) return new Vector2(b.size.x, b.max.y - (door.transform.root.position.y + FloorY));
+            }
+            return new Vector2(1.4f, 2.5f);
+        }
+
+        /// <summary>Проход шириной в две двери: тёмный прямоугольник от пола, триггер, DoorInteractable.</summary>
+        static void Passage(Transform parent, string name, Vector3 floorPos, Room room, DoorInteractable.Direction dir,
+                            string prompt, Vector2 size, Sprite square, Material unlit)
+        {
+            float width = size.x, height = size.y;
+            var go = new GameObject(name);
+            Undo.RegisterCreatedObjectUndo(go, "Add Side Corridor");
+            go.transform.SetParent(parent, true);
+            go.transform.position = floorPos + Vector3.up * (height / 2f);
+
+            var visual = new GameObject("~Graybox");
+            visual.transform.SetParent(go.transform, false);
+            var s = square.bounds.size;
+            visual.transform.localScale = new Vector3(width / s.x, height / s.y, 1f);
+            var sr = visual.AddComponent<SpriteRenderer>();
+            sr.sprite = square;
+            sr.color = PassageColor;
+            sr.sortingOrder = -8;
+            if (unlit != null) sr.sharedMaterial = unlit;
+
+            var col = go.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
+            col.size = new Vector2(width, height);
+            var door = go.AddComponent<DoorInteractable>();
+            RoomWiring.Set(door, ("room", room), ("direction", dir), ("prompt", prompt));
+        }
+
         // Компоненты сюжета: сценарии, зоны-триггеры, галлюцинации, вступление HUD.
         static readonly HashSet<string> StoryComponents = new HashSet<string>
         {
