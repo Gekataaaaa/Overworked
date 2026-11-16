@@ -3,7 +3,8 @@ using UnityEngine;
 namespace Overworked
 {
     /// <summary>
-    /// Управление Дэнни: только влево/вправо, без прыжка и бега.
+    /// Управление Дэнни: только влево/вправо, без прыжка. Бег на Shift со стаминой — если включён allowRun
+    /// (полоска под Дэнни — StaminaHud).
     /// Лежит на объекте Player в каждой сцене этажа (префаб Prefabs/Player/Player).
     /// Двигает Rigidbody2D по X, стены коридора останавливают его коллайдерами.
     /// </summary>
@@ -22,6 +23,28 @@ namespace Overworked
         [Tooltip("Сколько секунд взгляд в экран нельзя прервать движением — чтобы игрок успел поймать взгляд и реплику")]
         [SerializeField] float lookMinSeconds = 1.2f;
 
+        [Header("Бег (Shift) и стамина")]
+        [Tooltip("Можно ли бегать. Пока механика не утверждена — включается в рабочих сценах (Overworked → P1 → Enable Running)")]
+        [SerializeField] bool allowRun;
+
+        [Tooltip("Во сколько раз бег быстрее ходьбы")]
+        [SerializeField] float runMultiplier = 2f;
+
+        [Tooltip("Запас стамины: сколько секунд можно бежать с полной полоски")]
+        [SerializeField] float staminaMax = 4f;
+
+        [Tooltip("Восстановление стамины, секунд бега за секунду отдыха")]
+        [SerializeField] float staminaRegen = 1f;
+
+        [Tooltip("Пауза перед восстановлением после бега, секунд")]
+        [SerializeField] float regenDelay = 0.8f;
+
+        [Tooltip("После полного выдоха бег снова доступен, когда стамина восстановится до этой доли (0..1)")]
+        [Range(0f, 1f)] [SerializeField] float recoverToRun = 0.3f;
+
+        [Tooltip("Материал полоски стамины (Sprite-Unlit-Default: видна и на тёмных этажах). Пусто — материал спрайтов по умолчанию")]
+        [SerializeField] Material staminaHudMaterial;
+
         /// <summary>Текущий режим управления.</summary>
         public PlayerState State { get; private set; } = PlayerState.Normal;
 
@@ -30,6 +53,24 @@ namespace Overworked
 
         /// <summary>Идёт ли Дэнни сейчас (для анимации шагов и звука).</summary>
         public bool IsMoving { get; private set; }
+
+        /// <summary>Бежит ли Дэнни сейчас (Shift + движение + есть стамина).</summary>
+        public bool IsRunning { get; private set; }
+
+        /// <summary>Включён ли бег на этом игроке.</summary>
+        public bool AllowRun => allowRun;
+
+        /// <summary>Стамина 0..1 (для полоски под Дэнни).</summary>
+        public float Stamina01 => staminaMax > 0f ? stamina / staminaMax : 1f;
+
+        /// <summary>Стамина кончилась и ещё не восстановилась до recoverToRun — бежать нельзя.</summary>
+        public bool Exhausted { get; private set; }
+
+        /// <summary>Материал для полоски стамины (StaminaHud).</summary>
+        public Material StaminaHudMaterial => staminaHudMaterial;
+
+        float stamina;
+        float lastRunTime = -100f;
 
         Rigidbody2D body;
         PlayerAnimator anim;
@@ -64,20 +105,50 @@ namespace Overworked
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             if (sprite == null) sprite = GetComponentInChildren<SpriteRenderer>();
             anim = GetComponent<PlayerAnimator>();
+            stamina = staminaMax;
+        }
+
+        void Start()
+        {
+            if (allowRun) StaminaHud.Attach(this, sprite);
         }
 
         void FixedUpdate()
         {
             float dir = State == PlayerState.Normal ? ReadInput() : 0f;
-            body.linearVelocity = new Vector2(dir * speed, 0f);
-
             IsMoving = Mathf.Abs(dir) > 0.01f;
+            IsRunning = UpdateStamina(Time.fixedDeltaTime);
+            body.linearVelocity = new Vector2(dir * speed * (IsRunning ? runMultiplier : 1f), 0f);
             if (IsMoving)
             {
                 Facing = dir > 0 ? 1 : -1;
                 lastDir = Facing;
                 if (sprite != null) sprite.flipX = Facing < 0;
             }
+        }
+
+        /// <summary>
+        /// Бег и стамина: Shift + движение тратят стамину; после бега, через regenDelay, она восстанавливается.
+        /// Выдохся до нуля — бежать нельзя, пока не восстановится до recoverToRun (чтобы не «дёргать» Shift на нуле).
+        /// Возвращает, бежит ли Дэнни в этом шаге физики.
+        /// </summary>
+        bool UpdateStamina(float dt)
+        {
+            if (!allowRun) return false;
+            bool wantsRun = IsMoving && State == PlayerState.Normal && GameInput.Run != null && GameInput.Run.IsPressed();
+            bool running = wantsRun && !Exhausted && stamina > 0f;
+            if (running)
+            {
+                stamina = Mathf.Max(0f, stamina - dt);
+                lastRunTime = Time.time;
+                if (stamina <= 0f) Exhausted = true;
+            }
+            else if (Time.time - lastRunTime >= regenDelay)
+            {
+                stamina = Mathf.Min(staminaMax, stamina + staminaRegen * dt);
+                if (Exhausted && Stamina01 >= recoverToRun) Exhausted = false;
+            }
+            return running;
         }
 
         float ReadInput()

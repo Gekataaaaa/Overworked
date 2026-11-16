@@ -49,7 +49,11 @@ namespace Overworked
         {
             if (animator == null || animator.runtimeAnimatorController == null) return;
             animator.SetFloat(SpeedParam, controller.IsMoving ? 1f : 0f);
+            // Отдельной анимации бега нет — на бегу шаги проигрываются быстрее.
+            animator.speed = controller.IsRunning ? RunAnimSpeed : 1f;
         }
+
+        const float RunAnimSpeed = 1.7f;
 
         // Animator выставил кадр в этом кадре — подменяем его фронтальным (до HeldFlashlight, он читает кадр позже).
         void LateUpdate()

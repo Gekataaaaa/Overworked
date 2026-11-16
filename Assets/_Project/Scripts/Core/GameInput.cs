@@ -21,6 +21,8 @@ namespace Overworked
         public static InputAction Phone => Get("Phone");
         /// <summary>Esc.</summary>
         public static InputAction Pause => Get("Pause");
+        /// <summary>Shift (левый и правый) — бег, держать. Работает, если на игроке включён allowRun.</summary>
+        public static InputAction Run => Get("Run");
 
         static InputActionMap map;
 
