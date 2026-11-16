@@ -61,6 +61,8 @@ namespace Overworked
         IInteractable FindBest()
         {
             var player = PlayerController.Instance;
+            // Дэнни в шкафчике: ввод заблокирован, но в фокусе шкафчик — подсказка «[E] Leave» и выход по E.
+            if (HideLocker.Occupied != null && Time.timeScale > 0f) return HideLocker.Occupied;
             // Ни подсказки, ни контура, пока Дэнни заблокирован: телефон, мини-игра, катсцена, пауза.
             if (player == null || player.State != PlayerState.Normal || Time.timeScale == 0f) return null;
 
