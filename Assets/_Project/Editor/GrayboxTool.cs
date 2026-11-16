@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using SB = Overworked.EditorTools.PlayerSandboxBuilder;
 
 namespace Overworked.EditorTools
@@ -115,7 +116,6 @@ namespace Overworked.EditorTools
             Debug.Log($"[Graybox] {scene.name}: коридор удлинён ×3 (+{delta:0.#} юнитов вправо), перенесено в конец: {moved}");
         }
 
-        const string SideName = "Corridor_B";
         static readonly Color PassageColor = new Color(0.06f, 0.06f, 0.07f);
 
         /// <summary>
@@ -125,7 +125,20 @@ namespace Overworked.EditorTools
         /// телепорт, своя камера с границами. Повторный запуск пересоздаёт второй коридор. Отмена — Ctrl+Z.
         /// </summary>
         [MenuItem("Overworked/P1/Add Side Corridor In Open Scene")]
-        public static void AddSideCorridor()
+        public static void AddSideCorridor() => AddSide("Corridor_B", 2f / 3f, 0.5f, 1);
+
+        /// <summary>
+        /// Третий коридор: как второй, но длиной 1/3 основного, проход — на 3/4 основного коридора
+        /// (между центром и турникетом), в сцене стоит над вторым коридором.
+        /// </summary>
+        [MenuItem("Overworked/P1/Add Third Corridor In Open Scene")]
+        public static void AddThirdCorridor() => AddSide("Corridor_C", 1f / 3f, 0.75f, 2);
+
+        /// <param name="sideName">имя коридора (корень в Rooms, камера "CM имя", проход "Door_имя")</param>
+        /// <param name="lengthFraction">длина относительно основного коридора</param>
+        /// <param name="passageAt">где проход в основном коридоре: 0 — левая стена, 1 — правая</param>
+        /// <param name="level">какой по счёту над этажом (1 — сразу над ним)</param>
+        static void AddSide(string sideName, float lengthFraction, float passageAt, int level)
         {
             var scene = EditorSceneManager.GetActiveScene();
             var corridor = GameObject.Find("Environment/Corridor");
@@ -147,28 +160,30 @@ namespace Overworked.EditorTools
                 return;
             }
 
-            Undo.SetCurrentGroupName("Add Side Corridor");
+            Undo.SetCurrentGroupName("Add " + sideName);
             int group = Undo.GetCurrentGroup();
             var square = SB.EnsureSquareSprite();
             var unlit = AssetDatabase.LoadAssetAtPath<Material>(UnlitPath);
 
             // Старый второй коридор, его камеру, проход и точку возврата — убираем (пересборка).
-            foreach (var old in new[] { rooms.transform.Find(SideName), cameras.transform.Find("CM " + SideName),
-                         corridor.transform.Find("Doors/Door_" + SideName), corridor.transform.Find("ReturnPoints/" + SideName) })
+            foreach (var old in new[] { rooms.transform.Find(sideName), cameras.transform.Find("CM " + sideName),
+                         corridor.transform.Find("Doors/Door_" + sideName), corridor.transform.Find("ReturnPoints/" + sideName) })
                 if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
 
             float mainLength = right.position.x - left.position.x;
-            float centerX = (left.position.x + right.position.x) / 2f;
-            float halfB = mainLength / 3f;                       // длина 2/3 основного → половина 1/3
+            float centerX = left.position.x + mainLength * passageAt;   // x прохода в основном коридоре
+            float halfB = mainLength * lengthFraction / 2f;
             float bottom = float.MaxValue, top = float.MinValue;
             foreach (var p in mainBounds.points) { bottom = Mathf.Min(bottom, p.y); top = Mathf.Max(top, p.y); }
-            float originY = corridor.transform.position.y + (top - bottom) + 10f;   // над этажом, с запасом
+            // В сцене все коридоры выровнены по левой стене: левая стена нового — над левой стеной основного.
+            float rootX = left.position.x + halfB + 0.5f;
+            float originY = corridor.transform.position.y + level * ((top - bottom) + 10f);   // над этажом, с запасом
 
             // 1. Сам коридор: корень-«комната», стены, границы камеры, точка появления.
-            var root = new GameObject(SideName);
-            Undo.RegisterCreatedObjectUndo(root, "Add Side Corridor");
+            var root = new GameObject(sideName);
+            Undo.RegisterCreatedObjectUndo(root, "Add " + sideName);
             root.transform.SetParent(rooms.transform, false);
-            root.transform.position = new Vector3(centerX, originY, 0f);
+            root.transform.position = new Vector3(rootX, originY, 0f);
 
             var wallsB = new GameObject("Walls");
             wallsB.transform.SetParent(root.transform, false);
@@ -196,15 +211,15 @@ namespace Overworked.EditorTools
             // 2. Камера коридора B — как у комнат: префаб камеры игрока, свои границы, выключена до входа.
             var camPrefab = SB.EnsureCameraPrefab();
             var cam = (GameObject)PrefabUtility.InstantiatePrefab(camPrefab, scene);
-            Undo.RegisterCreatedObjectUndo(cam, "Add Side Corridor");
-            cam.name = "CM " + SideName;
+            Undo.RegisterCreatedObjectUndo(cam, "Add " + sideName);
+            cam.name = "CM " + sideName;
             cam.transform.SetParent(cameras.transform, false);
-            cam.transform.position = new Vector3(centerX, originY, cam.transform.position.z);
+            cam.transform.position = new Vector3(rootX, originY, cam.transform.position.z);
             cam.GetComponent<Unity.Cinemachine.CinemachineConfiner2D>().BoundingShape2D = bounds;
             cam.SetActive(false);
 
             // 3. Room + точка возврата в основном коридоре.
-            var back = new GameObject(SideName).transform;
+            var back = new GameObject(sideName).transform;
             var returnParent = corridor.transform.Find("ReturnPoints");
             if (returnParent == null)
             {
@@ -213,7 +228,7 @@ namespace Overworked.EditorTools
             }
             back.SetParent(returnParent, false);
             back.position = new Vector3(centerX, corridor.transform.position.y + FloorY + 0.9f, 0f);
-            Undo.RegisterCreatedObjectUndo(back.gameObject, "Add Side Corridor");
+            Undo.RegisterCreatedObjectUndo(back.gameObject, "Add " + sideName);
 
             var room = root.AddComponent<Room>();
             RoomWiring.Set(room, ("entryPoint", entry), ("returnPoint", back), ("roomCamera", cam), ("corridorCamera", corridorCam.gameObject));
@@ -223,10 +238,10 @@ namespace Overworked.EditorTools
             var size = KitchenDoorSize();
             var passageSize = new Vector2(size.x * 2f, size.y);
             var doorsParent = corridor.transform.Find("Doors");
-            Passage(doorsParent != null ? doorsParent : corridor.transform, "Door_" + SideName,
+            Passage(doorsParent != null ? doorsParent : corridor.transform, "Door_" + sideName,
                 new Vector3(centerX, corridor.transform.position.y + FloorY, 0f), room,
                 DoorInteractable.Direction.IntoRoom, "Go through", passageSize, square, unlit);
-            Passage(root.transform, "ExitPassage", new Vector3(centerX + startX, originY + FloorY, 0f), room,
+            Passage(root.transform, "ExitPassage", new Vector3(rootX + startX, originY + FloorY, 0f), room,
                 DoorInteractable.Direction.OutToCorridor, "Go back", passageSize, square, unlit);
 
             // 5. Серый фон — и в новом коридоре.
@@ -234,7 +249,7 @@ namespace Overworked.EditorTools
 
             Undo.CollapseUndoOperations(group);
             EditorSceneManager.MarkSceneDirty(scene);
-            Debug.Log($"[Graybox] {scene.name}: второй коридор {SideName} ({halfB * 2f:0.#} юнитов) над этажом, проход в центре (x={centerX:0.#})");
+            Debug.Log($"[Graybox] {scene.name}: коридор {sideName} ({halfB * 2f:0.#} юнитов) над этажом, проход в основном коридоре x={centerX:0.#}");
         }
 
         /// <summary>
@@ -454,6 +469,181 @@ namespace Overworked.EditorTools
             EditorSceneManager.MarkSceneDirty(scene);
             Debug.Log($"[Graybox] {scene.name}: фон спрятан ({hidden} спрайтов), квадратов для взаимодействия: {boxes}, " +
                       $"серый фон в зонах: {areas}");
+        }
+
+        // ------------------------------------------------------------ лампы
+
+        const string LampsName = "~GrayLamps";
+        const string LitPath = "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Lit-Default.mat";
+        const float LampSpacing = 16f;        // шаг ламп по коридору
+        const int FaultyEvery = 3;             // примерно каждая третья лампа неисправна
+        const float AmbientIntensity = 0.3f;   // общий свет сцены (Global Light 2D): между лампами полумрак
+        // Стены в коридорах с лампами — темнее обычной серой коробки, чтобы пятна света читались.
+        static readonly Color LitWallColor = new Color(0.3f, 0.31f, 0.3f);
+        static readonly Color LampColor = new Color(0.9f, 0.95f, 0.86f);
+        static readonly Color TubeColor = new Color(0.86f, 0.9f, 0.84f);
+        const float TubeWidth = 1.6f;          // ширина трубки = ширина начала конуса света
+        const float LampInnerAngle = 60f;      // яркая часть конуса (градусы), края — до 140°
+
+        /// <summary>
+        /// Лампы в основном коридоре и боковых (Rooms/Corridor_*): под потолком светлая трубка, под ней мягкий
+        /// Light2D — конус света от трубки вниз до пола, соседние не сливаются. Примерно каждая третья — неисправная:
+        /// раз в 2–6 с коротко мигает очередью (LightFlicker.idleBlinkEvery), трубка темнеет вместе со светом (LampLight).
+        /// Чтобы свет был виден, серый фон и квадраты в этих коридорах переводятся на Lit-материал, общий свет
+        /// сцены приглушается до AmbientIntensity, стены темнеют до LitWallColor, старые лампы с арта (Corridor/Lights) выключаются.
+        /// Повторный запуск пересобирает лампы. Отмена — Ctrl+Z.
+        /// </summary>
+        [MenuItem("Overworked/P1/Graybox Lamps In Open Scene")]
+        public static void AddLamps()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            var corridor = GameObject.Find("Environment/Corridor");
+            var rooms = GameObject.Find("Environment/Rooms");
+            if (corridor == null)
+            {
+                Debug.LogWarning($"[Graybox] {scene.name}: нет Environment/Corridor");
+                return;
+            }
+            Undo.SetCurrentGroupName("Graybox Lamps");
+            int undoGroup = Undo.GetCurrentGroup();
+            var square = SB.EnsureSquareSprite();
+            var unlit = AssetDatabase.LoadAssetAtPath<Material>(UnlitPath);
+            var lit = AssetDatabase.LoadAssetAtPath<Material>(LitPath);
+
+            // Зоны с лампами: основной коридор и боковые коридоры.
+            var areas = new List<Transform> { corridor.transform };
+            if (rooms != null)
+                foreach (Transform r in rooms.transform)
+                    if (r.name.StartsWith("Corridor_")) areas.Add(r);
+
+            // Старые лампы с арта — выключить (их картинки и так спрятаны серой коробкой).
+            var artLights = corridor.transform.Find("Lights");
+            if (artLights != null && artLights.gameObject.activeSelf)
+            {
+                Undo.RecordObject(artLights.gameObject, "Graybox Lamps");
+                artLights.gameObject.SetActive(false);
+            }
+
+            var litBounds = new List<Bounds>();
+            int lamps = 0, faulty = 0;
+            foreach (var area in areas)
+            {
+                var col = area.Find("CameraBounds")?.GetComponent<Collider2D>();
+                if (col == null) continue;
+                var old = area.Find(LampsName);
+                if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+
+                var b = col.bounds;
+                litBounds.Add(b);
+                var group = new GameObject(LampsName);
+                Undo.RegisterCreatedObjectUndo(group, "Graybox Lamps");
+                group.transform.SetParent(area, false);
+
+                // По всей длине с отступом от краёв, лампы примерно через LampSpacing.
+                float xMin = b.min.x + 3f, xMax = b.max.x - 3f;
+                int count = Mathf.Max(1, Mathf.RoundToInt((xMax - xMin) / LampSpacing) + 1);
+                // Своё смещение неисправных ламп в каждом коридоре; при пересборке раскладка та же.
+                int firstFaulty = (area.name.Length * 7 + count) % FaultyEvery;
+                for (int i = 0; i < count; i++)
+                {
+                    float x = count == 1 ? (xMin + xMax) / 2f : Mathf.Lerp(xMin, xMax, i / (float)(count - 1));
+                    bool broken = i % FaultyEvery == firstFaulty;
+                    BuildLamp(group.transform, $"Lamp_{i + 1}", x, area.position.y, broken, square, unlit);
+                    lamps++;
+                    if (broken) faulty++;
+                }
+            }
+
+            // Серый фон, квадраты и мебель в этих коридорах — на Lit, чтобы их освещали лампы.
+            int relit = 0;
+            if (lit != null)
+                foreach (var sr in Object.FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Include))
+                {
+                    if (!IsGrayRenderer(sr.transform)) continue;
+                    var c = sr.bounds.center;
+                    bool inside = false;
+                    foreach (var lb in litBounds)
+                        if (c.x >= lb.min.x && c.x <= lb.max.x && c.y >= lb.min.y && c.y <= lb.max.y) inside = true;
+                    if (!inside) continue;
+                    Undo.RecordObject(sr, "Graybox Lamps");
+                    bool backdrop = sr.transform.parent != null && sr.transform.parent.name == BackdropName;
+                    // Потолок остаётся Unlit: вершина конуса света — над трубкой, потолок не должен подсвечиваться.
+                    sr.sharedMaterial = backdrop && sr.name == "Ceiling" && unlit != null ? unlit : lit;
+                    if (backdrop && sr.name == "Wall") sr.color = LitWallColor;
+                    relit++;
+                }
+
+            // Общий свет — полумрак, лампы дают пятна света.
+            foreach (var l in Object.FindObjectsByType<Light2D>(FindObjectsInactive.Include))
+                if (l.lightType == Light2D.LightType.Global && l.gameObject.scene == scene)
+                {
+                    Undo.RecordObject(l, "Graybox Lamps");
+                    l.intensity = AmbientIntensity;
+                }
+
+            Undo.CollapseUndoOperations(undoGroup);
+            EditorSceneManager.MarkSceneDirty(scene);
+            Debug.Log($"[Graybox] {scene.name}: ламп {lamps} (мигают {faulty}) в {litBounds.Count} коридорах, на Lit переведено {relit} квадратов");
+        }
+
+        // Квадраты серой коробки: сам объект или его родитель называется "~…" (фон, квадраты, мебель), но не трубки ламп.
+        static bool IsGrayRenderer(Transform t)
+        {
+            for (var p = t; p != null; p = p.parent)
+            {
+                if (p.name == LampsName) return false;
+                if (p.name.StartsWith("~")) return true;
+            }
+            return false;
+        }
+
+        static void BuildLamp(Transform parent, string name, float x, float areaY, bool broken, Sprite square, Material unlit)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            // Свет повёрнут вниз (у Light2D конус смотрит вдоль локальной оси Y). Вершина конуса — выше трубки,
+            // на такой высоте, чтобы яркая часть конуса у трубки была шириной с саму трубку.
+            float tubeY = areaY + CeilingY - 0.12f;
+            float apexUp = TubeWidth / 2f / Mathf.Tan(LampInnerAngle / 2f * Mathf.Deg2Rad);
+            go.transform.position = new Vector3(x, tubeY + apexUp, 0f);
+            go.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+
+            // Трубка под потолком — Unlit: горит сама, LampLight темнит её, когда свет гаснет.
+            var tube = new GameObject("Tube");
+            tube.transform.SetParent(go.transform, false);
+            tube.transform.position = new Vector3(x, tubeY, 0f);
+            tube.transform.rotation = Quaternion.identity;
+            var s = square.bounds.size;
+            tube.transform.localScale = new Vector3(TubeWidth / s.x, 0.16f / s.y, 1f);
+            var tubeSr = tube.AddComponent<SpriteRenderer>();
+            tubeSr.sprite = square;
+            tubeSr.color = TubeColor;
+            tubeSr.sortingOrder = -90;
+            if (unlit != null) tubeSr.sharedMaterial = unlit;
+
+            // Конус света вниз: от потолка до пола, расходится к полу, края мягкие; соседние конусы не сливаются.
+            var light = go.AddComponent<Light2D>();
+            light.lightType = Light2D.LightType.Point;
+            light.color = LampColor;
+            light.intensity = 1.1f;
+            light.pointLightInnerRadius = apexUp + 0.3f;
+            light.pointLightOuterRadius = apexUp + CeilingY - FloorY + 0.5f;
+            light.pointLightInnerAngle = LampInnerAngle;
+            light.pointLightOuterAngle = 140f;
+            light.falloffIntensity = 0.5f;
+
+            var link = new SerializedObject(go.AddComponent<LampLight>());
+            link.FindProperty("tube").objectReferenceValue = tubeSr;
+            link.ApplyModifiedPropertiesWithoutUndo();
+
+            if (!broken) return;
+            // Неисправная: редкие короткие очереди миганий при любом рассудке, от рассудка сама не мерцает.
+            var flicker = new SerializedObject(go.AddComponent<LightFlicker>());
+            flicker.FindProperty("flickerBelowSanity").floatValue = 0f;
+            flicker.FindProperty("idleBlinkEvery").vector2Value = new Vector2(2f, 6f);
+            flicker.FindProperty("idleBlinkLength").vector2Value = new Vector2(0.15f, 0.6f);
+            flicker.FindProperty("dropoutLevel").floatValue = 0.1f;
+            flicker.ApplyModifiedPropertiesWithoutUndo();
         }
 
         // ------------------------------------------------------------ свой фон

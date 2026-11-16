@@ -6,7 +6,8 @@ namespace Overworked
     /// <summary>
     /// Мерцание лампы (Light2D): на низком рассудке свет иногда проваливается и дрожит, по желанию —
     /// мигает в такт пульсу (Room_101). Burst(сек) — бешеное мигание по команде (галлюцинация, сценарий).
-    /// Вешается на объект с Light2D (лампы этажа). Пока ни к каким лампам не прикреплён — подключим позже.
+    /// Вешается на объект с Light2D (лампы этажа). idleBlinkEvery — неисправная лампа: сама мигает очередью
+    /// раз в несколько секунд при любом рассудке.
     /// </summary>
     [RequireComponent(typeof(Light2D))]
     public class LightFlicker : MonoBehaviour
@@ -25,13 +26,19 @@ namespace Overworked
         [Tooltip("Сколько секунд длится провал на удар")]
         [SerializeField] float beatDipTime = 0.1f;
 
+        [Header("Неисправная лампа (с любого рассудка)")]
+        [Tooltip("Раз в сколько секунд (от-до) лампа сама коротко мигает очередью. 0 — выключено")]
+        [SerializeField] Vector2 idleBlinkEvery = Vector2.zero;
+        [Tooltip("Сколько секунд (от-до) длится одна очередь миганий")]
+        [SerializeField] Vector2 idleBlinkLength = new Vector2(0.15f, 0.6f);
+
         [Header("Бешеное мигание (Burst)")]
         [Tooltip("Смен состояния в секунду при Burst")]
         [SerializeField] float burstRate = 14f;
 
         Light2D lamp;
         float baseIntensity;
-        float dimUntil, burstUntil, nextBurstToggle;
+        float dimUntil, burstUntil, nextBurstToggle, nextIdleBlink;
         bool burstDark;
         // Свой сдвиг шума у каждой лампы — соседние не дрожат синхронно.
         float noiseSeed;
@@ -48,6 +55,12 @@ namespace Overworked
             lamp = GetComponent<Light2D>();
             baseIntensity = lamp.intensity;
             noiseSeed = Random.value * 100f;
+            ScheduleIdleBlink();
+        }
+
+        void ScheduleIdleBlink()
+        {
+            if (idleBlinkEvery.y > 0f) nextIdleBlink = Time.time + Random.Range(idleBlinkEvery.x, idleBlinkEvery.y);
         }
 
         void OnEnable()
@@ -72,6 +85,11 @@ namespace Overworked
         void Update()
         {
             float k = 1f;
+            if (idleBlinkEvery.y > 0f && Time.time >= nextIdleBlink)
+            {
+                Burst(Random.Range(idleBlinkLength.x, idleBlinkLength.y));
+                ScheduleIdleBlink();
+            }
             if (Time.time < burstUntil)
             {
                 if (Time.time >= nextBurstToggle)
