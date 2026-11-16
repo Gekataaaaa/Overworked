@@ -1606,7 +1606,7 @@ MonoBehaviour:
       m_Calls: []
   noteText: THE BOSS DOESN'T LIKE IT WHEN I LEAVE BEFORE HIM!!!
   receivedToast: 'Received: Charles''s note.'
-  afterDialogue: {fileID: 11400000, guid: b0200cf037f449cca5a4bd42808889c0, type: 2}
+  afterDialogue: {fileID: 0}
   paperSound: {fileID: 0}
   paperVolume: 0.8
 --- !u!61 &354373709
@@ -2214,9 +2214,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 471031438}
-  - component: {fileID: 471031441}
   - component: {fileID: 471031440}
-  - component: {fileID: 471031439}
   m_Layer: 0
   m_Name: 1.2 MaxAtClock
   m_TagString: Untagged
@@ -2239,22 +2237,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1837551373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &471031439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471031437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2546607cc0ef50d4297348f3af5c78c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.SequenceTrigger
-  sequence: {fileID: 471031441}
-  requireCompleted: {fileID: 0}
-  blockIfCompleted: {fileID: 0}
-  once: 1
 --- !u!61 &471031440
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2301,61 +2283,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 5}
   m_EdgeRadius: 0
---- !u!114 &471031441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471031437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4871b1be15c14f9489796e13dd6cc89c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.ScriptedSequence
-  playOnStart: 0
-  once: 1
-  lockPlayer: 1
-  steps:
-  - rid: 8210834316649037998
-  - rid: 8210834316649037999
-  - rid: 8210834316649038000
-  onFinished:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 8210834316649037998
-      type: {class: MessageStep, ns: Overworked, asm: Overworked}
-      data:
-        Message: {fileID: 11400000, guid: b9ac97e852524b6dba2d0feaaa4d2530, type: 2}
-        WaitUntilRead: 1
-    - rid: 8210834316649037999
-      type: {class: DialogueStep, ns: Overworked, asm: Overworked}
-      data:
-        Dialogue: {fileID: 11400000, guid: 4997567e09719204fa20b67b1dead645, type: 2}
-        Wait: 1
-        UnlessFlag: 
-    - rid: 8210834316649038000
-      type: {class: EventStep, ns: Overworked, asm: Overworked}
-      data:
-        Note: Unlock kitchen
-        OnRun:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 1943883096}
-              m_TargetAssemblyTypeName: Overworked.InteractableBase, Overworked
-              m_MethodName: SetLocked
-              m_Mode: 6
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: 
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
 --- !u!1 &498455490
 GameObject:
   m_ObjectHideFlags: 0
@@ -2874,7 +2801,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   receivedToast: 
-  afterDialogue: {fileID: 11400000, guid: f0784153eb81932468252130a9c59ae8, type: 2}
+  afterDialogue: {fileID: 0}
   hideOnPickup: {fileID: 0}
   pickupSound: {fileID: 0}
   pickupVolume: 0.8
@@ -5341,11 +5268,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!1 &900301030 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4759334494636930895, guid: f38f4059e360da94fa1bdadfe2380dc4, type: 3}
-  m_PrefabInstance: {fileID: 1354815462}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &900301040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5562,9 +5484,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 918564925}
-  - component: {fileID: 918564928}
   - component: {fileID: 918564927}
-  - component: {fileID: 918564926}
   m_Layer: 0
   m_Name: 1.1 OpenSpace
   m_TagString: Untagged
@@ -5587,22 +5507,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1837551373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &918564926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 918564924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2546607cc0ef50d4297348f3af5c78c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.SequenceTrigger
-  sequence: {fileID: 918564928}
-  requireCompleted: {fileID: 0}
-  blockIfCompleted: {fileID: 0}
-  once: 1
 --- !u!61 &918564927
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5649,35 +5553,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 5}
   m_EdgeRadius: 0
---- !u!114 &918564928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 918564924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4871b1be15c14f9489796e13dd6cc89c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.ScriptedSequence
-  playOnStart: 0
-  once: 1
-  lockPlayer: 1
-  steps:
-  - rid: 8210834316649037995
-  onFinished:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 8210834316649037995
-      type: {class: DialogueStep, ns: Overworked, asm: Overworked}
-      data:
-        Dialogue: {fileID: 11400000, guid: 5feafa764bada8445911d7ff69b46664, type: 2}
-        Wait: 1
-        UnlessFlag: 
 --- !u!4 &940310770 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 364481654337370029, guid: 00b2389d10711aa4890c756c80dc7409, type: 3}
@@ -6751,7 +6626,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1232427680
 Transform:
   m_ObjectHideFlags: 0
@@ -7499,7 +7374,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1370044986}
   - component: {fileID: 1370044988}
-  - component: {fileID: 1370044987}
   m_Layer: 0
   m_Name: CharlesDesk_Inspect
   m_TagString: Untagged
@@ -7522,20 +7396,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1725932001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1370044987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1370044985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d61c909b4d783646bd2c821c638b9a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.Inspectable
-  dialogue: {fileID: 11400000, guid: e351d3e093aa42cda30bf7c8c4ccc9b5, type: 2}
-  once: 1
 --- !u!61 &1370044988
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8208,25 +8068,13 @@ MonoBehaviour:
   passPrompt: Use Max's card
   passFlag: MaxPass
   cardReader: {fileID: 1471217627}
-  deniedDialogue: {fileID: 11400000, guid: 928e4eba20b4c494ca05128a5a47cabf, type: 2}
+  deniedDialogue: {fileID: 0}
   deniedText: ACCESS DENIED
-  grantedDialogue: {fileID: 11400000, guid: e7699d29cadf4904c92970e396892c1d, type: 2}
+  grantedDialogue: {fileID: 0}
   grantedText: ACCESS GRANTED
   onDenied:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1929764834}
-        m_TargetAssemblyTypeName: Overworked.ScriptedSequence, Overworked
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1471217627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8863,7 +8711,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3695571878064545994, guid: 00b2389d10711aa4890c756c80dc7409, type: 3}
       propertyPath: startLocked
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4024883870884038423, guid: 00b2389d10711aa4890c756c80dc7409, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9173,7 +9021,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1801917404}
-  - component: {fileID: 1801917405}
   m_Layer: 0
   m_Name: 1.0 Opening
   m_TagString: Untagged
@@ -9196,152 +9043,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1837551373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1801917405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801917403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4871b1be15c14f9489796e13dd6cc89c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.ScriptedSequence
-  playOnStart: 0
-  once: 1
-  lockPlayer: 1
-  steps:
-  - rid: 8210834316649037974
-  - rid: 8210834316649037975
-  - rid: 8210834316649037976
-  - rid: 8210834316649037977
-  - rid: 8210834316649037978
-  - rid: 8210834316649037979
-  - rid: 8210834316649037980
-  - rid: 8210834316649037981
-  - rid: 8210834316649037982
-  - rid: 8210834316649037983
-  - rid: 8210834316649037984
-  - rid: 8210834316649037985
-  - rid: 8210834316649037986
-  - rid: 8210834316649037987
-  - rid: 8210834316649037988
-  - rid: 8210834316649037989
-  - rid: 8210834316649037990
-  - rid: 8210834316649037991
-  - rid: 8210834316649037992
-  - rid: 8210834316649037993
-  - rid: 8210834316649037994
-  onFinished:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 8210834316649037974
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301000}
-        Active: 1
-    - rid: 8210834316649037975
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301030}
-        Active: 0
-    - rid: 8210834316649037976
-      type: {class: HudStep, ns: Overworked, asm: Overworked}
-      data:
-        Part: 0
-        Visible: 0
-        AllParts: 1
-    - rid: 8210834316649037977
-      type: {class: WaitStep, ns: Overworked, asm: Overworked}
-      data:
-        Seconds: 0.6
-    - rid: 8210834316649037978
-      type: {class: ControlsHintStep, ns: Overworked, asm: Overworked}
-      data: 
-    - rid: 8210834316649037979
-      type: {class: WaitStep, ns: Overworked, asm: Overworked}
-      data:
-        Seconds: 2.5
-    - rid: 8210834316649037980
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301010}
-        Active: 0
-    - rid: 8210834316649037981
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301020}
-        Active: 1
-    - rid: 8210834316649037982
-      type: {class: WaitStep, ns: Overworked, asm: Overworked}
-      data:
-        Seconds: 0.8
-    - rid: 8210834316649037983
-      type: {class: DialogueStep, ns: Overworked, asm: Overworked}
-      data:
-        Dialogue: {fileID: 11400000, guid: ffbdd87029db4621bfcd39493f8f6b12, type: 2}
-        Wait: 1
-        UnlessFlag: 
-    - rid: 8210834316649037984
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301020}
-        Active: 0
-    - rid: 8210834316649037985
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301050}
-        Active: 1
-    - rid: 8210834316649037986
-      type: {class: WaitStep, ns: Overworked, asm: Overworked}
-      data:
-        Seconds: 2
-    - rid: 8210834316649037987
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301000}
-        Active: 0
-    - rid: 8210834316649037988
-      type: {class: SetActiveStep, ns: Overworked, asm: Overworked}
-      data:
-        Target: {fileID: 900301030}
-        Active: 1
-    - rid: 8210834316649037989
-      type: {class: HudStep, ns: Overworked, asm: Overworked}
-      data:
-        Part: 0
-        Visible: 1
-        AllParts: 0
-    - rid: 8210834316649037990
-      type: {class: HudStep, ns: Overworked, asm: Overworked}
-      data:
-        Part: 1
-        Visible: 1
-        AllParts: 0
-    - rid: 8210834316649037991
-      type: {class: WaitStep, ns: Overworked, asm: Overworked}
-      data:
-        Seconds: 0.5
-    - rid: 8210834316649037992
-      type: {class: HudStep, ns: Overworked, asm: Overworked}
-      data:
-        Part: 2
-        Visible: 1
-        AllParts: 0
-    - rid: 8210834316649037993
-      type: {class: HudStep, ns: Overworked, asm: Overworked}
-      data:
-        Part: 3
-        Visible: 1
-        AllParts: 0
-    - rid: 8210834316649037994
-      type: {class: WaitStep, ns: Overworked, asm: Overworked}
-      data:
-        Seconds: 0.3
 --- !u!1 &1802431756
 GameObject:
   m_ObjectHideFlags: 0
@@ -10202,7 +9903,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1929764833}
-  - component: {fileID: 1929764834}
   m_Layer: 0
   m_Name: 1.3 DeniedBossAtTurnstile
   m_TagString: Untagged
@@ -10225,54 +9925,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1837551373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1929764834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1929764832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4871b1be15c14f9489796e13dd6cc89c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.ScriptedSequence
-  playOnStart: 0
-  once: 1
-  lockPlayer: 1
-  steps:
-  - rid: 8210834316649038001
-  - rid: 8210834316649038002
-  - rid: 8210834316649038003
-  - rid: 8210834316649038004
-  onFinished:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 8210834316649038001
-      type: {class: MessageStep, ns: Overworked, asm: Overworked}
-      data:
-        Message: {fileID: 11400000, guid: aadc40fd74374edba1c863ca798ce605, type: 2}
-        WaitUntilRead: 1
-    - rid: 8210834316649038002
-      type: {class: HallucinationStep, ns: Overworked, asm: Overworked}
-      data:
-        Hallucination: {fileID: 3166867752498374056}
-        Wait: 1
-    - rid: 8210834316649038003
-      type: {class: DialogueStep, ns: Overworked, asm: Overworked}
-      data:
-        Dialogue: {fileID: 11400000, guid: 42107cac5e6e48ab9f38865d392e72a3, type: 2}
-        Wait: 1
-        UnlessFlag: 
-    - rid: 8210834316649038004
-      type: {class: DialogueStep, ns: Overworked, asm: Overworked}
-      data:
-        Dialogue: {fileID: 11400000, guid: 423057f4dfd4cdc4a971a6ffb5d381ac, type: 2}
-        Wait: 1
-        UnlessFlag: MaxPass
 --- !u!1 &1939219541
 GameObject:
   m_ObjectHideFlags: 0
@@ -10475,7 +10127,7 @@ MonoBehaviour:
   prompt: Enter the kitchen
   requiresObjective: {fileID: 0}
   requiresFlag: 
-  startLocked: 1
+  startLocked: 0
   completesObjective: {fileID: 0}
   setsFlag: 
   onDone:
@@ -10718,9 +10370,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2026412911}
-  - component: {fileID: 2026412914}
   - component: {fileID: 2026412913}
-  - component: {fileID: 2026412912}
   m_Layer: 0
   m_Name: 1.3 MaxThanks
   m_TagString: Untagged
@@ -10743,22 +10393,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1837551373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2026412912
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2026412910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2546607cc0ef50d4297348f3af5c78c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.SequenceTrigger
-  sequence: {fileID: 2026412914}
-  requireCompleted: {fileID: 11400000, guid: d89508ebc79f4799bb54fd297a59020b, type: 2}
-  blockIfCompleted: {fileID: 0}
-  once: 1
 --- !u!61 &2026412913
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10805,41 +10439,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3, y: 5}
   m_EdgeRadius: 0
---- !u!114 &2026412914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2026412910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4871b1be15c14f9489796e13dd6cc89c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.ScriptedSequence
-  playOnStart: 0
-  once: 1
-  lockPlayer: 1
-  steps:
-  - rid: 8210834316649037996
-  - rid: 8210834316649037997
-  onFinished:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 8210834316649037996
-      type: {class: MessageStep, ns: Overworked, asm: Overworked}
-      data:
-        Message: {fileID: 11400000, guid: a53a7a04160341d5a41367d94b6bad23, type: 2}
-        WaitUntilRead: 1
-    - rid: 8210834316649037997
-      type: {class: DialogueStep, ns: Overworked, asm: Overworked}
-      data:
-        Dialogue: {fileID: 11400000, guid: b2fbca40ee6c9434a9771f355c8c0ee2, type: 2}
-        Wait: 1
-        UnlessFlag: 
 --- !u!1 &2034344897
 GameObject:
   m_ObjectHideFlags: 0
@@ -10855,7 +10454,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2034344898
 Transform:
   m_ObjectHideFlags: 0
@@ -11286,27 +10885,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8482253563241550221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3166867752498374056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8590558675097654327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01bd5d51cd081bf4ca00edd7dbb8af31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Overworked::Overworked.HallucinationEvent
-  SanityAfter: 90
-  HeartbeatSpike: 30
-  Duration: 4
-  ScreamerHeartbeat: 0
-  Sound: {fileID: 0}
-  SoundVolume: 1
-  SoundOnStart: 0
-  LockPlayer: 0
-  KeepLocked: 0
 --- !u!114 &5854825516336236115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11363,7 +10941,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8482253563241550221}
-  - component: {fileID: 3166867752498374056}
   m_Layer: 0
   m_Name: H1_Turnstile
   m_TagString: Untagged
