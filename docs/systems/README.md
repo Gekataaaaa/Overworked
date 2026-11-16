@@ -27,3 +27,4 @@
 | Footsteps — шаги Дэнни в такт анимации ходьбы | P1 | [Footsteps.md](Footsteps.md) |
 | LampHum — звуки ламп в кадре: гул и треск мигания | P1 | [LampHum.md](LampHum.md) |
 | ComputerHum — гул работающих компьютеров в кадре | P1 | [ComputerHum.md](ComputerHum.md) |
+| Рабочая сцена Floor_03_Work: стол на кухне, столовая | P3 | [WorkScene_P3.md](WorkScene_P3.md) |
