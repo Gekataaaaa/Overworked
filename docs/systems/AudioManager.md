@@ -27,7 +27,7 @@
 
 **Зависит от:** ничего.
 
-**Пересобрать заготовки:** меню **Overworked → P4 → Build Horror Sandbox** — создаёт миксер (если нет)
+**Пересобрать заготовки:** меню **Overworked → P4 → Sandbox → Build Horror Sandbox** — создаёт миксер (если нет)
 и назначает группы в `_Systems`, тёмный коридор в `Sandbox_P4` (шкала и пульс — из HUD P3 в `_Systems`).
 Если Unity не даст создать миксер автоматически — Create → Audio Mixer `Settings/MainMixer`,
 группы Music / Ambient / SFX / Heartbeat под Master, и снова запустить меню.

@@ -9,7 +9,7 @@ namespace Overworked.EditorTools
     /// лежала на столе, а не висела в воздухе (фон кухни в graybox спрятан). Стиль — как стол Чарльза в GrayboxTool (P1):
     /// тот же цвет, Unlit-материал, порядок отрисовки за объектами. Верх стола — по низу карточки, низ — по полу кухни.
     /// Объект ~KitchenTable в комнате Kitchen (имя с «~» — GrayboxTool его не прячет). Повторный запуск пересоздаёт стол.
-    /// Меню Overworked → P3 → Work: Kitchen Table For Max's Pass. Работает в открытой сцене (сохранить — Ctrl+S).
+    /// Меню Overworked → P3 → Floor_03_Work → Kitchen Table For Max's Pass. Работает в открытой сцене (сохранить — Ctrl+S).
     /// </summary>
     public static class WorkKitchenTable
     {
@@ -21,7 +21,7 @@ namespace Overworked.EditorTools
         const float FloorY = -4.2f;
         const float TableWidth = 2.2f;
 
-        [MenuItem("Overworked/P3/Work: Kitchen Table For Max's Pass")]
+        [MenuItem("Overworked/P3/Floor_03_Work/Kitchen Table For Max's Pass")]
         public static void Run()
         {
             if (!EnsureScene()) return;

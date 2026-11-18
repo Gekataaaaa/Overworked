@@ -11,9 +11,9 @@ namespace Overworked.EditorTools
 {
     /// <summary>
     /// P3: собирает телефон и тост внутри HUD префаба _Systems и тестовую сцену Sandbox_P3.
-    /// Меню Overworked → P3 → Build Phone UI: пересоздаёт объекты PhoneButton / PhonePanel / Toast в HUD
+    /// Меню Overworked → P3 → UI → Build Phone UI: пересоздаёт объекты PhoneButton / PhonePanel / Toast в HUD
     /// (остальное в _Systems не трогает) и проставляет ссылки в PhoneManager, UIManager.
-    /// Меню Overworked → P3 → Build Phone Sandbox: коридор, игрок, камера и PhoneTester в Sandbox_P3.
+    /// Меню Overworked → P3 → Sandbox → Build Phone Sandbox: коридор, игрок, камера и PhoneTester в Sandbox_P3.
     /// </summary>
     public static class PhoneUiBuilder
     {
@@ -53,13 +53,13 @@ namespace Overworked.EditorTools
         static readonly Color TextDim = new Color(0.55f, 0.6f, 0.57f);
         static readonly Color Unread = new Color(0.85f, 0.25f, 0.2f);
 
-        [MenuItem("Overworked/P3/Build Phone UI")]
+        [MenuItem("Overworked/P3/UI/Build Phone UI")]
         public static void BuildPhoneUi()
         {
             var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
             if (font == null)
             {
-                Debug.LogError("[Setup] нет шрифта PT Sans — сначала Overworked → P1 → Build Main Menu");
+                Debug.LogError("[Setup] нет шрифта PT Sans — сначала Overworked → P1 → UI → Build Main Menu");
                 return;
             }
 
@@ -429,7 +429,7 @@ namespace Overworked.EditorTools
 
         // ------------------------------------------------------------ песочница
 
-        [MenuItem("Overworked/P3/Build Phone Sandbox")]
+        [MenuItem("Overworked/P3/Sandbox/Build Phone Sandbox")]
         public static void BuildSandbox()
         {
             var square = PlayerSandboxBuilder.EnsureSquareSprite();

@@ -11,7 +11,7 @@ namespace Overworked.EditorTools
     /// их кладут владельцы сцен.
     /// Правила (по нарративу): рассудок падает в момент, когда Дэнни видит галлюцинацию; спайк пульса
     /// (до 140) — в резкий момент; финальный скример → падение, затемнение → WhiteRoom (FinalCollapse).
-    /// Запуск: меню Overworked → P4 → Build Hallucinations,
+    /// Запуск: меню Overworked → P4 → Hallucinations → Build Hallucinations,
     /// или batchmode -executeMethod Overworked.EditorTools.HallucinationPrefabBuilder.Run.
     /// Готовые префабы и реплики не перезаписываются (там может быть арт).
     /// </summary>
@@ -25,7 +25,7 @@ namespace Overworked.EditorTools
 
         static readonly Color SilhouetteColor = new Color(0.02f, 0.02f, 0.03f);
 
-        [MenuItem("Overworked/P4/Build Hallucinations")]
+        [MenuItem("Overworked/P4/Hallucinations/Build Hallucinations")]
         public static void Run()
         {
             var all = EnsurePrefabs();

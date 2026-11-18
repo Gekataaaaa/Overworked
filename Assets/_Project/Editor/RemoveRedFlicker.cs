@@ -8,7 +8,7 @@ namespace Overworked.EditorTools
     /// Убирает из игры красное мерцание экрана — вспышки ScreenFlashVisual красного цвета («Distortion» в H2, H4
     /// и в копии H4 у Room_201). Чёрные вспышки (мигание света, мигание в такт пульсу) остаются.
     /// Галлюцинация собирает визуалы из детей при запуске, поэтому удалённый объект просто не проигрывается.
-    /// Меню: Overworked → P1 → Remove Red Flicker.
+    /// Меню: Overworked → P1 → Art → Remove Red Flicker.
     /// </summary>
     public static class RemoveRedFlicker
     {
@@ -19,7 +19,7 @@ namespace Overworked.EditorTools
             "Assets/_Project/Scenes/Floor_01.unity", "Assets/_Project/Scenes/WhiteRoom.unity",
         };
 
-        [MenuItem("Overworked/P1/Remove Red Flicker")]
+        [MenuItem("Overworked/P1/Art/Remove Red Flicker")]
         public static void Run()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

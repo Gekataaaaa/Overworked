@@ -14,7 +14,7 @@ namespace Overworked.EditorTools
     /// дверь 102 — заперта до флага Key102, E → табличка (F1_Door102Locked) и задание F1_FindKey101.
     /// Тексты — ассеты Data/ с именами из таблицы P3 (docs/systems/Texts.md), строки — дословно из NARRATIVE_EN.
     /// Уже существующие ассеты не перезаписываются. Повторный запуск пересоздаёт выход и перенастраивает дверь.
-    /// Меню: Overworked → P2 → Build Floor_01 Corridor.
+    /// Меню: Overworked → P2 → Floor_01 → Build Floor_01 Corridor.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor01Corridor
@@ -52,7 +52,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Build Floor_01 Corridor")]
+        [MenuItem("Overworked/P2/Floor_01/Build Floor_01 Corridor")]
         public static void Build()
         {
             // Несохранённые правки в открытой сцене — спросить, иначе OpenScene их выбросит.
@@ -100,7 +100,7 @@ namespace Overworked.EditorTools
             var door = corridor.Find("Doors/Door_Room_102");
             if (door == null || !door.TryGetComponent(out DoorInteractable door102))
             {
-                Debug.LogError("[Setup] Floor_01: у Door_Room_102 нет DoorInteractable — сначала Overworked → P2 → Wire Rooms On All Floors");
+                Debug.LogError("[Setup] Floor_01: у Door_Room_102 нет DoorInteractable — сначала Overworked → P2 → All Floors → Wire Rooms On All Floors");
                 return;
             }
             RoomWiring.Set(door102,

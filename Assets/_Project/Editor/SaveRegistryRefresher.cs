@@ -6,7 +6,7 @@ namespace Overworked.EditorTools
 {
     /// <summary>
     /// Держит Resources/SaveRegistry в актуальном виде: после каждой перекомпиляции собирает все ObjectiveData
-    /// и MessageData проекта. Пересохраняет ассет, только если список изменился. Вручную — Overworked → P1 → Refresh Save Registry.
+    /// и MessageData проекта. Пересохраняет ассет, только если список изменился. Вручную — Overworked → P1 → Data → Refresh Save Registry.
     /// </summary>
     [InitializeOnLoad]
     public static class SaveRegistryRefresher
@@ -15,7 +15,7 @@ namespace Overworked.EditorTools
 
         static SaveRegistryRefresher() => EditorApplication.delayCall += () => Refresh(false);
 
-        [MenuItem("Overworked/P1/Refresh Save Registry")]
+        [MenuItem("Overworked/P1/Data/Refresh Save Registry")]
         public static void RefreshMenu() => Refresh(true);
 
         static void Refresh(bool log)

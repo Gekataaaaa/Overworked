@@ -8,7 +8,7 @@ namespace Overworked.EditorTools
     /// P3: записка Чарльза на Floor_03 (нарратив 1.1), которой нет в сборке P2/P1: у стола Чарльза
     /// «[E] Take the note» → текст на весь экран → тост «Received: Charles's note.» → реплики F3_CharlesNote_After.
     /// Всё кладётся в свой корневой объект P3_Floor03 — расстановку P2 и группу Chain (P1) не трогает.
-    /// Меню Overworked → P3 → Add Charles Note To Floor 03; повторный запуск пересоздаёт только P3_Floor03.
+    /// Меню Overworked → P3 → Old Floor_03 → Add Charles Note To Floor 03; повторный запуск пересоздаёт только P3_Floor03.
     /// </summary>
     public static class Floor03P3Builder
     {
@@ -18,7 +18,7 @@ namespace Overworked.EditorTools
         // Линия пола этажей (FloorSkeletonBuilder / ChainBuilder): Дэнни стоит на FloorY + 0.9.
         const float FloorY = -4.2f;
 
-        [MenuItem("Overworked/P3/Add Charles Note To Floor 03")]
+        [MenuItem("Overworked/P3/Old Floor_03/Add Charles Note To Floor 03")]
         public static void Run()
         {
             // Сцену открываем ДО загрузки ассетов: OpenScene(Single) выгружает загруженные раньше ассеты.
@@ -48,7 +48,7 @@ namespace Overworked.EditorTools
         /// вставляет шаги Hallucination (H1_Turnstile, P4) и Dialogue (F3_H1_After). Если шаги уже есть — ничего не делает.
         /// Сборщик цепочки P1 (ChainBuilder) теперь тоже их ставит — это меню для сцены без пересборки цепочки.
         /// </summary>
-        [MenuItem("Overworked/P3/Add H1 To Floor 03 Turnstile")]
+        [MenuItem("Overworked/P3/Old Floor_03/Add H1 To Floor 03 Turnstile")]
         public static void AddH1()
         {
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);

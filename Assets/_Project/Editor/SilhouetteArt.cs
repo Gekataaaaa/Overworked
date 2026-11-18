@@ -8,8 +8,8 @@ namespace Overworked.EditorTools
     /// Силуэты галлюцинаций H2 (Floor_02, середина коридора) и H4 (префаб; на Floor_02 — копия H4_Silhouette201
     /// у входа в Room_201): вместо тёмного прямоугольника — спрайт Silhouette_Wall в рост Дэнни, ногами на его уровне пола.
     /// Поведение (появление, рассудок, исчезновение от фонарика или при подходе) — SilhouetteBehaviour без изменений.
-    /// Меню: Overworked → P1 → Dress H2 Silhouette (повторить, если префабы пересобраны через
-    /// Overworked → P4 → Build Hallucinations или копия в 201 — через P2 → Move H4 Silhouette To Room 201).
+    /// Меню: Overworked → P1 → Art → Dress H2 Silhouette (повторить, если префабы пересобраны через
+    /// Overworked → P4 → Hallucinations → Build Hallucinations или копия в 201 — через P2 → Move H4 Silhouette To Room 201).
     /// </summary>
     public static class SilhouetteArt
     {
@@ -26,7 +26,7 @@ namespace Overworked.EditorTools
         // игрока (спрайт +0.256, ноги в 205 px под пивотом кадра). Пивот спрайта — внизу, поэтому опускаем на 1.30.
         const float FeetY = -1.30f;
 
-        [MenuItem("Overworked/P1/Dress H2 Silhouette")]
+        [MenuItem("Overworked/P1/Art/Dress H2 Silhouette")]
         public static void Run()
         {
             var sprite = ImportSprite();

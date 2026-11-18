@@ -16,7 +16,7 @@ namespace Overworked.EditorTools
     /// Маршрут, как на Floor_03: Дэнни появляется слева (у Door_Stairwell), идёт вправо, лестница вниз —
     /// лестничный проём справа (Stairs_Stairwell, из превью художника).
     /// Повторный запуск пересобирает арт с нуля; галлюцинации, фонарик и сюжет не трогает.
-    /// Меню: Overworked → P4 → Build Floor_02 Art.
+    /// Меню: Overworked → P4 → Art → Build Floor_02 Art.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor02Art
@@ -104,7 +104,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P4/Build Floor_02 Art")]
+        [MenuItem("Overworked/P4/Art/Build Floor_02 Art")]
         public static void Build()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
@@ -222,7 +222,7 @@ namespace Overworked.EditorTools
                 sr.sortingOrder = -7;
                 if (door201.TryGetComponent(out BoxCollider2D col)) { col.size = sr.sprite.bounds.size; col.offset = Vector2.zero; }
             }
-            else Debug.LogError("[Setup] Floor_02: нет Doors/Door_Room_201 — сначала Overworked → P2 → Wire Rooms On All Floors");
+            else Debug.LogError("[Setup] Floor_02: нет Doors/Door_Room_201 — сначала Overworked → P2 → All Floors → Wire Rooms On All Floors");
             // Door_203 подходит под шаблон декоративных дверей RoomWiring (Door_<число>) — E на ней не появится.
             Place(doors, "Door_203", "Door_203", C(5239, 515, 223, 485), -7);
             Place(doors, "Door_Stairwell", "Door_Stairwell", C(49, 515, 223, 485), -7);

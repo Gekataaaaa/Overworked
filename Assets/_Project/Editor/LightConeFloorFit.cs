@@ -10,7 +10,7 @@ namespace Overworked.EditorTools
     /// Конусы света от ламп (объекты Light_Cone*) не должны уходить ниже линии пола: верх остаётся
     /// под лампой, спрайт сжимается по высоте так, чтобы низ стоял ровно на полу (там, где ноги Дэнни).
     /// Линия пола — как у каркаса этажей (FloorSkeletonBuilder): Y = -4.2 относительно коридора/комнаты.
-    /// Меню: Overworked → P2 → Fit Light Cones To Floor.
+    /// Меню: Overworked → P2 → All Floors → Fit Light Cones To Floor.
     /// </summary>
     [InitializeOnLoad]
     public static class LightConeFloorFit
@@ -45,7 +45,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Fit Light Cones To Floor")]
+        [MenuItem("Overworked/P2/All Floors/Fit Light Cones To Floor")]
         public static void FitAll()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

@@ -16,7 +16,7 @@ namespace Overworked.EditorTools
     /// Вместо фона в коридоре и каждой комнате — серая стена, чёрный пол ниже горизонта, тёмно-серый потолок (Unlit).
     /// Повторный запуск безопасен: пересобирает серый фон, уже заменённое не трогает.
     /// Игрок не трогается. Отменяется через Ctrl+Z или копированием сцены заново.
-    /// Запуск: открыть сцену → меню Overworked → P1 → Graybox Open Scene.
+    /// Запуск: открыть сцену → меню Overworked → P1 → Graybox → Graybox Open Scene.
     /// </summary>
     public static class GrayboxTool
     {
@@ -28,7 +28,7 @@ namespace Overworked.EditorTools
         /// HUD по частям, подсказка управления), выключается playOnStart. Сцена стартует с управлением сразу.
         /// Остальные сценарии (зоны, турникет) не трогаются. Отмена — Ctrl+Z.
         /// </summary>
-        [MenuItem("Overworked/P1/Skip Opening In Open Scene")]
+        [MenuItem("Overworked/P1/Scene Setup/Skip Opening In Open Scene")]
         public static void SkipOpening()
         {
             var scene = EditorSceneManager.GetActiveScene();
@@ -53,7 +53,7 @@ namespace Overworked.EditorTools
         /// в конце коридора (турникет, лестница, лампы у них), переносится в новый конец. Начало коридора, кухня и
         /// объекты в середине остаются на месте. Серый фон пересобирается под новую длину. Отмена — Ctrl+Z.
         /// </summary>
-        [MenuItem("Overworked/P1/Extend Corridor x3 In Open Scene")]
+        [MenuItem("Overworked/P1/Graybox/Extend Corridor x3 In Open Scene")]
         public static void ExtendCorridor()
         {
             var scene = EditorSceneManager.GetActiveScene();
@@ -124,14 +124,14 @@ namespace Overworked.EditorTools
         /// в начале нового коридора (у левой стены), Дэнни появляется перед ним. Работает на механике комнат P2 (Room + DoorInteractable): затемнение,
         /// телепорт, своя камера с границами. Повторный запуск пересоздаёт второй коридор. Отмена — Ctrl+Z.
         /// </summary>
-        [MenuItem("Overworked/P1/Add Side Corridor In Open Scene")]
+        [MenuItem("Overworked/P1/Graybox/Add Side Corridor In Open Scene")]
         public static void AddSideCorridor() => AddSide("Corridor_B", 2f / 3f, 0.5f, 1);
 
         /// <summary>
         /// Третий коридор: как второй, но длиной 1/3 основного, проход — на 3/4 основного коридора
         /// (между центром и турникетом), в сцене стоит над вторым коридором.
         /// </summary>
-        [MenuItem("Overworked/P1/Add Third Corridor In Open Scene")]
+        [MenuItem("Overworked/P1/Graybox/Add Third Corridor In Open Scene")]
         public static void AddThirdCorridor() => AddSide("Corridor_C", 1f / 3f, 0.75f, 2);
 
         /// <param name="sideName">имя коридора (корень в Rooms, камера "CM имя", проход "Door_имя")</param>
@@ -317,7 +317,7 @@ namespace Overworked.EditorTools
         /// У объектов вычищаются ссылки на реплики/сообщения и подписки на сценарии, снимаются замки и условия
         /// по заданиям (их раньше открывал сюжет) — всё доступно сразу. Отмена — Ctrl+Z.
         /// </summary>
-        [MenuItem("Overworked/P1/Strip Story In Open Scene")]
+        [MenuItem("Overworked/P1/Scene Setup/Strip Story In Open Scene")]
         public static void StripStory()
         {
             var scene = EditorSceneManager.GetActiveScene();
@@ -392,7 +392,7 @@ namespace Overworked.EditorTools
         /// Бег со стаминой (Shift) на игроке открытой сцены: allowRun + материал полоски (Unlit — видна в темноте).
         /// Пока механика не утверждена — только в рабочих сценах. Переопределение префаба Player в этой сцене.
         /// </summary>
-        [MenuItem("Overworked/P1/Enable Running In Open Scene")]
+        [MenuItem("Overworked/P1/Scene Setup/Enable Running In Open Scene")]
         public static void EnableRunning()
         {
             var scene = EditorSceneManager.GetActiveScene();
@@ -407,7 +407,7 @@ namespace Overworked.EditorTools
             Debug.Log($"[Graybox] {scene.name}: бег на Shift со стаминой включён");
         }
 
-        [MenuItem("Overworked/P1/Graybox Open Scene")]
+        [MenuItem("Overworked/P1/Graybox/Graybox Open Scene")]
         public static void Run()
         {
             var scene = EditorSceneManager.GetActiveScene();
@@ -493,7 +493,7 @@ namespace Overworked.EditorTools
         /// сцены приглушается до AmbientIntensity, стены темнеют до LitWallColor, старые лампы с арта (Corridor/Lights) выключаются.
         /// Повторный запуск пересобирает лампы. Отмена — Ctrl+Z.
         /// </summary>
-        [MenuItem("Overworked/P1/Graybox Lamps In Open Scene")]
+        [MenuItem("Overworked/P1/Graybox/Graybox Lamps In Open Scene")]
         public static void AddLamps()
         {
             var scene = EditorSceneManager.GetActiveScene();

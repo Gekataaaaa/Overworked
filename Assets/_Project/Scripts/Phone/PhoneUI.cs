@@ -11,7 +11,7 @@ namespace Overworked
     /// Интерфейс телефона в HUD: кнопка в правом нижнем углу (точка непрочитанных, тряска при вибрации),
     /// список контактов Max / Boss и чат с историей. Ответить нельзя.
     /// Открывает/закрывает <see cref="PhoneManager"/>; данные берутся из <see cref="MessageManager"/>.
-    /// Собирается меню Overworked → P3 → Build Phone UI.
+    /// Собирается меню Overworked → P3 → UI → Build Phone UI.
     /// </summary>
     public class PhoneUI : MonoBehaviour
     {

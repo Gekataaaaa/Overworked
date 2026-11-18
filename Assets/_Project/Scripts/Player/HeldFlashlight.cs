@@ -11,7 +11,7 @@ namespace Overworked
     /// на Floor_02 его выдаёт подбор). Порядок слоёв: Дэнни → фонарик → кисть (картинка «только кисть»
     /// этого кадра) — пальцы обхватывают рукоятку, а сам фонарик не прячется за телом.
     /// Свет фонарика (FlashlightController, P4) переносится в линзу, при включённом фонарике линза светится.
-    /// Лежит на корне префаба Player (ставит Overworked → P1 → Setup Held Flashlight).
+    /// Лежит на корне префаба Player (ставит Overworked → P1 → Player → Setup Held Flashlight).
     /// Точки кисти по кадрам — в инспекторе, в пикселях кадра Дэнни (300 × 430).
     /// </summary>
     [DefaultExecutionOrder(200)]   // после FlashlightController.LateUpdate: свет ставим уже мы

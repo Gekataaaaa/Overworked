@@ -30,6 +30,9 @@ namespace Overworked
         [Tooltip("Яркость в «тёмной» фазе (доля от обычной)")]
         [Range(0f, 1f)] [SerializeField] float darkLevel = 0.1f;
 
+        [Tooltip("Яркость общего света сцены (Global Light 2D) в «тёмной» фазе. Меньше 0 — как darkLevel")]
+        [SerializeField] float globalDarkLevel = -1f;
+
         [Tooltip("Яркость во «вспышке» (Wild): больше 1 — лампа резко вспыхивает ярче обычного")]
         [SerializeField] float brightLevel = 1f;
 
@@ -47,7 +50,13 @@ namespace Overworked
             void SetLevel(float k)
             {
                 for (int i = 0; i < targets.Count; i++)
-                    if (targets[i] != null) targets[i].intensity = baseIntensity[i] * k;
+                {
+                    if (targets[i] == null) continue;
+                    // Общий свет в тёмной фазе может гаснуть слабее/сильнее ламп (globalDarkLevel).
+                    float level = k == darkLevel && globalDarkLevel >= 0f && targets[i].lightType == Light2D.LightType.Global
+                        ? globalDarkLevel : k;
+                    targets[i].intensity = baseIntensity[i] * level;
+                }
             }
 
             SeenIfNeeded(hallucination);
@@ -76,8 +85,10 @@ namespace Overworked
                     {
                         dark = !dark;
                         next = t + Random.Range(0.5f, 1.5f) / Mathf.Max(0.1f, rate);
-                        SetLevel(dark ? darkLevel : brightLevel);
                     }
+                    // Каждый кадр: LightFlicker на лампе в своём Update возвращает обычную яркость —
+                    // если ставить уровень только при переключении, лампа гаснет лишь на один кадр.
+                    SetLevel(dark ? darkLevel : brightLevel);
                     yield return null;
                 }
             }

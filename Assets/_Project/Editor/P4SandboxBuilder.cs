@@ -13,7 +13,7 @@ namespace Overworked.EditorTools
     /// <summary>
     /// Заготовки P4: Audio Mixer (Music / Ambient / SFX / Heartbeat) с подключением к AudioManager в _Systems
     /// и тёмный коридор с фонариком в Sandbox_P4. Шкала рассудка и пульс — из HUD P3 в _Systems.
-    /// Запуск: меню Overworked → P4 → Build Horror Sandbox,
+    /// Запуск: меню Overworked → P4 → Sandbox → Build Horror Sandbox,
     /// или batchmode -executeMethod Overworked.EditorTools.P4SandboxBuilder.Run.
     /// Готовые миксер и префабы не перезаписываются; объекты песочницы пересоздаются.
     /// </summary>
@@ -31,7 +31,7 @@ namespace Overworked.EditorTools
         const float FloorY = -4.2f;
         const float BoundsMargin = 0.25f;
 
-        [MenuItem("Overworked/P4/Build Horror Sandbox")]
+        [MenuItem("Overworked/P4/Sandbox/Build Horror Sandbox")]
         public static void Run()
         {
             var mixer = EnsureMixer();

@@ -19,7 +19,7 @@ namespace Overworked.EditorTools
         static readonly Color BackColor = new Color(0.05f, 0.05f, 0.06f);
         const string UnlitPath = "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Unlit-Default.mat";
 
-        [MenuItem("Overworked/P1/Add Locker In Open Scene")]
+        [MenuItem("Overworked/P1/Objects/Add Locker In Open Scene")]
         public static void Build()
         {
             var scene = EditorSceneManager.GetActiveScene();

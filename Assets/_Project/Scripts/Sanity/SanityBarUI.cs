@@ -123,6 +123,7 @@ namespace Overworked
             basePosition = rect.anchoredPosition;
 
             BuildLayers();
+            HotbarUI.Attach(rect);   // хотбар — правее шкалы, сверху экрана
         }
 
         // Порядок снизу вверх: Frame → Trail → Fill. Светлая маска не заходит на контур рамки, поэтому рамку сверху класть не нужно.

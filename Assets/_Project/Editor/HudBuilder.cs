@@ -9,7 +9,7 @@ namespace Overworked.EditorTools
     /// <summary>
     /// P3: собирает в HUD префаба _Systems места под шкалу рассудка и пульс под ней (их наполняет P4),
     /// окно текста на весь экран (записка) и подсказку управления; проставляет ссылки в UIManager.
-    /// Меню Overworked → P3 → Build HUD. Пересоздаёт только свои объекты: SanityBar, Heartbeat,
+    /// Меню Overworked → P3 → UI → Build HUD. Пересоздаёт только свои объекты: SanityBar, Heartbeat,
     /// FullscreenText, ControlsHint; SanityBar и Heartbeat — только если их нет (их наполняет P4). Телефон и тост — Build Phone UI, субтитры — Build Dialogue UI.
     /// </summary>
     public static class HudBuilder
@@ -22,13 +22,13 @@ namespace Overworked.EditorTools
         static readonly Color Paper = new Color(0.86f, 0.83f, 0.72f);
         static readonly Color Ink = new Color(0.12f, 0.1f, 0.09f);
 
-        [MenuItem("Overworked/P3/Build HUD")]
+        [MenuItem("Overworked/P3/UI/Build HUD")]
         public static void Run()
         {
             var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
             if (font == null)
             {
-                Debug.LogError("[Setup] нет шрифта PT Sans — сначала Overworked → P1 → Build Main Menu");
+                Debug.LogError("[Setup] нет шрифта PT Sans — сначала Overworked → P1 → UI → Build Main Menu");
                 return;
             }
 

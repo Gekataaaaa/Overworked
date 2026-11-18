@@ -11,7 +11,7 @@ namespace Overworked
     /// </summary>
     public class PhoneManager : SingletonBehaviour<PhoneManager>
     {
-        [Tooltip("Интерфейс телефона в HUD (собирается меню Overworked → P3 → Build Phone UI)")]
+        [Tooltip("Интерфейс телефона в HUD (собирается меню Overworked → P3 → UI → Build Phone UI)")]
         [SerializeField] PhoneUI ui;
 
         /// <summary>Игрок открыл телефон.</summary>

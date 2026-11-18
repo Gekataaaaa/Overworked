@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// <summary>
     /// Собирает сцену MainMenu: меню Continue / New Game / Quit и пролог-терминал (паспорт, разделы 5 и 21).
     /// Заодно импортирует TMP Essentials, создаёт TMP-шрифты (PT Sans, IBM Plex Mono) и тексты пролога.
-    /// Запуск: меню Overworked → P1 → Build Main Menu.
+    /// Запуск: меню Overworked → P1 → UI → Build Main Menu.
     /// Повторный запуск пересоздаёт только MainMenu Canvas; шрифты и тексты не перезаписывает.
     /// </summary>
     public static class MainMenuBuilder
@@ -34,7 +34,7 @@ namespace Overworked.EditorTools
 
         const string TmpEssentials = "Packages/com.unity.ugui/Package Resources/TMP Essential Resources.unitypackage";
 
-        [MenuItem("Overworked/P1/Build Main Menu")]
+        [MenuItem("Overworked/P1/UI/Build Main Menu")]
         public static void Run()
         {
             if (Resources.Load<TMP_Settings>("TMP Settings") == null)

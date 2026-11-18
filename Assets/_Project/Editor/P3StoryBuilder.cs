@@ -10,7 +10,7 @@ namespace Overworked.EditorTools
     /// повторный запуск пересобирает только её, расстановку P2 (Story/P2Chain) и P1 (Story/Chain) не трогает.
     /// Floor_02: 2.0 «So dark…» на старте; 2.0 сообщения Макса и Босса на первом включении фонарика;
     /// 2.2 запрет возврата после компьютера в 201. Floor_01: 3.0 сообщения Макса и Босса в коридоре,
-    /// Дэнни смотрит в экран. Меню Overworked → P3 → Build Story Floor 02 / Build Story Floor 01.
+    /// Дэнни смотрит в экран. Меню Overworked → P3 → Story → Build Story Floor 02 / Build Story Floor 01.
     /// </summary>
     public static class P3StoryBuilder
     {
@@ -20,7 +20,7 @@ namespace Overworked.EditorTools
         // Линия пола этажей (FloorSkeletonBuilder / ChainBuilder).
         const float FloorY = -4.2f;
 
-        [MenuItem("Overworked/P3/Build Story Floor 02")]
+        [MenuItem("Overworked/P3/Story/Build Story Floor 02")]
         public static void BuildFloor02()
         {
             // Сцену — ДО загрузки ассетов: OpenScene(Single) выгружает загруженные раньше ассеты.
@@ -78,7 +78,7 @@ namespace Overworked.EditorTools
             Save(scene, "Floor_02: старт, сообщения на фонарик, запрет возврата");
         }
 
-        [MenuItem("Overworked/P3/Build Story Floor 01")]
+        [MenuItem("Overworked/P3/Story/Build Story Floor 01")]
         public static void BuildFloor01()
         {
             var scene = EditorSceneManager.OpenScene(Scenes + "Floor_01.unity", OpenSceneMode.Single);

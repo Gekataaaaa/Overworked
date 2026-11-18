@@ -13,7 +13,7 @@ namespace Overworked.EditorTools
     /// «[E] Pick up the flashlight» → фонарик взлетает над Дэнни → «Looks like I found a flashlight!» (F2_FlashlightFound)
     /// → фонарик становится доступен (FlashlightController.SetAvailable(true)) → над Дэнни подсказка
     /// «[F] Turn the flashlight on / off» (FlashlightHint), пока не включит.
-    /// Меню: Overworked → P2 → Floor_02 Flashlight Pickup.
+    /// Меню: Overworked → P2 → Floor_02 → Floor_02 Flashlight Pickup.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor02Flashlight
@@ -48,7 +48,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Floor_02 Flashlight Pickup")]
+        [MenuItem("Overworked/P2/Floor_02/Floor_02 Flashlight Pickup")]
         public static void Build()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

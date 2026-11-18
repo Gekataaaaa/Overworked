@@ -17,7 +17,7 @@ namespace Overworked.EditorTools
     /// Отпирает лестницу Story/StairsLock (ObjectiveCompletedEvent по Id задания), кто бы задание ни закрыл:
     /// объяснение убирается, лестница открывается. Подсказка — по нарративу «Go down».
     /// Задание F2_CheckDocs201 выдаёт прочитанное сообщение Макса (P3StoryBuilder), дверь в Room_201 открыта сразу.
-    /// Меню: Overworked → P2 → Lock Floor_02 Stairs Until Room 201.
+    /// Меню: Overworked → P2 → Floor_02 → Lock Floor_02 Stairs Until Room 201.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor02StairsLock
@@ -55,7 +55,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Lock Floor_02 Stairs Until Room 201")]
+        [MenuItem("Overworked/P2/Floor_02/Lock Floor_02 Stairs Until Room 201")]
         public static void Build()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

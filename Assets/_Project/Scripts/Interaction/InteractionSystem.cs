@@ -50,12 +50,26 @@ namespace Overworked
 
             // Пока реплика после взаимодействия ждёт нажатия, E листает её, а не взаимодействует снова.
             var dm = DialogueManager.Instance;
-            if (best != null && GameInput.Interact != null && GameInput.Interact.WasPressedThisFrame()
-                && (dm == null || !dm.HoldsInteract))
+            bool pressed = GameInput.Interact != null && GameInput.Interact.WasPressedThisFrame()
+                && (dm == null || !dm.HoldsInteract);
+            // В хотбаре выбран предмет — E использует его, а не объект рядом (снять выбор — та же цифра).
+            if (pressed && Hotbar.SelectedItem != null && CanUseItem())
+            {
+                Hotbar.UseSelected();
+                return;
+            }
+            if (best != null && pressed)
             {
                 DialogueManager.NoteInteraction();
                 best.Interact();
             }
+        }
+
+        // Предмет — только когда Дэнни свободен: не в шкафчике, не в телефоне, мини-игре, катсцене, паузе.
+        static bool CanUseItem()
+        {
+            var player = PlayerController.Instance;
+            return HideLocker.Occupied == null && player != null && player.State == PlayerState.Normal && Time.timeScale > 0f;
         }
 
         IInteractable FindBest()

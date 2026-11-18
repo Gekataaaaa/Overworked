@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// В копиях этажей: двери в комнаты работают (DoorInteractable), фонарик на 2 и 1 этажах,
     /// зоны галлюцинаций по нарративу, P4SandboxRoute (переходы ведут по копиям) и отладка HorrorDebugKeys.
     /// Запускать игру — из Sandbox_P4_MainMenu (или сразу с копии этажа).
-    /// Запуск: меню Overworked → P4 → Build Game Sandbox,
+    /// Запуск: меню Overworked → P4 → Sandbox → Build Game Sandbox,
     /// или batchmode -executeMethod Overworked.EditorTools.P4GameSandboxBuilder.Run.
     /// Копии каждый раз пересоздаются из оригиналов (правки руками в копиях пропадут).
     /// </summary>
@@ -22,7 +22,7 @@ namespace Overworked.EditorTools
         const float FloorY = -4.2f;
         const float PlayerY = FloorY + 0.9f;
 
-        [MenuItem("Overworked/P4/Build Game Sandbox")]
+        [MenuItem("Overworked/P4/Sandbox/Build Game Sandbox")]
         public static void Run()
         {
             var h = HB.EnsurePrefabs();
@@ -98,7 +98,7 @@ namespace Overworked.EditorTools
         /// Финальный скример в настоящий Floor_01 (общая сцена): H5_FinalScreamer в Hallucinations
         /// и FinalScreamerStarter (победа в Tiny UFO + выход из Room_102). Повторный запуск заменяет прежние.
         /// </summary>
-        [MenuItem("Overworked/P4/Add Final Screamer to Floor_01")]
+        [MenuItem("Overworked/P4/Hallucinations/Add Final Screamer to Floor_01")]
         public static void AddToFloor01()
         {
             var h = HB.EnsurePrefabs();
@@ -121,7 +121,7 @@ namespace Overworked.EditorTools
         /// Ни к чему не привязаны (ни зон, ни шагов сценария) — запуск подключим позже.
         /// Уже стоящие не дублируются. Финальный скример — AddToFloor01.
         /// </summary>
-        [MenuItem("Overworked/P4/Add Hallucinations to Floors")]
+        [MenuItem("Overworked/P4/Hallucinations/Add Hallucinations to Floors")]
         public static void AddHallucinationsToFloors()
         {
             var h = HB.EnsurePrefabs();

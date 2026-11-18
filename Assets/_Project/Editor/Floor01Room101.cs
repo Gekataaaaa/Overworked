@@ -15,7 +15,7 @@ namespace Overworked.EditorTools
     /// флаг Key102 (открывает дверь 102), задание F1_FindKey101 выполнено, выдаётся F1_FinishWork.
     /// Тексты — ассеты Data/ с именами из таблицы P3 (docs/systems/Texts.md), строки дословно из NARRATIVE_EN.
     /// Уже существующие ассеты не перезаписываются. Повторный запуск пересоздаёт тумбу.
-    /// Меню: Overworked → P2 → Build Floor_01 Room 101 Drawer And Key.
+    /// Меню: Overworked → P2 → Floor_01 → Build Floor_01 Room 101 Drawer And Key.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor01Room101
@@ -57,7 +57,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Build Floor_01 Room 101 Drawer And Key")]
+        [MenuItem("Overworked/P2/Floor_01/Build Floor_01 Room 101 Drawer And Key")]
         public static void Build()
         {
             // Несохранённые правки в открытой сцене — спросить, иначе OpenScene их выбросит.

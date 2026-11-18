@@ -11,7 +11,7 @@ namespace Overworked.EditorTools
     /// с ключом, но без разговора — реплика F1_Door102TalkFirst. Карточка показывает оба задания списком.
     /// Оба задания выдаются до входа в 101: зона перед дверью 101 (ObjectiveTrigger) — даже если игрок
     /// не пробовал дверь 102 (её табличка по-прежнему тоже выдаёт задание).
-    /// Меню: Overworked → P1 → Floor_01 Talk To Man Objective (повторить после Overworked → P4 → Floor_01 Art
+    /// Меню: Overworked → P1 → Floors → Floor_01 Talk To Man Objective (повторить после Overworked → P4 → Floor_01 Art
     /// не нужно — Floor01Art сам ставит задание сидящему, если ассет есть).
     /// </summary>
     public static class Floor01TalkToMan
@@ -23,7 +23,7 @@ namespace Overworked.EditorTools
         const string LinkName = "F1_TalkToManLink";
         const string ZoneName = "F1_Door101Objectives";
 
-        [MenuItem("Overworked/P1/Floor_01 Talk To Man Objective")]
+        [MenuItem("Overworked/P1/Floors/Floor_01 Talk To Man Objective")]
         public static void Run()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

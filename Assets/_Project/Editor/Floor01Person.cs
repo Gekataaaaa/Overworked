@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// При приближении — подсказка E — Interact. После E фигура сжимается в точку и исчезает»,
     /// затем DANNY «He wasn't here…» (F1_PersonGone, ассет P3). Стул остаётся — исчезает только фигура.
     /// Пока без арта: стул и тёмная сидящая фигура из прямоугольников в левом углу комнаты.
-    /// Меню: Overworked → P2 → Place Floor_01 Mumbling Man.
+    /// Меню: Overworked → P2 → Floor_01 → Place Floor_01 Mumbling Man.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor01Person
@@ -50,7 +50,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Place Floor_01 Mumbling Man")]
+        [MenuItem("Overworked/P2/Floor_01/Place Floor_01 Mumbling Man")]
         public static void Place()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

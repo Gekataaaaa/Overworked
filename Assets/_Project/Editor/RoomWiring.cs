@@ -11,7 +11,7 @@ namespace Overworked.EditorTools
     /// компонент Room (точка входа, камера, точка возврата), двери Corridor/Doors/Door_Room_X — вход,
     /// Room_X/ExitDoor — выход. Остальные двери коридора — просто картинки, без E.
     /// Уже настроенные двери не перенастраиваются, так что запускать можно повторно.
-    /// Меню: Overworked → P2 → Wire Rooms On All Floors (Floor_03 кухня, Floor_02 Room_201, Floor_01 Room_101/102)
+    /// Меню: Overworked → P2 → All Floors → Wire Rooms On All Floors (Floor_03 кухня, Floor_02 Room_201, Floor_01 Room_101/102)
     /// и Wire Rooms In Open Scene (только открытая сцена).
     /// </summary>
     [InitializeOnLoad]
@@ -57,7 +57,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Wire Rooms On All Floors")]
+        [MenuItem("Overworked/P2/All Floors/Wire Rooms On All Floors")]
         public static void WireAllFloors()
         {
             // Несохранённые правки в открытой сцене — спросить, иначе OpenScene их выбросит.
@@ -76,7 +76,7 @@ namespace Overworked.EditorTools
             Debug.Log("[Setup] Комнаты разведены на всех этажах: Floor_03 кухня, Floor_02 Room_201, Floor_01 Room_101 и Room_102");
         }
 
-        [MenuItem("Overworked/P2/Wire Rooms In Open Scene")]
+        [MenuItem("Overworked/P2/All Floors/Wire Rooms In Open Scene")]
         public static void WireOpenScene()
         {
             var scene = SceneManager.GetActiveScene();

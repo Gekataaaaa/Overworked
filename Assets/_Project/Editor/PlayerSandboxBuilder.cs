@@ -9,7 +9,7 @@ namespace Overworked.EditorTools
 {
     /// <summary>
     /// Собирает префаб игрока-заглушки и тестовый коридор в Sandbox_P1 (серые прямоугольники).
-    /// Запуск: меню Overworked → P1 → Build Player Sandbox,
+    /// Запуск: меню Overworked → P1 → Player → Build Player Sandbox,
     /// или batchmode -executeMethod Overworked.EditorTools.PlayerSandboxBuilder.Run.
     /// Префаб не перезаписывается, если уже есть; объекты коридора в Sandbox_P1 пересоздаются.
     /// </summary>
@@ -30,7 +30,7 @@ namespace Overworked.EditorTools
         // сжимает их в отрезок и прибивает камеру к центру — она перестаёт ехать за игроком.
         const float BoundsMargin = 0.25f;
 
-        [MenuItem("Overworked/P1/Build Player Sandbox")]
+        [MenuItem("Overworked/P1/Player/Build Player Sandbox")]
         public static void Run()
         {
             var square = EnsureSquareSprite();

@@ -28,10 +28,10 @@ namespace Overworked
         [SerializeField] bool allowRun;
 
         [Tooltip("Во сколько раз бег быстрее ходьбы")]
-        [SerializeField] float runMultiplier = 2f;
+        [SerializeField] float runSpeedMultiplier = 2.6f;
 
         [Tooltip("Запас стамины: сколько секунд можно бежать с полной полоски")]
-        [SerializeField] float staminaMax = 4f;
+        [SerializeField] float staminaSeconds = 8f;
 
         [Tooltip("Восстановление стамины, секунд бега за секунду отдыха")]
         [SerializeField] float staminaRegen = 1f;
@@ -66,12 +66,15 @@ namespace Overworked
         /// </summary>
         public static bool DebugFastRun;
 
+        /// <summary>Скорость ходьбы, юнитов в секунду (от неё считают скорость враги).</summary>
+        public float WalkSpeed => speed;
+
         // Сброс при каждом входе в Play: при выключенном Domain Reload статика пережила бы прошлый запуск.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetDebugFastRun() => DebugFastRun = false;
 
         /// <summary>Стамина 0..1 (для полоски под Дэнни).</summary>
-        public float Stamina01 => staminaMax > 0f ? stamina / staminaMax : 1f;
+        public float Stamina01 => staminaSeconds > 0f ? stamina / staminaSeconds : 1f;
 
         /// <summary>Стамина кончилась и ещё не восстановилась до recoverToRun — бежать нельзя.</summary>
         public bool Exhausted { get; private set; }
@@ -115,7 +118,7 @@ namespace Overworked
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             if (sprite == null) sprite = GetComponentInChildren<SpriteRenderer>();
             anim = GetComponent<PlayerAnimator>();
-            stamina = staminaMax;
+            stamina = staminaSeconds;
         }
 
         void Start()
@@ -128,7 +131,7 @@ namespace Overworked
             float dir = State == PlayerState.Normal ? ReadInput() : 0f;
             IsMoving = Mathf.Abs(dir) > 0.01f;
             IsRunning = UpdateStamina(Time.fixedDeltaTime);
-            float run = IsRunning ? runMultiplier * (DebugFastRun ? 2f : 1f) : 1f;
+            float run = IsRunning ? runSpeedMultiplier * (DebugFastRun ? 2f : 1f) : 1f;
             body.linearVelocity = new Vector2(dir * speed * run, 0f);
             if (IsMoving)
             {
@@ -156,7 +159,7 @@ namespace Overworked
             }
             else if (Time.time - lastRunTime >= regenDelay)
             {
-                stamina = Mathf.Min(staminaMax, stamina + staminaRegen * dt);
+                stamina = Mathf.Min(staminaSeconds, stamina + staminaRegen * dt);
                 if (Exhausted && Stamina01 >= recoverToRun) Exhausted = false;
             }
             return running;

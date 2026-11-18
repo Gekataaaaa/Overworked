@@ -101,6 +101,7 @@ namespace Overworked
             // Задания и история телефона живут в _Systems и пережили бы новую игру.
             if (ObjectiveManager.Instance != null) ObjectiveManager.Instance.ResetAll();
             if (MessageManager.Instance != null) MessageManager.Instance.Clear();
+            Hotbar.Clear();
         }
 
         void ForgetHiddenFloor()

@@ -10,7 +10,7 @@ namespace Overworked.EditorTools
     /// как Room_201 на Floor_02: серые заглушки каркаса прячутся, дверь EXIT и пропуск Макса (спрайты P2)
     /// подгоняются под масштаб фона и встают на нарисованные места, под двумя нарисованными трубками — свет.
     /// Компоненты, подписки сценария и остальной Floor_03 не меняются. Повторный запуск безопасен.
-    /// Меню: Overworked → P1 → Build Floor_03 Kitchen Background (после Overworked → P2 → Floor_03 Kitchen Art).
+    /// Меню: Overworked → P1 → Old Floor_03 → Build Floor_03 Kitchen Background (после Overworked → P2 → Old Floor_03 → Floor_03 Kitchen Art).
     /// </summary>
     public static class Floor03KitchenBackground
     {
@@ -27,7 +27,7 @@ namespace Overworked.EditorTools
             DarkLevel = FloorLamps.Office.DarkLevel, ConeDim = 0.75f,
         };
 
-        [MenuItem("Overworked/P1/Build Floor_03 Kitchen Background")]
+        [MenuItem("Overworked/P1/Old Floor_03/Build Floor_03 Kitchen Background")]
         public static void Build()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
@@ -72,7 +72,7 @@ namespace Overworked.EditorTools
                 // Коллайдер — в локальных единицах спрайта, масштаб объекта растянет его вместе с дверью.
                 if (door.TryGetComponent(out BoxCollider2D col)) { col.size = doorSr.sprite.bounds.size; col.offset = Vector2.zero; }
             }
-            else Debug.LogWarning("[Setup] Floor_03: у двери кухни нет спрайта — сначала Overworked → P2 → Floor_03 Kitchen Art");
+            else Debug.LogWarning("[Setup] Floor_03: у двери кухни нет спрайта — сначала Overworked → P2 → Old Floor_03 → Floor_03 Kitchen Art");
             var label = kitchen.Find("ExitDoor/Label");
             if (label != null) label.gameObject.SetActive(false);
             var entry = kitchen.Find("EntryPoint");
@@ -90,7 +90,7 @@ namespace Overworked.EditorTools
                 passArt.localScale = Vector3.one * k;
                 passSr.sortingOrder = -7;
             }
-            else Debug.LogWarning("[Setup] Floor_03: нет Props/MaxPass/Sprite со спрайтом — сначала Overworked → P2 → Floor_03 Kitchen Art");
+            else Debug.LogWarning("[Setup] Floor_03: нет Props/MaxPass/Sprite со спрайтом — сначала Overworked → P2 → Old Floor_03 → Floor_03 Kitchen Art");
 
             // --- Свет: трубки нарисованы на фоне (центры x 822 и 1420, y ≈ 265), добавляем Light2D и мягкие конусы.
             var fixtures = new[]

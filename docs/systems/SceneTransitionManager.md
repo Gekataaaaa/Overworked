@@ -32,7 +32,7 @@
 начинается вместе с уходом в чёрное и гаснет за `descendFade` (0.15 с), как только новый этаж начинает
 проявляться (событие `SceneTransitionManager.FadeInStarted`).
 
-**Каркасы этажей** — меню **Overworked → P1 → Build Floor Skeletons**: коридор, двери с подписями,
+**Каркасы этажей** — меню **Overworked → P1 → Floors → Build Floor Skeletons**: коридор, двери с подписями,
 комнаты под коридором (EntryPoint, ExitDoor, выключенная камера комнаты), игрок, камера, лестница.
 Уже собранный этаж (есть объекты в `Environment/Corridor/Background`) пропускается.
 

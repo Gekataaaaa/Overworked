@@ -9,11 +9,11 @@
 
 **Как подключить:** ничего класть в сцену не нужно — всё живёт в префабе `_Systems`:
 `PhoneManager` и `MessageManager` на корне, `PhoneUI` и объекты `PhoneButton` / `PhonePanel` / `Toast` в `HUD`.
-UI собирается меню **Overworked → P3 → Build Phone UI** (пересоздаёт только эти три объекта в HUD
+UI собирается меню **Overworked → P3 → UI → Build Phone UI** (пересоздаёт только эти три объекта в HUD
 и ссылки в `PhoneManager`, `UIManager`). Тексты сообщений — ассеты `MessageData` в `Data/Messages/`
 (список — [Texts.md](Texts.md)).
 
-Песочница: **Overworked → P3 → Build Phone Sandbox** собирает `Sandbox_P3` (коридор, игрок, камера,
+Песочница: **Overworked → P3 → Sandbox → Build Phone Sandbox** собирает `Sandbox_P3` (коридор, игрок, камера,
 `PhoneTester`). В Play Mode: **1–3** — доставить тестовые сообщения, **0** — Max и Boss подряд,
 **Tab** — телефон, **A/D** — переключить чат, **колесо мыши** — прокрутка, **Esc** — закрыть.
 

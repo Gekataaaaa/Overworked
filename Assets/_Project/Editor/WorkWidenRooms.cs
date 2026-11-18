@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// (CameraBounds), серый фон (~GrayBackdrop) и всё, что стоит у правой стены (на кухне — дверь в столовую и точка
     /// выхода из неё). Лампы кухни повторяются по новой длине. Ширина задаётся целью, а не множителем: повторный запуск
     /// ничего не меняет. Работает в открытой сцене (сохранить — File → Save), отмена — Ctrl+Z.
-    /// Меню Overworked → P3 → Work: Widen Kitchen And Canteen To 3 Screens.
+    /// Меню Overworked → P3 → Floor_03_Work → Widen Kitchen And Canteen To 3 Screens.
     /// </summary>
     public static class WorkWidenRooms
     {
@@ -24,7 +24,7 @@ namespace Overworked.EditorTools
         // и прибивает камеру к центру комнаты. ±5.65 — как у коридора (FloorSkeletonBuilder: HalfHeight + 0.25).
         const float MinHalfHeight = 5.65f;
 
-        [MenuItem("Overworked/P3/Work: Widen Kitchen And Canteen To 3 Screens")]
+        [MenuItem("Overworked/P3/Floor_03_Work/Widen Kitchen And Canteen To 3 Screens")]
         public static void Run()
         {
             if (!EnsureScene()) return;

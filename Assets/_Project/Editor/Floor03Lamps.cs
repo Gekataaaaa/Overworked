@@ -14,7 +14,7 @@ namespace Overworked.EditorTools
     /// с Light2D (под конусом) и LampLight (картинки повторяют яркость света). Затем в H1 этого этажа
     /// мерцанию (LightFlickerVisual «LampLights») отдаются именно эти лампы — «лампы резко мигают» (нарратив 1.3)
     /// мигают сами лампы, а не только вспышка на экране. Вспышка экрана H1 остаётся.
-    /// Меню: Overworked → P2 → Floor_03 Lamps For Hallucination 1.
+    /// Меню: Overworked → P2 → Old Floor_03 → Floor_03 Lamps For Hallucination 1.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor03Lamps
@@ -84,7 +84,7 @@ namespace Overworked.EditorTools
             go.transform.localScale = template.transform.localScale;
         }
 
-        [MenuItem("Overworked/P2/Floor_03 Lamps For Hallucination 1")]
+        [MenuItem("Overworked/P2/Old Floor_03/Floor_03 Lamps For Hallucination 1")]
         public static void Build()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

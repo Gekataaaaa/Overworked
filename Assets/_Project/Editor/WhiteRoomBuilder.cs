@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// Собирает сцену WhiteRoom (паспорт, раздел 10): белое пространство с линией пола, Дэнни, камера,
     /// точки реплик по пути, кровать (проявляется), сценарий WhiteRoomSequence, белый слой и титры.
     /// Реплики — ассеты WR_01…WR_06 и WR_Bed в Data/Dialogues (имена по таблице P3 docs/systems/Texts.md, тексты из NARRATIVE_EN, сцена 4.0); готовые ассеты не перезаписываются.
-    /// Запуск: меню Overworked → P4 → Build White Room. Объекты сцены, которые собирает этот скрипт, пересоздаются;
+    /// Запуск: меню Overworked → P4 → Art → Build White Room. Объекты сцены, которые собирает этот скрипт, пересоздаются;
     /// FloorSettings, Story, Main Camera и свет из каркаса сцены не трогаются.
     /// </summary>
     public static class WhiteRoomBuilder
@@ -37,7 +37,7 @@ namespace Overworked.EditorTools
         static readonly Color BedSheet = new Color(0.88f, 0.89f, 0.9f);
         static readonly Color CreditsColor = new Color(0.35f, 0.36f, 0.38f);
 
-        [MenuItem("Overworked/P4/Build White Room")]
+        [MenuItem("Overworked/P4/Art/Build White Room")]
         public static void Run()
         {
             // Сцену открываем ДО загрузки ассетов: OpenScene(Single) выгружает «неиспользуемые» ассеты,

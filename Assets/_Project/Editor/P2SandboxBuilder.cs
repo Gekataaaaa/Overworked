@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// записка, пропуск, запертая дверь, дверь в комнату, ящик с ключом, бормочущий человек, турникет
     /// со считывателем, дверь на ключ, аркадный автомат с Tiny UFO. Задания и тексты — тестовые,
     /// лежат рядом со сценой (Sandbox_P2_Data), настоящие данные этажей делает P3.
-    /// Запуск: Overworked → P2 → Build Interaction Sandbox. Пересобирает сцену целиком.
+    /// Запуск: Overworked → P2 → Sandbox → Build Interaction Sandbox. Пересобирает сцену целиком.
     /// </summary>
     public static class P2SandboxBuilder
     {
@@ -24,7 +24,7 @@ namespace Overworked.EditorTools
         static Sprite square;
         static TMP_FontAsset font;
 
-        [MenuItem("Overworked/P2/Build Interaction Sandbox")]
+        [MenuItem("Overworked/P2/Sandbox/Build Interaction Sandbox")]
         public static void Run()
         {
             square = SB.EnsureSquareSprite();

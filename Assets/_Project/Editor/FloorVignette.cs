@@ -13,7 +13,7 @@ namespace Overworked.EditorTools
     /// Профиль Settings/Floors_Vignette.asset (один на все этажи — правится в одном месте),
     /// в каждой сцене этажа — объект GlobalVignette с глобальным Volume, у камеры этажа включается
     /// Post Processing. HUD и подсказки (экранные канвасы) виньетка не затемняет.
-    /// Меню: Overworked → P2 → Add Global Vignette To Floors.
+    /// Меню: Overworked → P2 → All Floors → Add Global Vignette To Floors.
     /// </summary>
     [InitializeOnLoad]
     public static class FloorVignette
@@ -48,7 +48,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Add Global Vignette To Floors")]
+        [MenuItem("Overworked/P2/All Floors/Add Global Vignette To Floors")]
         public static void AddToFloors()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

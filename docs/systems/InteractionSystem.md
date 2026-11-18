@@ -36,7 +36,7 @@
 `OutToCorridor` у `ExitDoor`). Камера под затемнением переключается резко (без блендинга Cinemachine).
 Поля `target` / `cameraOn` / `cameraOff` — для перехода без комнаты.
 
-**Разводка этажей:** меню **Overworked → P2 → Wire Rooms On All Floors** — Floor_03 (кухня),
+**Разводка этажей:** меню **Overworked → P2 → All Floors → Wire Rooms On All Floors** — Floor_03 (кухня),
 Floor_02 (Room_201), Floor_01 (Room_101, Room_102): `Room`, двери входа и выхода, точки возврата.
 Декоративные двери коридора (`Door_<число>`) остаются картинками без E. Повторный запуск безопасен.
 
@@ -53,7 +53,7 @@ Floor_02 (Room_201), Floor_01 (Room_101, Room_102): `Room`, двери вход�
 - **Build Floor_03 Turnstile And Stairs** — пропуск на кухне (`MaxPass`), турникет с барьером и считывателем,
   лестница заперта до ACCESS GRANTED (`F3_TurnstileDenied` / `F3_TurnstileGranted` / `F3_PassPicked`).
 
-**Сюжет и галлюцинации на объектах P2** — **Overworked → P2 → Wire Story And Hallucinations** (`P2StoryWiring`):
+**Сюжет и галлюцинации на объектах P2** — **Overworked → P2 → All Floors → Wire Story And Hallucinations** (`P2StoryWiring`):
 сценарии из шагов P3 в `Story/P2Chain` каждого этажа (пересоздаётся), тексты P3, галлюцинации P4:
 - Floor_03: в сценарий P3 у турникета после сообщения Босса — H1 → `F3_H1_After`;
 - Floor_02: середина коридора — H2 → `F2_Silhouette` → сбой ввода + `F2_InputDrift` → взгляд в экран + `F2_LookAtScreen`;
@@ -73,7 +73,7 @@ Floor_02 (Room_201), Floor_01 (Room_101, Room_102): `Room`, двери вход�
 | `InteractableBase.SetLocked(bool)`, `DoorInteractable.SetDoorLocked(bool)` | из сценария |
 | `[ContextMenu] Interact` | проверить объект без игрока |
 
-**Песочница:** меню **Overworked → P2 → Build Interaction Sandbox** собирает `Sandbox_P2`
+**Песочница:** меню **Overworked → P2 → Sandbox → Build Interaction Sandbox** собирает `Sandbox_P2`
 со всеми объектами (тестовые задания и тексты — в `Scenes/Sandbox/Sandbox_P2_Data`).
 
 **Зависит от:** PlayerController, GameInput, ObjectiveManager, MiniGameHost, DialogueManager

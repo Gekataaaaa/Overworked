@@ -16,7 +16,7 @@ namespace Overworked
     public class HallucinationEvent : MonoBehaviour
     {
         [Header("Рассудок и пульс")]
-        [Tooltip("Рассудок после галлюцинации (паспорт, раздел 11)")]
+        [Tooltip("Рассудок после галлюцинации (паспорт, раздел 11). Меньше 0 — рассудок не меняется")]
         public float SanityAfter = 90f;
 
         [Tooltip("Насколько подскакивает пульс")]
@@ -89,6 +89,7 @@ namespace Overworked
         {
             if (SanityApplied) return;
             SanityApplied = true;
+            if (SanityAfter < 0f) return;   // только эффект (мигание при появлении enemy01) — рассудок не трогаем
             if (SanityManager.Instance != null) SanityManager.Instance.SetSanity(SanityAfter);
             Debug.Log($"[Hallucinations] {name}: увидел, рассудок → {SanityAfter}");
         }

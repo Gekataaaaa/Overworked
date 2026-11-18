@@ -8,7 +8,7 @@ namespace Overworked.EditorTools
     /// для фонарика на этом кадре и список диалогов, где Дэнни обращается к игроку (PlayerController.lookAtScreenDialogues):
     /// на его репликах из них он останавливается и поворачивается к игроку, пока они идут.
     /// Так работает и там, где диалог запускают чужие объекты без шага сценария (ящики, запрет возврата, испуг).
-    /// Меню: Overworked → P1 → Setup Look At Screen.
+    /// Меню: Overworked → P1 → Player → Setup Look At Screen.
     /// </summary>
     public static class LookAtScreenSetup
     {
@@ -34,7 +34,7 @@ namespace Overworked.EditorTools
             "WR_01", "WR_02",
         };
 
-        [MenuItem("Overworked/P1/Setup Look At Screen")]
+        [MenuItem("Overworked/P1/Player/Setup Look At Screen")]
         public static void Run()
         {
             var front = ImportFront();

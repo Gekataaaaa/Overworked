@@ -18,7 +18,7 @@ namespace Overworked.EditorTools
     ///   Доступен после ящика — как в нарративе: сначала документы, потом компьютер.
     /// Галлюцинация 3 и сообщения после неё — P4/P3 (onDone компьютера).
     /// Тексты — ассеты Data/ с именами из таблицы P3, строки дословно из NARRATIVE_EN; существующие не трогаются.
-    /// Меню: Overworked → P2 → Build Floor_02 Room 201.
+    /// Меню: Overworked → P2 → Floor_02 → Build Floor_02 Room 201.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor02Room201
@@ -62,7 +62,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Build Floor_02 Room 201")]
+        [MenuItem("Overworked/P2/Floor_02/Build Floor_02 Room 201")]
         public static void Build()
         {
             // Несохранённые правки в открытой сцене — спросить, иначе OpenScene их выбросит.

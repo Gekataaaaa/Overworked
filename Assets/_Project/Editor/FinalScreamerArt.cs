@@ -10,7 +10,7 @@ namespace Overworked.EditorTools
     ///   а не вспышками; SpriteWalkCycle крутит кадры, пока он движется.
     /// — Бросок: кадры Art/Characters/Screamer/Screamer_FullScreen/Doppelganger_ScreamerFS_00..09 на весь экран
     ///   (ScreamerVisual.frames), удар — на последнем.
-    /// Меню: Overworked → P1 → Dress Final Screamer (повторить, если H5 пересобран через Overworked → P4 → Build Hallucinations).
+    /// Меню: Overworked → P1 → Art → Dress Final Screamer (повторить, если H5 пересобран через Overworked → P4 → Hallucinations → Build Hallucinations).
     /// </summary>
     public static class FinalScreamerArt
     {
@@ -22,7 +22,7 @@ namespace Overworked.EditorTools
         // Скорость шага двойника, юнитов в секунду (Дэнни ходит 1.5): медленнее — жутче.
         const float WalkSpeed = 1.1f;
 
-        [MenuItem("Overworked/P1/Dress Final Screamer")]
+        [MenuItem("Overworked/P1/Art/Dress Final Screamer")]
         public static void Run()
         {
             var walk = new Sprite[WalkFrames];

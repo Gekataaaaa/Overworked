@@ -22,6 +22,9 @@ namespace Overworked
         [Tooltip("Яркость трубки, когда свет полностью погас (доля обычной)")]
         [Range(0f, 1f)] [SerializeField] float tubeDarkLevel = 0.25f;
 
+        [Tooltip("Цвет трубки, когда свет выключен совсем (intensity 0): светло-серый, на тон светлее стены коридора")]
+        [SerializeField] Color tubeOffColor = new Color(0.38f, 0.39f, 0.38f);
+
         [Tooltip("Скачок яркости за кадр (доля обычной), который считается миганием, — лёгкое дрожание LightFlicker меньше")]
         [Range(0.05f, 1f)] [SerializeField] float flickerJump = 0.3f;
 
@@ -83,8 +86,16 @@ namespace Overworked
             lastLevel = level;
             if (tube != null)
             {
-                float t = Mathf.Lerp(tubeDarkLevel, 1f, Mathf.Clamp01(k));
-                tube.color = new Color(tubeColor.r * t, tubeColor.g * t, tubeColor.b * t, tubeColor.a);
+                if (k <= 0.001f)
+                {
+                    // Свет погашен полностью (мигание при появлении enemy01) — трубка выключена: просто серое стекло.
+                    tube.color = new Color(tubeOffColor.r, tubeOffColor.g, tubeOffColor.b, tubeColor.a);
+                }
+                else
+                {
+                    float t = Mathf.Lerp(tubeDarkLevel, 1f, Mathf.Clamp01(k));
+                    tube.color = new Color(tubeColor.r * t, tubeColor.g * t, tubeColor.b * t, tubeColor.a);
+                }
             }
             if (cone != null)
             {

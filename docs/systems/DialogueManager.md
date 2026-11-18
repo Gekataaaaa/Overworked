@@ -19,7 +19,7 @@
 не открывает (телефон только ставит печать на паузу, пока открыт).
 
 **Как подключить:** в сцену ничего класть не нужно — `DialogueManager` на корне `_Systems`, плашка
-`Subtitles` в `HUD`. UI и стили собирает меню **Overworked → P3 → Build Dialogue UI** (пересоздаёт только
+`Subtitles` в `HUD`. UI и стили собирает меню **Overworked → P3 → UI → Build Dialogue UI** (пересоздаёт только
 `Subtitles`). Тексты — ассеты `DialogueData`: `Data/Dialogues/` (реплики сцен), `Data/Inspectables/`
 (описания объектов). Полный список — [Texts.md](Texts.md).
 

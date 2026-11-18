@@ -11,7 +11,7 @@ namespace Overworked
     /// <summary>
     /// Общие окна интерфейса: тосты, текст на весь экран (записка), подсказка управления,
     /// видимость частей HUD. Живёт в префабе _Systems; ссылки на элементы HUD проставляют
-    /// меню Overworked → P3 → Build Phone UI и Build HUD.
+    /// меню Overworked → P3 → UI → Build Phone UI и Build HUD.
     /// </summary>
     public class UIManager : SingletonBehaviour<UIManager>
     {

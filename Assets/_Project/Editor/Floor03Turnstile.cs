@@ -18,7 +18,7 @@ namespace Overworked.EditorTools
     /// - Лестница заперта на старте, подсказка «[E] Go down».
     /// Сообщение Босса и Галлюцинация 1 после отказа — сценарий P3/P4 через onDenied турникета.
     /// Тексты — ассеты Data/ с именами из таблицы P3, строки дословно из NARRATIVE_EN; существующие не трогаются.
-    /// Меню: Overworked → P2 → Build Floor_03 Turnstile And Stairs.
+    /// Меню: Overworked → P2 → Old Floor_03 → Build Floor_03 Turnstile And Stairs.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor03Turnstile
@@ -57,7 +57,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Build Floor_03 Turnstile And Stairs")]
+        [MenuItem("Overworked/P2/Old Floor_03/Build Floor_03 Turnstile And Stairs")]
         public static void Build()
         {
             // Несохранённые правки в открытой сцене — спросить, иначе OpenScene их выбросит.

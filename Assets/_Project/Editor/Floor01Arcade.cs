@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// триггер, ArcadeInteractable («[E] Play») и TinyUfoMiniGame — по E запускается Tiny UFO.
     /// Реплики после победы и задание «Finish work in room 102» подключаются, когда P3 сделает их ассеты.
     /// Повторный запуск пересоздаёт автомат на том же месте. Арт потом меняется в дочернем Sprite.
-    /// Меню: Overworked → P2 → Place Floor_01 Arcade.
+    /// Меню: Overworked → P2 → Floor_01 → Place Floor_01 Arcade.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor01Arcade
@@ -52,7 +52,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Place Floor_01 Arcade")]
+        [MenuItem("Overworked/P2/Floor_01/Place Floor_01 Arcade")]
         public static void Place()
         {
             // Несохранённые правки в открытой сцене — спросить, иначе OpenScene их выбросит.

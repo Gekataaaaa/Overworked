@@ -6,7 +6,7 @@ namespace Overworked
     /// <summary>
     /// Гасит HUD (рассудок, пульс, кнопка телефона) вместе с белым слоем смерти в WhiteRoom:
     /// чем белее экран, тем прозрачнее HUD; на полностью белом экране и титрах HUD не видно.
-    /// Кладётся отдельным объектом в сцену WhiteRoom (меню Overworked → P3 → Add HUD Fade To White Room),
+    /// Кладётся отдельным объектом в сцену WhiteRoom (меню Overworked → P3 → UI → Add HUD Fade To White Room),
     /// overlay — белый слой WhiteRoomSequence (P4). Код P4 не меняет. Если ссылка пустая (WhiteRoomBuilder пересоздал
     /// WhiteRoomUI, и она слетела), слой ищется по имени WhiteRoomUI/WhiteOverlay.
     /// </summary>

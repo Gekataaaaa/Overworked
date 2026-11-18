@@ -8,7 +8,7 @@ namespace Overworked.EditorTools
 {
     /// <summary>
     /// P3: собирает плашку субтитров (объект Subtitles) внутри HUD префаба _Systems и проставляет
-    /// ссылки и стили в DialogueManager. Меню Overworked → P3 → Build Dialogue UI.
+    /// ссылки и стили в DialogueManager. Меню Overworked → P3 → UI → Build Dialogue UI.
     /// Пересоздаёт только Subtitles, остальное в _Systems не трогает.
     /// </summary>
     public static class DialogueUiBuilder
@@ -21,14 +21,14 @@ namespace Overworked.EditorTools
         static readonly Color DescriptionColor = new Color(0.66f, 0.73f, 0.69f);
         static readonly Color SystemColor = new Color(0.55f, 0.88f, 0.55f);
 
-        [MenuItem("Overworked/P3/Build Dialogue UI")]
+        [MenuItem("Overworked/P3/UI/Build Dialogue UI")]
         public static void Run()
         {
             var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(MainFontPath);
             var mono = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(MonoFontPath);
             if (font == null || mono == null)
             {
-                Debug.LogError("[Setup] нет шрифтов PT Sans / IBM Plex Mono — сначала Overworked → P1 → Build Main Menu");
+                Debug.LogError("[Setup] нет шрифтов PT Sans / IBM Plex Mono — сначала Overworked → P1 → UI → Build Main Menu");
                 return;
             }
 

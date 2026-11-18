@@ -9,7 +9,7 @@ namespace Overworked
     /// Continue — если этаж спрятан под меню (пауза → Main Menu: возвращает в то же место) или есть чекпоинт
     /// на диске (SaveSystem: этаж с начала в сохранённом состоянии), без пролога и ввода имени. При первом запуске его нет.
     /// New Game — затемнение → пролог-терминал с вводом имени; точка Continue и сохранение на диске стираются.
-    /// Лежит на MainMenu Canvas, собирается меню Overworked → P1 → Build Main Menu.
+    /// Лежит на MainMenu Canvas, собирается меню Overworked → P1 → UI → Build Main Menu.
     /// </summary>
     public class MainMenuUI : MonoBehaviour
     {

@@ -30,7 +30,7 @@
 **В настоящих этажах** (папка `Hallucinations`): Floor_03 — H1, Floor_02 — H2, H3, Floor_01 — H4, H5.
 H1–H4 **пока ни к чему не привязаны** (нет зон и шагов сценария) — сами не запускаются, подключим позже
 (шаг `HallucinationStep`, `HallucinationTrigger` или `Room.onEnter`). Поставить заново без дублей —
-`Overworked → P4 → Add Hallucinations to Floors`.
+`Overworked → P4 → Hallucinations → Add Hallucinations to Floors`.
 
 **Мерцание света.** `LightFlickerVisual` в H1 (резкая вспышка ламп), H3 (бешеное мигание) и H4 (провалы
 в такт пульсу) мигает настоящим светом сцены. Список ламп пустой — мигает весь свет, кроме фонарика
@@ -42,7 +42,7 @@ H1–H4 **пока ни к чему не привязаны** (нет зон и 
 (вызывается только при победе в Tiny UFO, ставит флаг `TinyUfoWon`) и `Room.onExit` комнаты 102.
 Вышел после победы → ждёт, пока дверь проявит экран и вернёт управление → H5. Без победы выход ничего не запускает.
 **В настоящем Floor_01 уже стоит** (Hallucinations: H5_FinalScreamer + H5_Starter_AfterTinyUfo), повторно поставить —
-`Overworked → P4 → Add Final Screamer to Floor_01`. Копия песочницы второй скример не добавляет.
+`Overworked → P4 → Hallucinations → Add Final Screamer to Floor_01`. Копия песочницы второй скример не добавляет.
 
 **Финал (H5 + `FinalCollapse`, по NARRATIVE 3.3):** двойник идёт к Дэнни шагом (1.1 ю/с, неровно — `moveJerk`;
 кадры шага крутятся, пока он движется; всё время мерцает — пропадает на доли секунды, иногда дважды подряд,
@@ -52,7 +52,7 @@ H1–H4 **пока ни к чему не привязаны** (нет зон и 
 звук и пульс резко обрываются → пауза 3 с → `GameManager.LoadFloor(0)` → WhiteRoom.
 Реплики — `Data/Dialogues/F1_FinalNo`, `F1_Collapse`.
 
-**Песочница P4 «вся игра»** (`Overworked → P4 → Build Game Sandbox`, `P4GameSandboxBuilder`):
+**Песочница P4 «вся игра»** (`Overworked → P4 → Sandbox → Build Game Sandbox`, `P4GameSandboxBuilder`):
 копии `Scenes/Sandbox/Sandbox_P4_MainMenu`, `Sandbox_P4_Floor_03/02/01` — оригиналы не трогаются.
 В копиях этажей двери в комнаты работают, на 2 и 1 этажах есть фонарик, галлюцинации стоят на зонах:
 
@@ -87,7 +87,7 @@ WhiteRoom — настоящая. Копии пересоздаются сбор
 
 Визуалы (`HallucinationVisual`: `WithPrevious`, `Delay`, `TriggersHit`, `SanityOnSeen`, `Cleanup()`):
 `SilhouetteBehaviour`, `ScreamerVisual`, `ScreenFlashVisual` (вспышки, в т. ч. в такт пульсу; только тёмные —
-красное мерцание «Distortion» из H2/H4 убрано, меню Overworked → P1 → Remove Red Flicker),
+красное мерцание «Distortion» из H2/H4 убрано, меню Overworked → P1 → Art → Remove Red Flicker),
 `StaticNoiseVisual` (помехи + надпись), `DialogueVisual` (реплики). Помехи H3 и шум скримера H5 шипят звуком
 заставки Tiny UFO (`noiseSound` = `Audio/Horror/SFX_StaticNoise`, тот же клип, что `IntroBoot.noiseSound`):
 H3 — 0.3 всё время помех, H5 — 0.45 на пике и уходит вместе со «снегом». Полноэкранные — на своём Canvas

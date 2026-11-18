@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// в Floor_02 — копия H4 «H4_Silhouette201» только с силуэтом и искажением, рассудок не трогает
     /// (70, как после H2; дальше H3 → 50). Запускает её вход в 201 (P2StoryWiring).
     /// Префаб H4 не меняется — экземпляры в сценах распаковываются.
-    /// Меню: Overworked → P2 → Move H4 Silhouette To Room 201.
+    /// Меню: Overworked → P2 → Floor_02 → Move H4 Silhouette To Room 201.
     /// </summary>
     [InitializeOnLoad]
     public static class MoveH4Silhouette
@@ -47,7 +47,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Move H4 Silhouette To Room 201")]
+        [MenuItem("Overworked/P2/Floor_02/Move H4 Silhouette To Room 201")]
         public static void Move()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

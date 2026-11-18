@@ -8,7 +8,7 @@ namespace Overworked.EditorTools
     /// Floor_02: подбираемый фонарик (FlashlightPickup от P2, Floor02Flashlight) — вместо серого прямоугольника
     /// спрайт фонарика Flashlight_Held, лежащий на полу, того же размера и тона, что в руке Дэнни.
     /// Подбор, полёт над Дэнни, реплика и подсказка [F] — без изменений.
-    /// Меню: Overworked → P1 → Dress Floor_02 Flashlight Pickup (после Overworked → P2 → Floor_02 Flashlight Pickup).
+    /// Меню: Overworked → P1 → Art → Dress Floor_02 Flashlight Pickup (после Overworked → P2 → Floor_02 → Floor_02 Flashlight Pickup).
     /// </summary>
     public static class Floor02FlashlightArt
     {
@@ -18,7 +18,7 @@ namespace Overworked.EditorTools
         // Тот же приглушённый тон, что у спрайта Дэнни и фонарика в руке.
         static readonly Color Tint = new Color(0.62f, 0.64f, 0.6f, 1f);
 
-        [MenuItem("Overworked/P1/Dress Floor_02 Flashlight Pickup")]
+        [MenuItem("Overworked/P1/Art/Dress Floor_02 Flashlight Pickup")]
         public static void Run()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
@@ -26,7 +26,7 @@ namespace Overworked.EditorTools
             var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritePath);
             if (sprite == null)
             {
-                Debug.LogError("[Setup] нет Flashlight_Held — сначала Overworked → P1 → Setup Held Flashlight");
+                Debug.LogError("[Setup] нет Flashlight_Held — сначала Overworked → P1 → Player → Setup Held Flashlight");
                 return;
             }
 
@@ -36,7 +36,7 @@ namespace Overworked.EditorTools
                     if (t.name == "FlashlightPickup") pickup = t;
             if (pickup == null)
             {
-                Debug.LogError("[Setup] Floor_02: нет FlashlightPickup — сначала Overworked → P2 → Floor_02 Flashlight Pickup");
+                Debug.LogError("[Setup] Floor_02: нет FlashlightPickup — сначала Overworked → P2 → Floor_02 → Floor_02 Flashlight Pickup");
                 return;
             }
 
@@ -81,7 +81,7 @@ namespace Overworked.EditorTools
                 ht.target = proxy.gameObject;
                 EditorUtility.SetDirty(ht);
             }
-            else Debug.LogWarning("[Setup] нет Lens_Glow — сначала Overworked → P1 → Setup Held Flashlight");
+            else Debug.LogWarning("[Setup] нет Lens_Glow — сначала Overworked → P1 → Player → Setup Held Flashlight");
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);

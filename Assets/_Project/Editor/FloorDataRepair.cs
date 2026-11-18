@@ -11,7 +11,7 @@ namespace Overworked.EditorTools
     /// загружали ассеты до OpenScene, сцена выгружала их, и в поля сохранялся null — у главного выхода,
     /// двери 102, тумбы и ключа в 101, турникета и пропуска, ящика и компьютера в 201 не было текстов.
     /// Проставляет только ПУСТЫЕ поля, объекты не пересоздаёт — подписки сценария P3 (onDenied и т. п.) целы.
-    /// Меню: Overworked → P2 → Repair Floor Data References.
+    /// Меню: Overworked → P2 → All Floors → Repair Floor Data References.
     /// </summary>
     [InitializeOnLoad]
     public static class FloorDataRepair
@@ -45,7 +45,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Repair Floor Data References")]
+        [MenuItem("Overworked/P2/All Floors/Repair Floor Data References")]
         public static void RepairAll()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

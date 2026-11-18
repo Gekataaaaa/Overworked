@@ -11,7 +11,7 @@ namespace Overworked.EditorTools
     /// (Art/Environment/Floor03). Спрайты в родном размере (масштаб 1), дверь стоит на полу (-4.2),
     /// коллайдер двери — по размеру спрайта, чтобы E срабатывала по всей двери.
     /// Трогает только Kitchen/ExitDoor/Door и Kitchen/Props/MaxPass/Sprite.
-    /// Меню: Overworked → P2 → Floor_03 Kitchen Art.
+    /// Меню: Overworked → P2 → Old Floor_03 → Floor_03 Kitchen Art.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor03KitchenArt
@@ -46,7 +46,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Floor_03 Kitchen Art")]
+        [MenuItem("Overworked/P2/Old Floor_03/Floor_03 Kitchen Art")]
         public static void Apply()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

@@ -11,7 +11,7 @@ namespace Overworked.EditorTools
     /// пиксель в пиксель, тот же тон и материал, что у Дэнни), поэтому подмена незаметна и сцену прятать не нужно.
     /// Каркас сцены (стены, триггеры, BedPoint) делает WhiteRoomBuilder от P4; здесь только арт и точка укладывания.
     /// Дэнни в этой сцене светлее, чем на этажах (тон RoomTint).
-    /// Меню: Overworked → P1 → Dress White Room (после пересборки сцены билдером P4).
+    /// Меню: Overworked → P1 → Art → Dress White Room (после пересборки сцены билдером P4).
     /// </summary>
     public static class WhiteRoomArt
     {
@@ -37,7 +37,7 @@ namespace Overworked.EditorTools
         // здесь тон светлее (переопределение только в этой сцене). Кровать — в том же тоне, что и кадры укладывания.
         static readonly Color RoomTint = new Color(0.95f, 0.96f, 0.93f, 1f);
 
-        [MenuItem("Overworked/P1/Dress White Room")]
+        [MenuItem("Overworked/P1/Art/Dress White Room")]
         public static void Run()
         {
             var frames = ImportFrames();

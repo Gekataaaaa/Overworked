@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// и пункты Resume / Main Menu / Quit как в главном меню — моноширинный шрифт, «> » у выбранного (ConsoleMenuItem),
     /// без фона, зелёным цветом терминала пролога (выбранный — ярче); звуки — UiSounds, как везде.
     /// Bootstrap кладёт префаб в _Systems при старте игры. На паузе HUD прячется (PauseMenuUI).
-    /// Запуск: меню Overworked → P1 → Build Pause Menu (после Build Main Menu — нужны шрифты). Префаб пересоздаётся целиком.
+    /// Запуск: меню Overworked → P1 → UI → Build Pause Menu (после Build Main Menu — нужны шрифты). Префаб пересоздаётся целиком.
     /// </summary>
     public static class PauseMenuBuilder
     {
@@ -23,13 +23,13 @@ namespace Overworked.EditorTools
         static readonly Color ItemNormal = new Color(0.25f, 0.6f, 0.32f);
         static readonly Color ItemSelected = new Color(0.6f, 1f, 0.68f);
 
-        [MenuItem("Overworked/P1/Build Pause Menu")]
+        [MenuItem("Overworked/P1/UI/Build Pause Menu")]
         public static void Run()
         {
             var mono = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(MonoFontPath);
             if (mono == null)
             {
-                Debug.LogError("[Setup] нет шрифта IBM Plex Mono — сначала Overworked → P1 → Build Main Menu");
+                Debug.LogError("[Setup] нет шрифта IBM Plex Mono — сначала Overworked → P1 → UI → Build Main Menu");
                 return;
             }
             var titleSprite = ImportTitle();

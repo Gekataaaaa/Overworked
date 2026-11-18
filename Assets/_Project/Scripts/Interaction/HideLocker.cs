@@ -6,8 +6,9 @@ namespace Overworked
     /// <summary>
     /// Шкафчик в рост Дэнни: по E Дэнни залезает внутрь, повторное E — вылезает.
     /// Внутри Дэнни рисуется между задней стенкой и дверцей (его спрайты опускаются на hiddenOrderShift),
-    /// поэтому через щель в дверце видно его голову. Пока сидит — управление заблокировано, фонарик выключен.
-    /// Собирается меню Overworked → P1 → Add Locker In Open Scene.
+    /// поэтому через щель в дверце видно его голову. Внутри он обрезан маской по контуру шкафчика — ступни
+    /// ниже дна не видны. Пока сидит — управление заблокировано, фонарик выключен.
+    /// Собирается меню Overworked → P1 → Objects → Add Locker In Open Scene.
     /// </summary>
     public class HideLocker : InteractableBase
     {
@@ -30,8 +31,10 @@ namespace Overworked
         /// <summary>Дэнни сейчас в шкафчике.</summary>
         public bool IsHidden { get; private set; }
 
-        readonly List<(SpriteRenderer sr, int order)> shifted = new List<(SpriteRenderer, int)>();
+        readonly List<(SpriteRenderer sr, int order, SpriteMaskInteraction mask)> shifted = new List<(SpriteRenderer, int, SpriteMaskInteraction)>();
         bool flashlightWasOn;
+        SpriteMask clip;
+        static Sprite clipSprite;
 
         public override string Prompt => IsHidden ? leavePrompt : hidePrompt;
 
@@ -52,11 +55,48 @@ namespace Overworked
             player.Teleport(new Vector3(transform.position.x, p.y, p.z));
             LockPlayer(true);
             shifted.Clear();
+            EnableClip(true);
             foreach (var sr in player.GetComponentsInChildren<SpriteRenderer>(true))
             {
-                shifted.Add((sr, sr.sortingOrder));
+                shifted.Add((sr, sr.sortingOrder, sr.maskInteraction));
                 sr.sortingOrder -= hiddenOrderShift;
+                // Дэнни виден только в пределах шкафчика: ступни ниже его дна не торчат.
+                sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
             }
+        }
+
+        // Маска по коллайдеру шкафчика (от пола до верха) — обрезает спрятанного Дэнни по контуру шкафчика.
+        void EnableClip(bool on)
+        {
+            if (!on)
+            {
+                if (clip != null) clip.enabled = false;
+                return;
+            }
+            if (clip == null)
+            {
+                var go = new GameObject("~HideClip");
+                go.transform.SetParent(transform, false);
+                clip = go.AddComponent<SpriteMask>();
+                clip.sprite = ClipSprite();
+            }
+            var b = GetComponent<Collider2D>().bounds;
+            var t = clip.transform;
+            t.position = new Vector3(b.center.x, b.center.y, transform.position.z);
+            var ls = transform.lossyScale;
+            t.localScale = new Vector3(b.size.x / ls.x, b.size.y / ls.y, 1f);
+            clip.enabled = true;
+        }
+
+        // Белый квадрат 1×1 юнит для маски.
+        static Sprite ClipSprite()
+        {
+            if (clipSprite == null)
+            {
+                var tex = Texture2D.whiteTexture;
+                clipSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), tex.width);
+            }
+            return clipSprite;
         }
 
         /// <summary>Вылезти из шкафчика (E или из сценария).</summary>
@@ -65,9 +105,14 @@ namespace Overworked
             if (!IsHidden) return;
             IsHidden = false;
             if (Occupied == this) Occupied = null;
-            foreach (var (sr, order) in shifted)
-                if (sr != null) sr.sortingOrder = order;
+            foreach (var (sr, order, mask) in shifted)
+            {
+                if (sr == null) continue;
+                sr.sortingOrder = order;
+                sr.maskInteraction = mask;
+            }
             shifted.Clear();
+            EnableClip(false);
             LockPlayer(false);
             if (flashlightWasOn && FlashlightController.Instance != null) FlashlightController.Instance.Toggle();
             Finish();

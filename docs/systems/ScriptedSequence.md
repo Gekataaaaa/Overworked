@@ -14,7 +14,7 @@
    - `SequenceTrigger` на объекте с `Collider2D` (Is Trigger) — когда Дэнни входит в зону;
    - из кода / UnityEvent: `sequence.Play()` (например, `onFinished` другого сценария или шаг `PlaySequence`).
 
-Пример — `StoryDemo` в `Sandbox_P3` (жёлтая зона справа от старта; меню **Overworked → P3 → Build Phone Sandbox**).
+Пример — `StoryDemo` в `Sandbox_P3` (жёлтая зона справа от старта; меню **Overworked → P3 → Sandbox → Build Phone Sandbox**).
 
 **Настройки сценария:** `once` — проиграть один раз; `lockPlayer` — Дэнни стоит всё время сценария,
 в конце управление возвращается; `onFinished` — UnityEvent в конце.

@@ -10,7 +10,8 @@ namespace Overworked
     /// Отладочные клавиши для всей команды (только редактор и development-билд, добавляет Bootstrap).
     /// F1 — MainMenu, F2/F3/F4 — Floor_03/02/01, F5 — WhiteRoom, F6 — fade туда-обратно,
     /// F7 — панель состояния (этаж, имя, рассудок, флаги), F8 — по кругу: коридор → комнаты этажа → коридор,
-    /// F9 — быстрый бег: бесконечная стамина и бег вдвое быстрее (вкл/выкл; там, где бег включён — allowRun).
+    /// F9 — быстрый бег: бесконечная стамина и бег вдвое быстрее (вкл/выкл; там, где бег включён — allowRun),
+    /// F10 — рассудок −50, F11 — рассудок 100.
     /// </summary>
     public class DebugHotkeys : MonoBehaviour
     {
@@ -48,6 +49,13 @@ namespace Overworked
                 string state = PlayerController.DebugFastRun ? "ON" : "OFF";
                 Debug.Log($"[Debug] F9 fast run {state}");
                 if (UIManager.Instance != null) UIManager.Instance.ShowToast($"Debug: fast run {state}");
+            }
+            // F10 — рассудок −50, F11 — рассудок 100 (плавно, со шкалой).
+            var sanity = SanityManager.Instance;
+            if (sanity != null)
+            {
+                if (kb.f10Key.wasPressedThisFrame) sanity.SetSanity(sanity.Target - 50f);
+                if (kb.f11Key.wasPressedThisFrame) sanity.SetSanity(100f);
             }
         }
 

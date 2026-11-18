@@ -7,7 +7,7 @@ namespace Overworked.EditorTools
     /// <summary>
     /// Фонарик в руке Дэнни: импорт спрайта (PPU 1088 ≈ 0.41 юнита, пивот на рукоятке), мягкое свечение линзы
     /// и компонент HeldFlashlight на префабе Player с точками кисти по кадрам анимации ходьбы.
-    /// Меню: Overworked → P1 → Setup Held Flashlight. Повторный запуск пересоздаёт объекты фонарика в префабе.
+    /// Меню: Overworked → P1 → Player → Setup Held Flashlight. Повторный запуск пересоздаёт объекты фонарика в префабе.
     /// </summary>
     public static class HeldFlashlightBuilder
     {
@@ -39,7 +39,7 @@ namespace Overworked.EditorTools
             ("Danny_Walk_5_3", new Vector2(136, 280)), ("Danny_Walk_5_4", new Vector2(140, 286)),
         };
 
-        [MenuItem("Overworked/P1/Setup Held Flashlight")]
+        [MenuItem("Overworked/P1/Player/Setup Held Flashlight")]
         public static void Run()
         {
             var flashSprite = ImportFlashlight();

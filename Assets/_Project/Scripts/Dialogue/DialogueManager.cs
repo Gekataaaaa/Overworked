@@ -15,7 +15,7 @@ namespace Overworked
     /// Space / Enter / клик мышью — допечатать строку сразу, повторно — перейти к следующей.
     /// Если пришёл новый Play, пока идёт старый, он встаёт в очередь — колбэки done не теряются.
     /// Управление Дэнни не блокирует (это делает сценарий). Живёт в префабе _Systems,
-    /// UI — объект Subtitles в HUD (Overworked → P3 → Build Dialogue UI).
+    /// UI — объект Subtitles в HUD (Overworked → P3 → UI → Build Dialogue UI).
     /// </summary>
     public class DialogueManager : SingletonBehaviour<DialogueManager>
     {

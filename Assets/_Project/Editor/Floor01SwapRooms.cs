@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// ближе к началу коридора, дверь 101 — дальше; сами комнаты (Room_X со всем содержимым, камерой
     /// и границами) меняются местами под коридором. Результат один и тот же при любом числе запусков:
     /// 102 всегда получает меньший X двери и верхнюю комнату.
-    /// Меню: Overworked → P2 → Swap Floor_01 Rooms 101 and 102.
+    /// Меню: Overworked → P2 → Floor_01 → Swap Floor_01 Rooms 101 and 102.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor01SwapRooms
@@ -46,7 +46,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Swap Floor_01 Rooms 101 and 102")]
+        [MenuItem("Overworked/P2/Floor_01/Swap Floor_01 Rooms 101 and 102")]
         public static void Swap()
         {
             // Несохранённые правки в открытой сцене — спросить, иначе OpenScene их выбросит.

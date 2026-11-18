@@ -7,7 +7,7 @@ namespace Overworked.EditorTools
 {
     /// <summary>
     /// P3: кладёт в сцену WhiteRoom объект P3_HudFade с HudFadeWithOverlay и связывает его с белым слоем
-    /// WhiteRoomSequence (P4) — HUD гаснет вместе с белым. Меню Overworked → P3 → Add HUD Fade To White Room.
+    /// WhiteRoomSequence (P4) — HUD гаснет вместе с белым. Меню Overworked → P3 → UI → Add HUD Fade To White Room.
     /// Объекты P4 не трогает. После пересборки сцены сборщиком P4 (Build White Room) запустить ещё раз:
     /// белый слой создаётся заново, и ссылка на него теряется.
     /// </summary>
@@ -16,7 +16,7 @@ namespace Overworked.EditorTools
         const string ScenePath = "Assets/_Project/Scenes/WhiteRoom.unity";
         const string RootName = "P3_HudFade";
 
-        [MenuItem("Overworked/P3/Add HUD Fade To White Room")]
+        [MenuItem("Overworked/P3/UI/Add HUD Fade To White Room")]
         public static void Run()
         {
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
@@ -26,7 +26,7 @@ namespace Overworked.EditorTools
                 : null;
             if (overlay == null)
             {
-                Debug.LogError("[Setup] в WhiteRoom нет WhiteRoomSequence с белым слоем — сначала Overworked → P4 → Build White Room");
+                Debug.LogError("[Setup] в WhiteRoom нет WhiteRoomSequence с белым слоем — сначала Overworked → P4 → Art → Build White Room");
                 return;
             }
 

@@ -14,7 +14,7 @@ namespace Overworked.EditorTools
     /// обратно на кухню. Для столовой «коридор» — это кухня: её камера и точка у двери. При выходе из столовой кухня
     /// снова становится текущей комнатой (Room.RestoreInside — без повторных сценариев входа кухни).
     /// Повторный запуск пересоздаёт столовую, её камеру и дверь на кухне. Работает в открытой сцене (сохранить — Ctrl+S).
-    /// Меню Overworked → P3 → Work: Build Staff Canteen.
+    /// Меню Overworked → P3 → Floor_03_Work → Build Staff Canteen.
     /// </summary>
     public static class WorkCanteenBuilder
     {
@@ -33,7 +33,7 @@ namespace Overworked.EditorTools
         static readonly Color CeilingColor = new Color(0.18f, 0.18f, 0.19f);
         static readonly Color SideWallColor = new Color(0.15f, 0.16f, 0.15f);
 
-        [MenuItem("Overworked/P3/Work: Build Staff Canteen")]
+        [MenuItem("Overworked/P3/Floor_03_Work/Build Staff Canteen")]
         public static void Run()
         {
             if (!EnsureScene()) return;

@@ -22,7 +22,7 @@ namespace Overworked.EditorTools
     ///          (3.2): у двери 102 с ключом — F1_Door102Approach; вход в 102 — F1_Boss_03 → F1_Boss03_After;
     ///          автомат: победа — F1_ArcadeAfter и задание F1_FinishWork выполнено.
     ///          (3.3): финальный скример H5 при выходе из 102 после победы — уже подключён P4 (FinalScreamerStarter).
-    /// Меню: Overworked → P2 → Wire Story And Hallucinations.
+    /// Меню: Overworked → P2 → All Floors → Wire Story And Hallucinations.
     /// </summary>
     [InitializeOnLoad]
     public static class P2StoryWiring
@@ -58,7 +58,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Wire Story And Hallucinations")]
+        [MenuItem("Overworked/P2/All Floors/Wire Story And Hallucinations")]
         public static void WireAll()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
@@ -188,7 +188,7 @@ namespace Overworked.EditorTools
                 }
                 Hook(key.onDone, afterKey, key);
             }
-            else Debug.LogWarning("[Setup] Floor_01: нет Room_101/Props/Key102 — сначала Overworked → P4 → Build Floor_01 Art");
+            else Debug.LogWarning("[Setup] Floor_01: нет Room_101/Props/Key102 — сначала Overworked → P4 → Art → Build Floor_01 Art");
 
             // 3.2 Подход к двери 102 с ключом: «The break room? Now?»
             var approach = Sequence(group, "3.2 Door102Approach", false,
@@ -291,7 +291,7 @@ namespace Overworked.EditorTools
             foreach (var root in scene.GetRootGameObjects())
                 foreach (var h in root.GetComponentsInChildren<HallucinationEvent>(true))
                     if (h.name.StartsWith(prefix)) return h;
-            Debug.LogWarning($"[Setup] {scene.name}: нет галлюцинации {prefix} (Overworked → P4 → Add Hallucinations to Floors)");
+            Debug.LogWarning($"[Setup] {scene.name}: нет галлюцинации {prefix} (Overworked → P4 → Hallucinations → Add Hallucinations to Floors)");
             return null;
         }
 

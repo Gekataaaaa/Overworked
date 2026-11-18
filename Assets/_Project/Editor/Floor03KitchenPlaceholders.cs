@@ -12,7 +12,7 @@ namespace Overworked.EditorTools
     /// (прямоугольники того же размера и цвета, что делал каркас и Floor03Turnstile), вместо арта.
     /// Трогает только Environment/Rooms/Kitchen/ExitDoor/Door и Kitchen/Props/MaxPass/Sprite —
     /// компоненты, подписки сценария и остальной Floor_03 не меняются.
-    /// Меню: Overworked → P2 → Floor_03 Kitchen Placeholders.
+    /// Меню: Overworked → P2 → Old Floor_03 → Floor_03 Kitchen Placeholders.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor03KitchenPlaceholders
@@ -46,7 +46,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P2/Floor_03 Kitchen Placeholders")]
+        [MenuItem("Overworked/P2/Old Floor_03/Floor_03 Kitchen Placeholders")]
         public static void Apply()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;

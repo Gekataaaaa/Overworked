@@ -364,7 +364,7 @@ Heartbeat — не здоровье и не HP, а визуально-звуко
 **Рассудок падает в момент, когда Дэнни видит галлюцинацию** (силуэт попал в кадр, вспышка на экране),
 а не при подходе. Спайк пульса (до 140) — в резкий момент по нарративу.
 Все галлюцинации в игре целиком можно пройти в песочнице P4: копии меню и этажей
-`Scenes/Sandbox/Sandbox_P4_MainMenu`, `Sandbox_P4_Floor_03/02/01` (сборщик `Overworked → P4 → Build Game Sandbox`).
+`Scenes/Sandbox/Sandbox_P4_MainMenu`, `Sandbox_P4_Floor_03/02/01` (сборщик `Overworked → P4 → Sandbox → Build Game Sandbox`).
 Пока весь визуал — квадраты-заглушки; подробности — `docs/systems/Hallucinations.md`.
 
 ## 19. Фонарик

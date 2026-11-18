@@ -8,7 +8,7 @@ namespace Overworked.EditorTools
 {
     /// <summary>
     /// Каркасы этажей на серых прямоугольниках: коридор со стенами, комнаты, игрок, камеры, лестница.
-    /// Запуск: Overworked → P1 → Build Floor Skeletons. Этаж, где в Corridor/Background уже что-то есть,
+    /// Запуск: Overworked → P1 → Floors → Build Floor Skeletons. Этаж, где в Corridor/Background уже что-то есть,
     /// пропускается — чужую работу не перезаписывает. Дальше этажи собирают их владельцы (docs/TASKS.md).
     /// </summary>
     public static class FloorSkeletonBuilder
@@ -61,7 +61,7 @@ namespace Overworked.EditorTools
             },
         };
 
-        [MenuItem("Overworked/P1/Build Floor Skeletons")]
+        [MenuItem("Overworked/P1/Floors/Build Floor Skeletons")]
         public static void Run()
         {
             var square = SB.EnsureSquareSprite();

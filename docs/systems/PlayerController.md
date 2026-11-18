@@ -11,14 +11,14 @@
 группа по центру персонажа; видна при беге и пока полоска не полная, через секунду после полной тает;
 выдохся — полоска красная. Шаги на бегу анимируются в 1.7 раза быстрее.
 Включается на игроке полем `allowRun` (по умолчанию выключено) — в рабочей сцене меню
-**Overworked → P1 → Enable Running In Open Scene**. Настройки — в разделе «Бег (Shift) и стамина» на PlayerController.
+**Overworked → P1 → Scene Setup → Enable Running In Open Scene**. Настройки — в разделе «Бег (Shift) и стамина» на PlayerController.
 
 **Как подключить:** положить в сцену префаб `Prefabs/Player/Player` (Rigidbody2D, BoxCollider2D,
 PlayerController, PlayerAnimator, дочерний `Sprite`). Стены коридора — объекты с `BoxCollider2D`.
 Камера: `CinemachineCamera` с `Follow = Player`, `CinemachinePositionComposer` (Lookahead) и
 `CinemachineConfiner2D`; границы — `PolygonCollider2D` (Is Trigger), **по высоте больше кадра**
 (иначе Confiner2D прибивает камеру к центру). Готовый пример — `Sandbox_P1`
-(собирается меню **Overworked → P1 → Build Player Sandbox**).
+(собирается меню **Overworked → P1 → Player → Build Player Sandbox**).
 
 **Публичный API:**
 
@@ -60,7 +60,7 @@ PlayerController, PlayerAnimator, дочерний `Sprite`). Стены кор�
 
 ## Фонарик в руке (HeldFlashlight)
 
-На корне префаба Player (ставит **Overworked → P1 → Setup Held Flashlight**). Спрайт `Art/Props/Flashlight_Held.png`
+На корне префаба Player (ставит **Overworked → P1 → Player → Setup Held Flashlight**). Спрайт `Art/Props/Flashlight_Held.png`
 (PPU 1088, пивот на рукоятке) держится в кисти правой руки по кадрам анимации, зеркалится с Дэнни.
 Виден, когда `FlashlightController.Available` (Floor_02 — после подбора). Слои: Дэнни → фонарик →
 кисть (`HandOverlay`, картинка «только кисть» этого кадра из `Art/Characters/Danny/Hands`) — пальцы
@@ -78,7 +78,7 @@ PlayerController, PlayerAnimator, дочерний `Sprite`). Стены кор�
 пошёл — взгляд заканчивается сразу; на ходу фронтальный кадр не показывается никогда.
 Пока Дэнни смотрит в экран, фонарика в руке нет и луч погашен (`HeldFlashlight` выключает сам источник света,
 не `Toggle()` — без щелчка и `OnToggled`); после взгляда фонарик снова в руке, луч — в прежнем состоянии (`IsOn`). Плюс автоматически: список `lookAtScreenDialogues` в префабе
-(ставит **Overworked → P1 → Setup Look At Screen**: Floor_02, Floor_01, WhiteRoom; кроме мест, где он лежит) — на репликах Дэнни из этих диалогов он сам смотрит в экран,
+(ставит **Overworked → P1 → Player → Setup Look At Screen**: Floor_02, Floor_01, WhiteRoom; кроме мест, где он лежит) — на репликах Дэнни из этих диалогов он сам смотрит в экран,
 даже если диалог запускает чужой объект (ящик в 201, запрет возврата). Добавить новое место — дописать
 диалог в список (сборщик `Editor/LookAtScreenSetup.cs`).
 
@@ -89,5 +89,5 @@ PlayerController, PlayerAnimator, дочерний `Sprite`). Стены кор�
 `lieDownFps` = 5) и держит последний. Кровать нарисована в каждом кадре — ровно там же, где спрайт кровати в сцене
 (тот же тон и материал), поэтому сцену не прячем. Пока лежит (`IsLyingDown`), взгляд в экран не включается
 и фонарика в руке нет. Любое другое `PlayAnim` (например, "StandUp") снимает режим.
-Фон, кровать, точку `BedPoint` и кадры ставит **Overworked → P1 → Dress White Room** (`Editor/WhiteRoomArt.cs`)
+Фон, кровать, точку `BedPoint` и кадры ставит **Overworked → P1 → Art → Dress White Room** (`Editor/WhiteRoomArt.cs`)
 после пересборки сцены билдером P4.

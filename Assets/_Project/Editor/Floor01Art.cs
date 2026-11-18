@@ -19,7 +19,7 @@ namespace Overworked.EditorTools
     /// выдаёт главный выход (раньше — запертая дверь 102).
     /// Освещения и затемнения пока нет: группы Lights пустые, свечения аркады нет, общий свет — 1.
     /// Повторный запуск пересобирает арт с нуля; галлюцинации H4/H5, фонарик и сюжет не трогает.
-    /// Меню: Overworked → P4 → Build Floor_01 Art.
+    /// Меню: Overworked → P4 → Art → Build Floor_01 Art.
     /// </summary>
     [InitializeOnLoad]
     public static class Floor01Art
@@ -73,7 +73,7 @@ namespace Overworked.EditorTools
             RunRequest();
         }
 
-        [MenuItem("Overworked/P4/Build Floor_01 Art")]
+        [MenuItem("Overworked/P4/Art/Build Floor_01 Art")]
         public static void Build()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
@@ -186,7 +186,7 @@ namespace Overworked.EditorTools
             // Дверь 102 — стеклянная стена комнаты отдыха; подсказка E — только у самой двери, не по всей ширине.
             var door102 = Dress(doors.Find("Door_Room_102"), "Door_102_ChillZone", door102Pos, -7, 2.4f);
             if (door101 == null || door102 == null)
-                Debug.LogError("[Setup] Floor_01: нет Doors/Door_Room_101 или Door_Room_102 — сначала Overworked → P2 → Wire Rooms On All Floors");
+                Debug.LogError("[Setup] Floor_01: нет Doors/Door_Room_101 или Door_Room_102 — сначала Overworked → P2 → All Floors → Wire Rooms On All Floors");
             Place(doors, "Door_Archive", "Door_Archive", C(829, 400, 302, 600), -7);
 
             var returns = corridor.Find("ReturnPoints");
@@ -243,7 +243,7 @@ namespace Overworked.EditorTools
             var exit = corridor.Find("MainExit");
             if (exit == null)
             {
-                Debug.LogWarning("[Setup] Floor_01: нет MainExit — сначала Overworked → P2 → Build Floor_01 Corridor");
+                Debug.LogWarning("[Setup] Floor_01: нет MainExit — сначала Overworked → P2 → Floor_01 → Build Floor_01 Corridor");
                 return;
             }
             var pos = C(6960, 432, 500, 568);
@@ -397,7 +397,7 @@ namespace Overworked.EditorTools
                 ("setsFlag", "Key102"),
                 ("completesObjective", AssetDatabase.LoadAssetAtPath<ObjectiveData>(FindKeyPath)));
             // «Finish work in room 102» выдаёт не ключ, а цепочка 3.1 AfterKey после сообщения Босса
-            // (Overworked → P2 → Wire Story And Hallucinations).
+            // (Overworked → P2 → All Floors → Wire Story And Hallucinations).
             EditorUtility.SetDirty(pickup);
             Debug.Log("[Setup] Floor_01: ключ-карта Key102 создана");
             return key.transform;
@@ -431,7 +431,7 @@ namespace Overworked.EditorTools
                     EditorUtility.SetDirty(game);
                 }
             }
-            else Debug.LogWarning("[Setup] Floor_01: нет Room_102/Props/Arcade — сначала Overworked → P2 → Place Floor_01 Arcade");
+            else Debug.LogWarning("[Setup] Floor_01: нет Room_102/Props/Arcade — сначала Overworked → P2 → Floor_01 → Place Floor_01 Arcade");
 
             RoomLamp(room);
         }
