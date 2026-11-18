@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Overworked.EditorTools
 {
     /// <summary>
-    /// Держит Resources/SaveRegistry в актуальном виде: после каждой перекомпиляции собирает все ObjectiveData
-    /// и MessageData проекта. Пересохраняет ассет, только если список изменился. Вручную — Overworked → P1 → Data → Refresh Save Registry.
+    /// Держит Resources/SaveRegistry в актуальном виде: после каждой перекомпиляции собирает все ObjectiveData,
+    /// MessageData и HotbarItemData проекта. Пересохраняет ассет, только если список изменился. Вручную — Overworked → P1 → Data → Refresh Save Registry.
     /// </summary>
     [InitializeOnLoad]
     public static class SaveRegistryRefresher
@@ -23,6 +23,7 @@ namespace Overworked.EditorTools
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
             var objectives = Find<ObjectiveData>();
             var messages = Find<MessageData>();
+            var items = Find<HotbarItemData>();
 
             var reg = AssetDatabase.LoadAssetAtPath<SaveRegistry>(AssetPath);
             if (reg == null)
@@ -32,16 +33,18 @@ namespace Overworked.EditorTools
                 reg = ScriptableObject.CreateInstance<SaveRegistry>();
                 AssetDatabase.CreateAsset(reg, AssetPath);
             }
-            else if (reg.Objectives.SequenceEqual(objectives) && reg.Messages.SequenceEqual(messages))
+            else if (reg.Objectives.SequenceEqual(objectives) && reg.Messages.SequenceEqual(messages)
+                     && reg.Items != null && reg.Items.SequenceEqual(items))
             {
                 if (log) Debug.Log("[Setup] SaveRegistry уже актуален");
                 return;
             }
             reg.Objectives = objectives;
             reg.Messages = messages;
+            reg.Items = items;
             EditorUtility.SetDirty(reg);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[Setup] SaveRegistry: заданий {objectives.Length}, сообщений {messages.Length}");
+            Debug.Log($"[Setup] SaveRegistry: заданий {objectives.Length}, сообщений {messages.Length}, предметов {items.Length}");
         }
 
         static T[] Find<T>() where T : Object =>

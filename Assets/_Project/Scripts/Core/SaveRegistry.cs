@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Overworked
 {
     /// <summary>
-    /// Список всех заданий и сообщений — чтобы SaveSystem находил их по Id / имени при загрузке сохранения.
+    /// Список всех заданий, сообщений и предметов хотбара — чтобы SaveSystem находил их по Id / имени при загрузке сохранения.
     /// Лежит в Resources/SaveRegistry; заполняется сам в редакторе (SaveRegistryRefresher) при каждой перекомпиляции.
     /// </summary>
     public class SaveRegistry : ScriptableObject
@@ -15,6 +15,16 @@ namespace Overworked
 
         [Tooltip("Все MessageData проекта (Data/Messages)")]
         public MessageData[] Messages = new MessageData[0];
+
+        [Tooltip("Все HotbarItemData проекта (Data/Items) — содержимое хотбара в чекпоинте")]
+        public HotbarItemData[] Items = new HotbarItemData[0];
+
+        /// <summary>Предмет хотбара по id или null.</summary>
+        public HotbarItemData Item(string id)
+        {
+            foreach (var i in Items) if (i != null && i.id == id) return i;
+            return null;
+        }
 
         /// <summary>Задание по Id или null.</summary>
         public ObjectiveData Objective(string id)

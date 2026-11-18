@@ -11,7 +11,7 @@ namespace Overworked
     /// F1 — MainMenu, F2/F3/F4 — Floor_03/02/01, F5 — WhiteRoom, F6 — fade туда-обратно,
     /// F7 — панель состояния (этаж, имя, рассудок, флаги), F8 — по кругу: коридор → комнаты этажа → коридор,
     /// F9 — быстрый бег: бесконечная стамина и бег вдвое быстрее (вкл/выкл; там, где бег включён — allowRun),
-    /// F10 — рассудок −50, F11 — рассудок 100.
+    /// F10 — рассудок −50, F11 — рассудок 100, F12 — рассудок 0 (перезагрузка с чекпоинта).
     /// </summary>
     public class DebugHotkeys : MonoBehaviour
     {
@@ -56,6 +56,7 @@ namespace Overworked
             {
                 if (kb.f10Key.wasPressedThisFrame) sanity.SetSanity(sanity.Target - 50f);
                 if (kb.f11Key.wasPressedThisFrame) sanity.SetSanity(100f);
+                if (kb.f12Key.wasPressedThisFrame) sanity.SetSanity(0f);
             }
         }
 

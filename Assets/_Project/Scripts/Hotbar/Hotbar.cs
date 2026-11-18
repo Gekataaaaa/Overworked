@@ -70,6 +70,15 @@ namespace Overworked
 
         public static bool IsFull => Array.IndexOf(slots, null) < 0;
 
+        /// <summary>Содержимое из чекпоинта (SaveSystem): предметы по слотам, выделение снимается.</summary>
+        public static void Restore(HotbarItemData[] items)
+        {
+            Array.Clear(slots, 0, SlotCount);
+            for (int i = 0; i < SlotCount && i < items.Length; i++) slots[i] = items[i];
+            Selected = -1;
+            Changed?.Invoke();
+        }
+
         public static void Clear()
         {
             Array.Clear(slots, 0, SlotCount);

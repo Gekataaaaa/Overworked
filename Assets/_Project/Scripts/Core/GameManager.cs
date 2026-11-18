@@ -55,8 +55,6 @@ namespace Overworked
         public void LeaveToMainMenu()
         {
             if (SceneTransitionManager.Instance.IsLoading) return;
-            // Этаж уходит под меню — на диск место остановки (если игру закроют из меню, Continue вернёт сюда).
-            SaveSystem.SaveNow();
             Debug.Log("[Core] LeaveToMainMenu: этаж спрятан под меню");
             SceneTransitionManager.Instance.LoadOver("MainMenu", (scene, roots) =>
             {
